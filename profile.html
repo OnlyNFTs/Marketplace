@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OnlyNFTs</title>
+</head>
+<body>
+
+    <div>
+        <button id= "btnConnect" >Connect wallet</button>
+        <button id= "btnUserInfo" >Profile</button>
+    </div>
+
+    <div id="userinfo">
+        <h4>User Profile</h4>
+        <input type="text" id="textUsername" required placeholder="Enter Username">;
+        <input type="text" id="textEmail" placeholder="Enter Email">
+        <small>Optional</small>
+
+        <img src="" id="imgAvatar" alt="">
+        <label for="fileAvatar">Select Avatar</label>
+        <input type="file" id="fileAvatar">
+
+        <button id="btnLogout">Log Out</button>
+        <button id="btnCloseUserInfo">Close</button>
+        <button id="btnSaveUserInfo">Save</button>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="https://unpkg.com/moralis/dist/moralis.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
