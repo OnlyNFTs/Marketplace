@@ -108,8 +108,8 @@ logout = async () => {
 
 openUserInfo = async () => {
     user = await Moralis.User.current();
-    const bnbBalance = await Moralis.Web3.getERC20({chain: 'bsc', symbol: 'ONFTs'});
-    console.log (bnbBalance)
+    // const bnbBalance = await Moralis.Web3.getERC20({chain: 'bsc', symbol: 'ONFTs'});
+    // console.log (bnbBalance)
 
     if (user){    
         const email = user.get('email');
@@ -119,7 +119,7 @@ openUserInfo = async () => {
             userEmailField.value = "";
         }
         
-        userUsernameField.value = bnbBalance.tokens ;
+        userUsernameField.value = user.get('username');
         
         const userAvatar = user.get('avatar');
         if(userAvatar){
