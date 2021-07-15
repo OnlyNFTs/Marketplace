@@ -260,9 +260,10 @@ renderUserItem = async (item) => {
     userItem.getElementsByTagName("img")[0].alt = item.name;
     userItem.getElementsByTagName("h5")[0].innerText = item.name;
     userItem.getElementsByTagName("p")[0].innerText = item.description; 
-   // userItem.getElementsByTagName("p")[0].innerText = item.creator;    
-
-    userItem.getElementsByTagName("input")[0].value = item.askingPrice ?? 1;
+    userItem.getElementsByTagName("h6")[0].innerText = "Creator";
+    userItem.getElementsByTagName("p")[1].innerText = item.creator;    
+    itemPrice = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
+    userItem.getElementsByTagName("input")[0].value = itemPrice ?? 1;
     userItem.getElementsByTagName("input")[0].disabled = item.askingPrice > 0;
     userItem.getElementsByTagName("button")[0].disabled = item.askingPrice > 0;
     userItem.getElementsByTagName("button")[0].onclick = async () => {
