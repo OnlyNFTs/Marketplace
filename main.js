@@ -260,7 +260,7 @@ renderUserItem = async (item) => {
     userItem.getElementsByTagName("img")[0].alt = item.name;
     userItem.getElementsByTagName("h5")[0].innerText = item.name;
     userItem.getElementsByTagName("p")[0].innerText = item.description; 
-    userItem.getElementsByTagName("p")[0].innerText = item.creator;    
+   // userItem.getElementsByTagName("p")[0].innerText = item.creator;    
 
     userItem.getElementsByTagName("input")[0].value = item.askingPrice ?? 1;
     userItem.getElementsByTagName("input")[0].disabled = item.askingPrice > 0;
