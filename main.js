@@ -495,6 +495,6 @@ const marketplaceItemTemplate = initTemplate("marketplaceItemTemplate");
 
 // Items for sale
 const itemsForSale = document.getElementById("itemsForSale");
-var   usdPrice = new BigNumber(0.0002);
+var   usdPrice = new BigNumber(0.000025);
 
 init();
