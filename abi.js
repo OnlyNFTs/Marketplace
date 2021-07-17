@@ -704,6 +704,19 @@ var marketplaceContractAbi = [
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      }
+    ],
+    "name": "removeItem",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "_paymentToken",
         "type": "address"
@@ -757,7 +770,7 @@ var marketplaceContractAbi = [
       },
       {
         "internalType": "uint256",
-        "name": "_royaltyFee",
+        "name": "royaltyFee",
         "type": "uint256"
       }
     ],

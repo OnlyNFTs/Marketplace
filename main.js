@@ -2,7 +2,7 @@ Moralis.initialize("kjD0iZDa6qnqTsIN7NNyt2zMcDIPkf8DuELBhUxt");
 Moralis.serverURL = 'https://2xpqa1mlwfdh.usemoralis.com:2053/server';
 
 const TOKEN_CONTRACT_ADDRESS = "0x0F41cb1E0FeAb5b79F90E4384fE54fE375b73741";
-const MARKETPLACE_CONTRACT_ADDRESS = "0x650F4180144fe5a812969842F561b8D219e7634E";
+const MARKETPLACE_CONTRACT_ADDRESS = "0x56Ee024c090b102d66323161F69A58F665f6DC8e";
 const PAYMENT_TOKEN_ADDRESS = "0xF9f612F44351753C9F600cbFf08e0dd0F726DB6B";
 const MINT_TOKEN_ADDRESS = "0xa1aFA0F5F11B5fF4700883Ed76fb2Baa98c94E83";
 
@@ -125,10 +125,6 @@ openUserInfo = async () => {
         }
         
         userUsernameField.value = user.get('username');
-       // onftsBalance = onftsBalance.value;
-        // 
-    //     
-    //   
         
         const userAvatar = user.get('avatar');
         if(userAvatar){
@@ -232,57 +228,54 @@ openUserItems = async () => {
     user = await Moralis.User.current();
     
 
-    const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
-    const query = new Moralis.Query(BscTokenBalance);
-    query.equalTo("token_address", "0xf9f612f44351753c9f600cbff08e0dd0f726db6b");
-    query.equalTo("address", user.get('ethAddress'));
-    const results = await query.find();
-  //  alert("Successfully retrieved " + results.length + " balance.");
-// Do something with the returned Moralis.Object values
-for (let i = 0; i < results.length; i++) {
-  const object = results[i];
-  //alert(object.id + ' - ' + object.get('balance'));
-  const onftsBalance1 = object.get('balance');
-  //alert (onftsBalance1);
-  onftsBalanceBN = new BigNumber(onftsBalance1).div(1000000000).div(1000000000);
-
-  onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(usdPrice);
-  document.getElementById("onftsBalanceButton").innerText = `${onftsBalanceBN.dp(2)} ONFTs - ${onftsBalanceUSDBN.dp(2)} USD`;
-  
-}
-
-//const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
-//const query = new Moralis.Query(BscTokenBalance);
-query.equalTo("token_address", "0xa1afa0f5f11b5ff4700883ed76fb2baa98c94e83");
-query.equalTo("address", user.get('ethAddress'));
-const results1 = await query.find();
-//alert("Successfully retrieved " + results1.length + " balance.");
-// Do something with the returned Moralis.Object values
-for (let i = 0; i < results1.length; i++) {
-const object1 = results1[i];
-//alert(object.id + ' - ' + object.get('balance'));
-const mintTokenBalance = object1.get('balance');
-//alert (onftsBalance1);
-mintTokenBalanceBN = new BigNumber(mintTokenBalance).div(1000000000).div(1000000000);
-
-document.getElementById("mintTokenBalanceButton").innerText = `${mintTokenBalanceBN.dp(2)} TOKEN`;
-
-};
-
-
-
-
     
-    if (user){    
+    if (user){ 
 
+        const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
+        const query = new Moralis.Query(BscTokenBalance);
+        query.equalTo("token_address", "0xf9f612f44351753c9f600cbff08e0dd0f726db6b");
+        query.equalTo("address", user.get('ethAddress'));
+        const results = await query.find();
+      //  alert("Successfully retrieved " + results.length + " balance.");
+    // Do something with the returned Moralis.Object values
+    for (let i = 0; i < results.length; i++) {
+      const object = results[i];
+      //alert(object.id + ' - ' + object.get('balance'));
+      const onftsBalance1 = object.get('balance');
+      //alert (onftsBalance1);
+      onftsBalanceBN = new BigNumber(onftsBalance1).div(1000000000).div(1000000000);
+    
+      onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(usdPrice);
+      document.getElementById("onftsBalanceButton").innerText = `${onftsBalanceBN.dp(2)} ONFTs - ${onftsBalanceUSDBN.dp(2)} USD`;
+      
+    }
+    
+    //const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
+    //const query = new Moralis.Query(BscTokenBalance);
+    query.equalTo("token_address", "0xa1afa0f5f11b5ff4700883ed76fb2baa98c94e83");
+    query.equalTo("address", user.get('ethAddress'));
+    const results1 = await query.find();
+    //alert("Successfully retrieved " + results1.length + " balance.");
+    // Do something with the returned Moralis.Object values
+    for (let i = 0; i < results1.length; i++) {
+    const object1 = results1[i];
+    //alert(object.id + ' - ' + object.get('balance'));
+    const mintTokenBalance = object1.get('balance');
+    //alert (onftsBalance1);
+    mintTokenBalanceBN = new BigNumber(mintTokenBalance).div(1000000000).div(1000000000);
+    
+    document.getElementById("mintTokenBalanceButton").innerText = `${mintTokenBalanceBN.dp(2)} TOKEN`;
+    
+    };
 
-
-        
         
         $('#userItems').modal('show');
     }else{
         login();
     }
+
+    
+
 }
 
 loadUserItems = async () => {
@@ -339,6 +332,7 @@ renderUserItem = async (item) => {
     userItem.getElementsByTagName("button")[0].disabled = item.askingPrice > 0;
     
     userItem.getElementsByTagName("button")[1].disabled = item.askingPrice == null;
+    userItem.getElementsByTagName("button")[1].onclick = () => removeItem(item);
     //userItem.getElementsByTagName("input")[1].disabled = item.askingPrice < 10;
     
     userItem.getElementsByTagName("button")[0].onclick = async () => {
@@ -442,7 +436,16 @@ buyItem = async (item) => {
     alert("NFT Purchased");
 }
 
-
+// Remove from marketplace
+removeItem = async (item) => {
+    user = await Moralis.User.current();
+    if (!user){
+        login();
+        return;
+    }
+    await marketplaceContract.methods.removeItem(item.uid).send({from: user.get('ethAddress')});
+    alert("NFT Removed from Marketplace!");
+}
 
 hideElement = (element) => element.style.display = "none";
 showElement = (element) => element.style.display = "block";
