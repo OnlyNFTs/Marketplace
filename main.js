@@ -1,10 +1,10 @@
 Moralis.initialize("kjD0iZDa6qnqTsIN7NNyt2zMcDIPkf8DuELBhUxt");
 Moralis.serverURL = 'https://2xpqa1mlwfdh.usemoralis.com:2053/server';
 
-const TOKEN_CONTRACT_ADDRESS = "0x019001B30ed26172581F1e5F775B6CE710F02204";
+const TOKEN_CONTRACT_ADDRESS = "0x0F41cb1E0FeAb5b79F90E4384fE54fE375b73741";
 const MARKETPLACE_CONTRACT_ADDRESS = "0x650F4180144fe5a812969842F561b8D219e7634E";
 const PAYMENT_TOKEN_ADDRESS = "0xF9f612F44351753C9F600cbFf08e0dd0F726DB6B";
-
+const MINT_TOKEN_ADDRESS = "0xa1aFA0F5F11B5fF4700883Ed76fb2Baa98c94E83";
 
 
 init = async () => {
@@ -13,8 +13,11 @@ init = async () => {
     window.tokenContract = new web3.eth.Contract(tokenContractAbi, TOKEN_CONTRACT_ADDRESS);
     window.marketplaceContract = new web3.eth.Contract(marketplaceContractAbi, MARKETPLACE_CONTRACT_ADDRESS);
     window.paymentTokenContract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
+    window.mintTokenContract = new web3.eth.Contract(mintTokenContractAbi, MINT_TOKEN_ADDRESS);
     initUser();
     loadItems();
+
+    
 
     const soldItemsQuery = new Moralis.Query('SoldItemsRoylt');
     const soldItemsSubscription = await soldItemsQuery.subscribe();
@@ -76,6 +79,8 @@ onItemAdded = async (item) => {
 
 initUser = async () => {
     if (await Moralis.User.current()){
+        user = await Moralis.User.current();
+ 
         hideElement(userConnectButton);
         showElement(userProfileButton);
         showElement(openCreateItemButton);
@@ -120,6 +125,10 @@ openUserInfo = async () => {
         }
         
         userUsernameField.value = user.get('username');
+       // onftsBalance = onftsBalance.value;
+        // 
+    //     
+    //   
         
         const userAvatar = user.get('avatar');
         if(userAvatar){
@@ -150,8 +159,13 @@ saveUserInfo = async () => {
 }
 
 createItem = async () => {
-
-    if (createItemFile.files.length == 0){
+    mintTokenBalance = 10;
+    if (mintTokenBalance < 1) { 
+        document.getElementById("btnCreateItem").disabled = 1;
+        alert("Not Enough Mint Tokens! You need atleast 1 to mint an NFT!");
+       return;
+    
+    } else if (createItemFile.files.length == 0){
         alert("Please select a file!");
         return;
     } else if (createItemNameField.value.length == 0){
@@ -179,7 +193,7 @@ createItem = async () => {
     await nftFileMetadataFile.saveIPFS();
 
     const nftFileMetadataFilePath = nftFileMetadataFile.ipfs();
-
+    await ensureMintTokenIsApproved(MINT_TOKEN_ADDRESS);
     const nftId = await mintNft(nftFileMetadataFilePath);
 
     
@@ -192,11 +206,16 @@ createItem = async () => {
             return;
         case "1":
             await ensureMarketplaceIsApproved(nftId, TOKEN_CONTRACT_ADDRESS);
-            await marketplaceContract.methods.addItemToMarket(nftId, TOKEN_CONTRACT_ADDRESS, createItemPriceField.value).send({from: userAddress});
-            alert("Added to marketplace!");
-            break;
-        case "2":
-            alert("Not yet supported!");
+            await createItemStatusField.value;
+            let test1 = createItemPriceField.value;
+            let askingPriceBN = new BigNumber(test1).times(1000000000).times(1000000000);
+            let creator = userAddress;
+            // let royaltyPriceBN = new Bignumber(askingPriceBN).div(10);
+            // let finalPriceBN = new Bignumber(askingPriceBN).sub(royaltyPriceBN);
+            let royaltyFee = 10;
+            // //await web3.fromWei(userItem.getElementsByTagName("input")[0].value.toString(tests1), "ether")
+         await marketplaceContract.methods.addItemToMarket(nftId, TOKEN_CONTRACT_ADDRESS, askingPriceBN, creator, royaltyFee).send({from: user.get('ethAddress')});
+         alert("NFT Added To Marketplace!");
             return;
     }
 
@@ -211,7 +230,55 @@ mintNft = async (metadataUrl) => {
 
 openUserItems = async () => {
     user = await Moralis.User.current();
+    
+
+    const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
+    const query = new Moralis.Query(BscTokenBalance);
+    query.equalTo("token_address", "0xf9f612f44351753c9f600cbff08e0dd0f726db6b");
+    query.equalTo("address", user.get('ethAddress'));
+    const results = await query.find();
+  //  alert("Successfully retrieved " + results.length + " balance.");
+// Do something with the returned Moralis.Object values
+for (let i = 0; i < results.length; i++) {
+  const object = results[i];
+  //alert(object.id + ' - ' + object.get('balance'));
+  const onftsBalance1 = object.get('balance');
+  //alert (onftsBalance1);
+  onftsBalanceBN = new BigNumber(onftsBalance1).div(1000000000).div(1000000000);
+
+  onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(usdPrice);
+  document.getElementById("onftsBalanceButton").innerText = `${onftsBalanceBN.dp(2)} ONFTs - ${onftsBalanceUSDBN.dp(2)} USD`;
+  
+}
+
+//const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
+//const query = new Moralis.Query(BscTokenBalance);
+query.equalTo("token_address", "0xa1afa0f5f11b5ff4700883ed76fb2baa98c94e83");
+query.equalTo("address", user.get('ethAddress'));
+const results1 = await query.find();
+//alert("Successfully retrieved " + results1.length + " balance.");
+// Do something with the returned Moralis.Object values
+for (let i = 0; i < results1.length; i++) {
+const object1 = results1[i];
+//alert(object.id + ' - ' + object.get('balance'));
+const mintTokenBalance = object1.get('balance');
+//alert (onftsBalance1);
+mintTokenBalanceBN = new BigNumber(mintTokenBalance).div(1000000000).div(1000000000);
+
+document.getElementById("mintTokenBalanceButton").innerText = `${mintTokenBalanceBN.dp(2)} TOKEN`;
+
+};
+
+
+
+
+    
     if (user){    
+
+
+
+        
+        
         $('#userItems').modal('show');
     }else{
         login();
@@ -219,7 +286,11 @@ openUserItems = async () => {
 }
 
 loadUserItems = async () => {
+
+    
+
     const ownedItems = await Moralis.Cloud.run("getUserItems");
+   
     ownedItems.forEach(item => {
         const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
         if (userItemListing) return;
@@ -266,6 +337,10 @@ renderUserItem = async (item) => {
     userItem.getElementsByTagName("input")[0].value = itemPrice ?? 1;
     userItem.getElementsByTagName("input")[0].disabled = item.askingPrice > 0;
     userItem.getElementsByTagName("button")[0].disabled = item.askingPrice > 0;
+    
+    userItem.getElementsByTagName("button")[1].disabled = item.askingPrice == null;
+    //userItem.getElementsByTagName("input")[1].disabled = item.askingPrice < 10;
+    
     userItem.getElementsByTagName("button")[0].onclick = async () => {
         user = await Moralis.User.current();
         if (!user){
@@ -304,8 +379,9 @@ renderItem = (item) => {
     itemForSale.getElementsByTagName("p")[0].innerText = item.description;
     
     let itemlol = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
-    itemForSale.getElementsByTagName("button")[0].innerText = `Buy for ${itemlol} $ONFTs`;
-    
+    let convertedToUSDPrice = new BigNumber(usdPrice).times(itemlol);
+    itemForSale.getElementsByTagName("button")[0].innerText = `Buy for ${itemlol} ONFTs`;
+    itemForSale.getElementsByTagName("button")[1].innerText = `${convertedToUSDPrice} $USD`;
     itemForSale.getElementsByTagName("button")[0].onclick = () => buyItem(item);
     itemForSale.id = `item-${item.uid}`;
     itemsForSale.appendChild(itemForSale);
@@ -337,12 +413,21 @@ ensureMarketplaceIsApproved = async (tokenId, tokenAddress) => {
 
 ensurePaymentTokenIsApproved = async (tokenAddress, amount) => {
     user = await Moralis.User.current();
-    //new BN(9999999999999999999999999999999*10**18).toString();
     const userAddress = user.get('ethAddress');
     const contract = new web3.eth.Contract(paymentTokenContractAbi, tokenAddress);
     const approvedAddress = await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, web3.utils.toWei('1', 'ether')).call({from: userAddress});
     if (approvedAddress != PAYMENT_TOKEN_ADDRESS){
         await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, web3.utils.toWei('1', 'tether')).send({from: userAddress});
+    }
+}
+
+ensureMintTokenIsApproved = async (tokenAddress, amount) => {
+    user = await Moralis.User.current();
+    const userAddress = user.get('ethAddress');
+    const contract = new web3.eth.Contract(mintTokenContractAbi, tokenAddress);
+    const approvedAddress = await contract.methods.approve(TOKEN_CONTRACT_ADDRESS, web3.utils.toWei('1', 'ether')).call({from: userAddress});
+    if (approvedAddress != MINT_TOKEN_ADDRESS){
+        await contract.methods.approve(TOKEN_CONTRACT_ADDRESS, web3.utils.toWei('1', 'tether')).send({from: userAddress});
     }
 }
 
@@ -378,7 +463,8 @@ const userUsernameField = document.getElementById("txtUsername");
 const userEmailField = document.getElementById("txtEmail");
 const userAvatarImg = document.getElementById("imgAvatar");
 const userAvatarFile = document.getElementById("fileAvatar");
-
+const onftsBalanceButton = document.getElementById("onftsBalanceButton");
+        
 document.getElementById("btnCloseUserInfo").onclick = () => hideElement(userInfo);
 document.getElementById("btnLogout").onclick = logout;
 document.getElementById("btnSaveUserInfo").onclick = saveUserInfo;
@@ -388,10 +474,7 @@ const createItemForm = document.getElementById("createItem");
 
 const createItemNameField = document.getElementById("txtCreateItemName");
 const createItemDescriptionField = document.getElementById("txtCreateItemDescription");
-const createItemPriceFieldSn = document.getElementById("numCreateItemPrice");
-
-// Set DECIMAL_PLACES for the original BigNumber constructor
-const createItemPriceField = new BigNumber(createItemPriceFieldSn).toFixed(18);
+const createItemPriceField = document.getElementById("numCreateItemPrice");
 const createItemStatusField = document.getElementById("selectCreateItemStatus");
 const createItemFile = document.getElementById("fileCreateItemFile");
 document.getElementById("btnCloseCreateItem").onclick = () => hideElement(createItemForm);
@@ -400,6 +483,8 @@ document.getElementById("btnCreateItem").onclick = createItem;
 // User items
 const userItemsSection = document.getElementById("userItems");
 const userItems = document.getElementById("userItemsList");
+
+
 document.getElementById("btnCloseUserItems").onclick = () => hideElement(userItemsSection);
 const openUserItemsButton = document.getElementById("btnMyItems");
 openUserItemsButton.onclick = openUserItems;
@@ -410,6 +495,6 @@ const marketplaceItemTemplate = initTemplate("marketplaceItemTemplate");
 
 // Items for sale
 const itemsForSale = document.getElementById("itemsForSale");
-
+var   usdPrice = new BigNumber(0.0002);
 
 init();
