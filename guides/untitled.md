@@ -1,2 +1,2 @@
-# Untitled
+# How to Buy Token
 
