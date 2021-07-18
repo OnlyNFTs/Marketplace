@@ -1,7 +1,7 @@
 Moralis.initialize("kjD0iZDa6qnqTsIN7NNyt2zMcDIPkf8DuELBhUxt");
 Moralis.serverURL = 'https://2xpqa1mlwfdh.usemoralis.com:2053/server';
 
-const TOKEN_CONTRACT_ADDRESS = "0x0F41cb1E0FeAb5b79F90E4384fE54fE375b73741";
+const TOKEN_CONTRACT_ADDRESS = "0x19ca0391CC2085c6608ED12d22Afcfc9c55c15D3";
 const MARKETPLACE_CONTRACT_ADDRESS = "0x56Ee024c090b102d66323161F69A58F665f6DC8e";
 const PAYMENT_TOKEN_ADDRESS = "0xF9f612F44351753C9F600cbFf08e0dd0F726DB6B";
 const MINT_TOKEN_ADDRESS = "0xa1aFA0F5F11B5fF4700883Ed76fb2Baa98c94E83";
@@ -171,6 +171,11 @@ createItem = async () => {
 
     user = await Moralis.User.current();
     const userAddress = user.get('ethAddress');
+    await createItemRoyaltyFee.value;
+    const royaltyFee = createItemRoyaltyFee.value;
+    alert(royaltyFee);
+
+
 
     document.getElementById("btnCreateItem").disabled = 1;
     const nftFile = new Moralis.File("nftFile",createItemFile.files[0]);
@@ -183,6 +188,7 @@ createItem = async () => {
         description: createItemDescriptionField.value,
         image: nftFilePath,
         creator: userAddress,
+        royaltyFee: royaltyFee,
     };
 
     const nftFileMetadataFile = new Moralis.File("metadata.json", {base64 : btoa(JSON.stringify(metadata))});
@@ -190,7 +196,7 @@ createItem = async () => {
 
     const nftFileMetadataFilePath = nftFileMetadataFile.ipfs();
     await ensureMintTokenIsApproved(MINT_TOKEN_ADDRESS);
-    const nftId = await mintNft(nftFileMetadataFilePath);
+    const nftId = await mintNft(nftFileMetadataFilePath, royaltyFee);
 
     
 
@@ -206,9 +212,10 @@ createItem = async () => {
             let test1 = createItemPriceField.value;
             let askingPriceBN = new BigNumber(test1).times(1000000000).times(1000000000);
             let creator = userAddress;
+            let royaltyFee = createItemRoyaltyFee.value;
             // let royaltyPriceBN = new Bignumber(askingPriceBN).div(10);
             // let finalPriceBN = new Bignumber(askingPriceBN).sub(royaltyPriceBN);
-            let royaltyFee = 10;
+           //let royaltyFee = 10;
             // //await web3.fromWei(userItem.getElementsByTagName("input")[0].value.toString(tests1), "ether")
          await marketplaceContract.methods.addItemToMarket(nftId, TOKEN_CONTRACT_ADDRESS, askingPriceBN, creator, royaltyFee).send({from: user.get('ethAddress')});
          alert("NFT Added To Marketplace!");
@@ -218,8 +225,8 @@ createItem = async () => {
     
 }
 
-mintNft = async (metadataUrl) => {
-    const receipt = await tokenContract.methods.createItem(metadataUrl).send({from: ethereum.selectedAddress});
+mintNft = async (metadataUrl, RoyaltyFee) => {
+    const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee).send({from: ethereum.selectedAddress});
     console.log(receipt);
     return receipt.events.Transfer.returnValues.tokenId;
 }
@@ -325,7 +332,9 @@ renderUserItem = async (item) => {
     userItem.getElementsByTagName("h5")[0].innerText = item.name;
     userItem.getElementsByTagName("p")[0].innerText = item.description; 
     userItem.getElementsByTagName("h6")[0].innerText = "Creator";
-    userItem.getElementsByTagName("p")[1].innerText = item.creator;    
+    userItem.getElementsByTagName("p")[1].innerText = item.creator;
+
+    userItem.getElementsByTagName("p")[2].innerText = item.royaltyFee;    
     itemPrice = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
     userItem.getElementsByTagName("input")[0].value = itemPrice ?? 1;
     userItem.getElementsByTagName("input")[0].disabled = item.askingPrice > 0;
@@ -348,7 +357,7 @@ renderUserItem = async (item) => {
         let creator = item.creator;
         // let royaltyPriceBN = new Bignumber(askingPriceBN).div(10);
         // let finalPriceBN = new Bignumber(askingPriceBN).sub(royaltyPriceBN);
-        let royaltyFee = 10;
+        let royaltyFee = item.royaltyFee;
         // //await web3.fromWei(userItem.getElementsByTagName("input")[0].value.toString(tests1), "ether")
      await marketplaceContract.methods.addItemToMarket(item.tokenId, item.tokenAddress, askingPriceBN, creator, royaltyFee).send({from: user.get('ethAddress')});
      alert("NFT Added To Marketplace!");
@@ -366,11 +375,13 @@ renderItem = (item) => {
         itemForSale.getElementsByTagName("img")[0].alt = item.sellerUsername;
      
     }
-
+    itemForSale.getElementsByTagName("p")[0].innerText = item.sellerUsername;
     itemForSale.getElementsByTagName("img")[1].src = item.image;
     itemForSale.getElementsByTagName("img")[1].alt = item.name;
     itemForSale.getElementsByTagName("h5")[0].innerText = item.name;
-    itemForSale.getElementsByTagName("p")[0].innerText = item.description;
+    itemForSale.getElementsByTagName("h6")[0].innerText = "Description:";
+    itemForSale.getElementsByTagName("p")[1].innerText = item.description;
+    itemForSale.getElementsByTagName("p")[2].innerText = `RoyaltyFee ${item.royaltyFee} %`;
     
     let itemlol = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
     let convertedToUSDPrice = new BigNumber(usdPrice).times(itemlol);
@@ -391,6 +402,7 @@ getAndRenderItemData = (item, renderFunction) => {
         item.description = data.description;
         item.image = data.image;
         item.creator = data.creator;
+        item.royaltyFee = data.royaltyFee;
         renderFunction(item);
     })
 }
@@ -478,6 +490,7 @@ const createItemForm = document.getElementById("createItem");
 const createItemNameField = document.getElementById("txtCreateItemName");
 const createItemDescriptionField = document.getElementById("txtCreateItemDescription");
 const createItemPriceField = document.getElementById("numCreateItemPrice");
+const createItemRoyaltyFee = document.getElementById("numCreateRoyaltyFee");
 const createItemStatusField = document.getElementById("selectCreateItemStatus");
 const createItemFile = document.getElementById("fileCreateItemFile");
 document.getElementById("btnCloseCreateItem").onclick = () => hideElement(createItemForm);
