@@ -12,7 +12,7 @@ const cover = document.querySelector('#cover');
 const songs = ['diamonds', 'pumpitup']
 
 // Keep track of songs
-let songIndex = 1
+let songIndex = 0
 
 //Load a song of dom
 loadSong(songs[songIndex])
