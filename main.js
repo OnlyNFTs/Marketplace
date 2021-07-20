@@ -1,5 +1,7 @@
-Moralis.initialize("kjD0iZDa6qnqTsIN7NNyt2zMcDIPkf8DuELBhUxt");
-Moralis.serverURL = 'https://2xpqa1mlwfdh.usemoralis.com:2053/server';
+
+
+Moralis.initialize("j9J7gTh6yD6WzYOu9bapoYp5vXKUNJejxPfvgin7");
+Moralis.serverURL = 'https://djffuhus7tly.usemoralis.com:2053/server';
 
 const TOKEN_CONTRACT_ADDRESS = "0x19ca0391CC2085c6608ED12d22Afcfc9c55c15D3";
 const MARKETPLACE_CONTRACT_ADDRESS = "0x56Ee024c090b102d66323161F69A58F665f6DC8e";
@@ -9,12 +11,28 @@ const MINT_TOKEN_ADDRESS = "0xa1aFA0F5F11B5fF4700883Ed76fb2Baa98c94E83";
 
 init = async () => {
     hideElement(userItemsSection);
+    hideElement(musicPlayer);
+
+ window.addEventListener('load', function() {
+  if (typeof web3 !== 'undefined') {
+    console.log('web3 is enabled')
+    if (web3.currentProvider.isMetaMask === true) {
+      console.log('MetaMask is active')
+    } else {
+      console.log('MetaMask is not available')
+    }
+  } else {
+    alert('No Web3 Browser Has Been Detected. Please visit... And install Metamask!')
+  }
+});
     window.web3 = await Moralis.Web3.enable();
+    
     window.tokenContract = new web3.eth.Contract(tokenContractAbi, TOKEN_CONTRACT_ADDRESS);
     window.marketplaceContract = new web3.eth.Contract(marketplaceContractAbi, MARKETPLACE_CONTRACT_ADDRESS);
     window.paymentTokenContract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
     window.mintTokenContract = new web3.eth.Contract(mintTokenContractAbi, MINT_TOKEN_ADDRESS);
     initUser();
+    fetchCoinPrice();
     loadItems();
 
     
@@ -27,6 +45,67 @@ init = async () => {
     const itemsAddedSubscription = await itemsAddedQuery.subscribe();
     itemsAddedSubscription.on("create", onItemAdded);
 }
+
+
+const livecoindata_api_url = 'https://api.livecoinwatch.com/coins/single';
+const pancakeswap_api_url = 'https://api.pancakeswap.info/api/v2/tokens/0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b';
+
+fetchCoinPrice = async () => {
+// const respone = await fetch(new Request(livecoindata_api_url), {
+//     method: 'POST',
+//     headers: new Headers({
+//       'content-type': 'application/json',
+//       'x-api-key': '7c49a6ef-ab71-4f3b-8a07-6ae9220b2bd3'
+//     }),
+//     body: JSON.stringify({
+//       currency: 'USD',
+//       code: 'ONFTS',
+//       meta: true
+//     }),
+// })
+const response = await fetch(pancakeswap_api_url)
+.then((response) => {
+    return response.json();
+})
+.then((data) => {
+    //console.log("DATA IS", data);
+    //console.log
+    //var onftsPrice = data.price;
+    var onftsApiData = data.data;
+    onftsPrice = onftsApiData.price;
+    onftsPriceBN = new BigNumber(onftsPrice);
+   // alert(onftsPrice);
+    //console.log(onftsApiData.price);
+    document.getElementById("onftspricebutton").innerText = `$${onftsPriceBN.dp(6)}`;
+})
+//.then((onftsPrice) = console.log(onftsPrice))
+//alert(onftsPrice)
+//for (let i = 0; i < data.length; i++) {
+//    const object1 = data[i];
+ //   alert(object1.rate)
+  //  const priceoftoken = object1.get('rate');
+ ///   console.log(priceoftoken);}
+}
+
+// coinPrice = await fetch(new Request('https://api.livecoinwatch.com/coins/single'), {
+//   method: 'POST',
+//   headers: new Headers({
+//     'content-type': 'application/json',
+//     'x-api-key': '7c49a6ef-ab71-4f3b-8a07-6ae9220b2bd3'
+//   }),
+//   body: JSON.stringify({
+//     currency: 'USD',
+//     code: 'ETH',
+//     meta: true
+//   }),
+// });
+// console.log(Request);
+// alert(Request);
+
+
+
+
+
 
 BigNumber.config({
     DECIMAL_PLACES: 2,
@@ -243,7 +322,7 @@ openUserItems = async () => {
         query.equalTo("token_address", "0xf9f612f44351753c9f600cbff08e0dd0f726db6b");
         query.equalTo("address", user.get('ethAddress'));
         const results = await query.find();
-      //  alert("Successfully retrieved " + results.length + " balance.");
+        //alert("Successfully retrieved " + results.length + " balance.");
     // Do something with the returned Moralis.Object values
     for (let i = 0; i < results.length; i++) {
       const object = results[i];
@@ -252,10 +331,10 @@ openUserItems = async () => {
       //alert (onftsBalance1);
       onftsBalanceBN = new BigNumber(onftsBalance1).div(1000000000).div(1000000000);
     
-      onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(usdPrice);
+      onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(onftsPrice);
       document.getElementById("onftsBalanceButton").innerText = `${onftsBalanceBN.dp(2)} ONFTs - ${onftsBalanceUSDBN.dp(2)} USD`;
       
-    }
+    };
     
     //const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
     //const query = new Moralis.Query(BscTokenBalance);
@@ -375,7 +454,7 @@ renderItem = (item) => {
         itemForSale.getElementsByTagName("img")[0].alt = item.sellerUsername;
      
     }
-    itemForSale.getElementsByTagName("p")[0].innerText = item.sellerUsername;
+    itemForSale.getElementsByTagName("p")[0].innerText = item.symbol;
     itemForSale.getElementsByTagName("img")[1].src = item.image;
     itemForSale.getElementsByTagName("img")[1].alt = item.name;
     itemForSale.getElementsByTagName("h5")[0].innerText = item.name;
@@ -384,10 +463,11 @@ renderItem = (item) => {
     itemForSale.getElementsByTagName("p")[2].innerText = `RoyaltyFee ${item.royaltyFee} %`;
     
     let itemlol = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
-    let convertedToUSDPrice = new BigNumber(usdPrice).times(itemlol);
-    itemForSale.getElementsByTagName("button")[0].innerText = `Buy for ${itemlol} ONFTs`;
-    itemForSale.getElementsByTagName("button")[1].innerText = `${convertedToUSDPrice} $USD`;
+    let convertedToUSDPrice = new BigNumber(onftsPrice).times(itemlol);
+    itemForSale.getElementsByTagName("button")[0].innerText = `Buy ${itemlol} ONFTs`;
+    itemForSale.getElementsByTagName("button")[1].innerText = `${convertedToUSDPrice.dp(2)} $USD`;
     itemForSale.getElementsByTagName("button")[0].onclick = () => buyItem(item);
+    itemForSale.getElementsByTagName("a")[3].innerText = `Royalties ${item.royaltyFee}%`;
     itemForSale.id = `item-${item.uid}`;
     itemsForSale.appendChild(itemForSale);
 }
@@ -496,12 +576,17 @@ const createItemFile = document.getElementById("fileCreateItemFile");
 document.getElementById("btnCloseCreateItem").onclick = () => hideElement(createItemForm);
 document.getElementById("btnCreateItem").onclick = createItem;
 
+//Music Player
+const musicPlayer = document.getElementById("musicPlayer")
+document.getElementById("secretbutton").onclick = () => $('#musicPlayer').modal('show');
+//$('#userItems').modal('show');
 // User items
 const userItemsSection = document.getElementById("userItems");
 const userItems = document.getElementById("userItemsList");
 
 
 document.getElementById("btnCloseUserItems").onclick = () => hideElement(userItemsSection);
+
 const openUserItemsButton = document.getElementById("btnMyItems");
 openUserItemsButton.onclick = openUserItems;
 
@@ -512,5 +597,6 @@ const marketplaceItemTemplate = initTemplate("marketplaceItemTemplate");
 // Items for sale
 const itemsForSale = document.getElementById("itemsForSale");
 var   usdPrice = new BigNumber(0.000025);
+
 
 init();
