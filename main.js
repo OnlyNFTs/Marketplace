@@ -42,7 +42,7 @@ init = async () => {
    }
  });
  if (typeof web3 !== 'undefined') {
-    window.web3 = await Moralis.Web3.enable({provider: 'walletconnect, trustwallet'});}
+    window.web3 = await Moralis.Web3.enable({provider: 'walletconnect, trustwallet'});
     if (web3.currentProvider.isMetaMask === true) {
     window.web3 = await Moralis.Web3.enable({provider: 'metmask'});
     }
