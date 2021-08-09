@@ -320,6 +320,13 @@ openCreateItem = async () => {
             document.getElementById("mint-fee").innerText = mintFee;
             document.getElementById("mint-balance").innerText = onftsBalanceBN;
             createItemCreator.disabled = 1;
+            if (await adminStatus == true) {
+
+                showElement(devSwitchButton);
+                devSwitch.disabled = 0;
+    
+    
+            }
            }
            createItemCreator.value = await user.get('ethAddress');
            createNFTValue = "0";
@@ -629,7 +636,6 @@ renderUserItem = async (item) => {
         let askingPriceBN = new BigNumber(test1).times(1000000000).times(1000000000);
      await marketplaceContract.methods.addItemToMarket(item.tokenId, item.tokenAddress, askingPriceBN, item.creator, item.royaltyFee, item.referrer).send({from: user.get('ethAddress')});
      alert("NFT Added To Marketplace!");
-     return;
     };
 
     userItem.id = `user-item-${item.tokenObjectId}`
