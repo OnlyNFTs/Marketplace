@@ -42,11 +42,13 @@ init = async () => {
    }
  });
  if (typeof web3 !== 'undefined') {
-     alert(1);
-    window.web3 = await Moralis.Web3.enable({provider: 'walletconnect'});
+    
     if (web3.currentProvider.isMetaMask === true) {
         alert(2);
     window.web3 = await Moralis.Web3.enable({provider: 'metmask'});
+    }else{
+        alert(1);
+        window.web3 = await Moralis.Web3.enable({provider: 'walletconnect'});
     }
  } else {
     alert(3);
