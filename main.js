@@ -188,7 +188,7 @@ initUser = async () => {
 login = async () => {
     try {
         
-        if (typeof web3 !== 'undefined') {
+        if (typeof web3 === 'undefined') {
         window.web3 = await Moralis.Web3.enable({provider: 'walletconnect'});
         await Moralis.Web3.authenticate({provider: 'walletconnect'});
         alert("Loged in Successfully!");
