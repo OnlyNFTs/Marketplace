@@ -38,11 +38,13 @@ init = async () => {
    } else {
      alert('No Web3 Browser Has Been Detected. Please visit https://metamask.io/download And install Metamask!');
      //window.web3 = Moralis.Web3.enable({provider: 'walletconnect'});
-     console.log(web3.currentProvider);
+     
    }
  });
- console.log(web3.currentProvider);
-    window.web3 = await Moralis.Web3.enable({provider: 'walletconnect, trustwallet, metamask'});
+ if (typeof web3 === 'undefined') {
+    window.web3 = await Moralis.Web3.enable({provider: 'walletconnect'});
+ } else {
+    window.web3 = await Moralis.Web3.enable({provider: 'walletconnect, trustwallet, metamask'});}
     window.tokenContract = new web3.eth.Contract(tokenContractAbi, TOKEN_CONTRACT_ADDRESS);
     window.marketplaceContract = new web3.eth.Contract(marketplaceContractAbi, MARKETPLACE_CONTRACT_ADDRESS);
     window.paymentTokenContract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
