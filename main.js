@@ -48,11 +48,11 @@ init = async () => {
     window.web3 = await Moralis.Web3.enable({provider: 'metmask'});
     }else{
         alert(1);
-        window.web3 = await Moralis.Web3.enable({provider: 'walletconnect'});
+        window.web3 = await Moralis.Web3.enable({provider: 'trustwallet'});
     }
  } else {
     alert(3);
-    window.web3 = await Moralis.Web3.authenticate({provider: 'walletconnect'});
+    window.web3 = await Moralis.Web3.enable({provider: 'walletconnect'});
     }
     window.tokenContract = new web3.eth.Contract(tokenContractAbi, TOKEN_CONTRACT_ADDRESS);
     window.marketplaceContract = new web3.eth.Contract(marketplaceContractAbi, MARKETPLACE_CONTRACT_ADDRESS);
