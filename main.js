@@ -1,21 +1,21 @@
-Moralis.initialize("j9J7gTh6yD6WzYOu9bapoYp5vXKUNJejxPfvgin7");
-Moralis.serverURL = 'https://djffuhus7tly.usemoralis.com:2053/server';
+Moralis.initialize("Yt8nY74340sEhXEWlVCASjPTq5kcBMg4pzqu7iox");
+Moralis.serverURL = 'https://uctux2sj3ina.moralisweb3.com:2053/server';
 
 // Contract Addresses
-const TOKEN_CONTRACT_ADDRESS = "0xDc637A21d38d150778F59Eef2Ec2987e9cFDB144";
-const MARKETPLACE_CONTRACT_ADDRESS = "0x5038249BbCA72DD0b0B6936F9a9C2594E149f8A2";
-const PAYMENT_TOKEN_ADDRESS = "0xf9f612f44351753c9f600cbff08e0dd0f726db6b";
+const TOKEN_CONTRACT_ADDRESS = "0x67A3C573bE9edca87f5097e3A3F8f1111E51a6cd";
+const MARKETPLACE_CONTRACT_ADDRESS = "0x09a13f95bBcDf87C92412ba42d849Bb852C8795e";
+const PAYMENT_TOKEN_ADDRESS = "0x134BBB94Fc5a92c854cD22B783FfE9E1C02d761B";
 //const MINT_TOKEN_ADDRESS = "0xa1aFA0F5F11B5fF4700883Ed76fb2Baa98c94E83";
-const MINT_TOKEN_ADDRESS = "0xf9f612f44351753c9f600cbff08e0dd0f726db6b";
-const EARLY_HOLDERS_NFT_ADDRESS = "0x1E2DA509D7bDfA8eEb4a9D8E40B509Fb2d68DBe8";
+const MINT_TOKEN_ADDRESS = "0x134BBB94Fc5a92c854cD22B783FfE9E1C02d761B";
+const EARLY_HOLDERS_NFT_ADDRESS = "0x5692AB9e489e9c88d72431ce572c31061BbC7531";
 //const EARLY_HOLDERS_NFT_ADDRESS = "0x1E2DA509D7bDfA8eEb4a9D8E40B509Fb2d68DBe8";
 
 // Fees/Requirements
 onftsHoldersMintRequirements = 1000;
 mintFee = 1000;
-onftsEarlyHoldersNFTAddress = "0x1e2da509d7bdfa8eeb4a9d8e40b509fb2d68dbe8";
-onftsNSFWAddress = "0xdc637a21d38d150778f59eef2ec2987e9cfdb144";
-onftsAddress = "0xf9f612f44351753c9f600cbff08e0dd0f726db6b";
+onftsEarlyHoldersNFTAddress = "0x5692ab9e489e9c88d72431ce572c31061bbc7531";
+onftsNSFWAddress = "0x67a3c573be9edca87f5097e3a3f8f1111e51a6cd";
+onftsAddress = "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b";
 
 
 // Initialise
