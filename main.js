@@ -33,7 +33,7 @@ init = async () => {
        window.web3 = Moralis.Web3.enable({provider: 'metamask'});
      } else {
        console.log('MetaMask is not available');
-       window.web3 = Moralis.Web3.enable({provider: 'walletconnect'});
+       window.web3 = Moralis.Web3.enable({provider: 'walletconnect, trustwallet'});
      }
    } else {
      alert('No Web3 Browser Has Been Detected. Please visit https://metamask.io/download And install Metamask!');
