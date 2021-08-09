@@ -187,9 +187,18 @@ initUser = async () => {
 //Log In
 login = async () => {
     try {
-        await Moralis.Web3.authenticate({provider: 'walletconnect, trustwallet, metamask'});
+        
+        if (typeof web3 !== 'undefined') {
+        await Moralis.Web3.authenticate({provider: 'walletconnect'});
         alert("Loged in Successfully!");
         initUser();
+        } else {
+            await Moralis.Web3.authenticate({provider: 'walletconnect, trustwallet, metamask'});
+            alert("Loged in Successfully!");
+            initUser(); 
+        }
+
+
     } catch (error) {
         alert(error)
     }
