@@ -36,7 +36,7 @@ init = async () => {
        //window.web3 = Moralis.Web3.enable({provider: 'walletconnect, trustwallet'});
      }
    } else {
-     alert('No Web3 Browser Has Been Detected. Please visit https://metamask.io/download And install Metamask!');
+     //alert('No Web3 Browser Has Been Detected. Please visit https://metamask.io/download And install Metamask!');
      //window.web3 = Moralis.Web3.enable({provider: 'walletconnect'});
      
    }
@@ -44,15 +44,15 @@ init = async () => {
  if (typeof web3 !== 'undefined') {
     
     if (web3.currentProvider.isMetaMask === true) {
-        alert(2);
+        //alert(2);
     window.web3 = await Moralis.Web3.enable({provider: 'metmask'});
     }else{
-        alert(1);
+        //alert(1);
         window.web3 = await Moralis.Web3.enable({provider: 'trustwallet'});
     }
  } else {
-    alert(3);
-    window.web3 = await Moralis.Web3.enable({provider: 'walletconnect'});
+    //alert(3);
+    // window.web3 = await Moralis.Web3.enable({provider: 'walletconnect'});
     }
     window.tokenContract = new web3.eth.Contract(tokenContractAbi, TOKEN_CONTRACT_ADDRESS);
     window.marketplaceContract = new web3.eth.Contract(marketplaceContractAbi, MARKETPLACE_CONTRACT_ADDRESS);
@@ -60,10 +60,10 @@ init = async () => {
     window.mintTokenContract = new web3.eth.Contract(mintTokenContractAbi, MINT_TOKEN_ADDRESS);
     window.earlyHoldersContract = new web3.eth.Contract(earlyHoldersContractAbi, EARLY_HOLDERS_NFT_ADDRESS);
     fetchCoinPrice();
-    initUser();
     
-
+    initUser();
     loadItems();
+    
     const soldItemsQuery = new Moralis.Query('SoldItemsNSFW');
     const soldItemsSubscription = await soldItemsQuery.subscribe();
     soldItemsSubscription.on("create", onItemSold);
