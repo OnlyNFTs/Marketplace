@@ -41,10 +41,12 @@ init = async () => {
      
    }
  });
- if (typeof web3 === 'undefined') {
-    window.web3 = await Moralis.Web3.enable({provider: 'walletconnect'});
+ if (typeof web3 !== 'undefined') {
+    if (web3.currentProvider.isMetaMask === true) {
+    window.web3 = await Moralis.Web3.enable({provider: 'metmask'});
+    }
  } else {
-    window.web3 = await Moralis.Web3.enable({provider: 'walletconnect, trustwallet, metamask'});}
+    window.web3 = await Moralis.Web3.enable({provider: 'walletconnect'});}
     window.tokenContract = new web3.eth.Contract(tokenContractAbi, TOKEN_CONTRACT_ADDRESS);
     window.marketplaceContract = new web3.eth.Contract(marketplaceContractAbi, MARKETPLACE_CONTRACT_ADDRESS);
     window.paymentTokenContract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
@@ -195,12 +197,14 @@ initUser = async () => {
 login = async () => {
     try {
         
-        if (typeof web3 === 'undefined') {
-        await Moralis.Web3.authenticate({provider: 'walletconnect'});
+        if (typeof web3 !== 'undefined') {
+            if (web3.currentProvider.isMetaMask === true) {
+        await Moralis.Web3.authenticate({provider: 'metmask'});
         alert("Loged in Successfully!");
         initUser();
+            }
         } else {
-            await Moralis.Web3.authenticate({provider: 'walletconnect, trustwallet, metamask'});
+            await Moralis.Web3.authenticate({provider: 'walletconnect'});
             alert("Loged in Successfully!");
             initUser(); 
         }
