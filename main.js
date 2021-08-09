@@ -25,18 +25,18 @@ init = async () => {
     hideElement(createItemForm);
     hideElement(loadingMintForm);
     hideElement(musicPlayer);
-//     window.addEventListener('load', function() {
-//     if (typeof web3 !== 'undefined') {
-//     console.log('web3 is enabled')
-//     if (web3.currentProvider.isMetaMask === true) {
-//       console.log('MetaMask is active')
-//     } else {
-//       console.log('MetaMask is not available')
-//     }
-//   } else {
-//     alert('No Web3 Browser Has Been Detected. Please visit https://metamask.io/download And install Metamask!')
-//   }
-// });
+     window.addEventListener('load', function() {
+     if (typeof web3 !== 'undefined') {
+     console.log('web3 is enabled')
+     if (web3.currentProvider.isMetaMask === true) {
+       console.log('MetaMask is active')
+     } else {
+       console.log('MetaMask is not available')
+     }
+   } else {
+     alert('No Web3 Browser Has Been Detected. Please visit https://metamask.io/download And install Metamask!')
+   }
+ });
     window.web3 = await Moralis.Web3.enable({provider: 'walletconnect, trustwallet, metamask'});
     window.tokenContract = new web3.eth.Contract(tokenContractAbi, TOKEN_CONTRACT_ADDRESS);
     window.marketplaceContract = new web3.eth.Contract(marketplaceContractAbi, MARKETPLACE_CONTRACT_ADDRESS);
