@@ -29,15 +29,17 @@ init = async () => {
      if (typeof web3 !== 'undefined') {
      console.log('web3 is enabled')
      if (web3.currentProvider.isMetaMask === true) {
-       console.log('MetaMask is active')
+       console.log('MetaMask is active');
+       window.web3 = await Moralis.Web3.enable({provider: 'metamask'});
      } else {
-       console.log('MetaMask is not available')
+       console.log('MetaMask is not available');
+       window.web3 = await Moralis.Web3.enable({provider: 'walletconnect'});
      }
    } else {
      alert('No Web3 Browser Has Been Detected. Please visit https://metamask.io/download And install Metamask!')
    }
  });
-    window.web3 = await Moralis.Web3.enable({provider: 'walletconnect, trustwallet, metamask'});
+    //window.web3 = await Moralis.Web3.enable({provider: 'walletconnect, trustwallet, metamask'});
     window.tokenContract = new web3.eth.Contract(tokenContractAbi, TOKEN_CONTRACT_ADDRESS);
     window.marketplaceContract = new web3.eth.Contract(marketplaceContractAbi, MARKETPLACE_CONTRACT_ADDRESS);
     window.paymentTokenContract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
