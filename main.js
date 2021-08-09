@@ -55,10 +55,10 @@ init = async () => {
     fetchCoinPrice();
 
     loadItems();
-    const soldItemsQuery = new Moralis.Query('SoldItemsRoylt');
+    const soldItemsQuery = new Moralis.Query('SoldItemsNSFW');
     const soldItemsSubscription = await soldItemsQuery.subscribe();
     soldItemsSubscription.on("create", onItemSold);
-    const itemsAddedQuery = new Moralis.Query('ItemsForSaleRoylt');
+    const itemsAddedQuery = new Moralis.Query('ItemsForSaleNSFW');
     const itemsAddedSubscription = await itemsAddedQuery.subscribe();
     itemsAddedSubscription.on("create", onItemAdded);
     const removedItemsQuery = new Moralis.Query('removedItems');
