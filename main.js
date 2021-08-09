@@ -452,7 +452,7 @@ createItem = async () => {
         OnlyNFTs.set('creator_address', creator);
         OnlyNFTs.set('royaltyFee', royaltyFee);
         OnlyNFTs.set('token_address', onftsNSFWAddress);
-        OnlyNFTs.set('token_id', 1);
+        OnlyNFTs.set('token_id', nftId);
         OnlyNFTs.set('token_uri', nftFileMetadataFilePath);
         OnlyNFTs.set('token_symbol', symbol);
         OnlyNFTs.set('token_name', name);
