@@ -205,11 +205,15 @@ login = async () => {
     try {
         
         if (typeof web3 !== 'undefined') {
-            await Moralis.Web3.authenticate({provider: 'walletconnect'});
+            
             if (web3.currentProvider.isMetaMask === true) {
-        await Moralis.Web3.authenticate({provider: 'metmask'});
+        await Moralis.Web3.authenticate({provider: 'metamask'});
         alert("Loged in Successfully!");
         initUser();
+            }else {
+                await Moralis.Web3.authenticate({provider: 'metamask'});
+        alert("Loged in Successfully!");
+        initUser(); 
             }
         } else {
             await Moralis.Web3.authenticate({provider: 'walletconnect'});
