@@ -690,8 +690,8 @@ renderItem = (item) => {
     itemForSale.getElementsByTagName("p")[1].innerText = item.description;
     itemForSale.getElementsByTagName("p")[2].innerText = `RoyaltyFee ${item.royaltyFee} %`;
     
-    let itemlol = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
-    let convertedToUSDPrice = new BigNumber(onftsPrice).times(itemlol);
+    let itemlol = await new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
+    let convertedToUSDPrice = await new BigNumber(onftsPrice).times(itemlol);
     itemForSale.getElementsByTagName("button")[0].innerText = `BUY ${itemlol} ONFTs`;
     itemForSale.getElementsByTagName("button")[1].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
     itemForSale.getElementsByTagName("button")[0].onclick = async () =>  buyItem(item);
