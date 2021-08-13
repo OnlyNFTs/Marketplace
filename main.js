@@ -59,7 +59,7 @@ init = async () => {
     window.paymentTokenContract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
     window.mintTokenContract = new web3.eth.Contract(mintTokenContractAbi, MINT_TOKEN_ADDRESS);
     window.earlyHoldersContract = new web3.eth.Contract(earlyHoldersContractAbi, EARLY_HOLDERS_NFT_ADDRESS);
-    fetchCoinPrice();
+    await fetchCoinPrice();
     
     initUser();
     loadItems();
@@ -86,8 +86,8 @@ const response = await fetch(pancakeswap_api_url)
     return response.json();
 })
 .then((data) => {
-    var onftsApiData = await data.data;
-    onftsPrice = await onftsApiData.price;
+    var onftsApiData = data.data;
+    onftsPrice = onftsApiData.price;
     onftsPriceBN = new BigNumber(onftsPrice);
     document.getElementById("onftspricebutton").innerText = `$${onftsPriceBN.dp(6)}`;
 })
