@@ -86,8 +86,8 @@ const response = await fetch(pancakeswap_api_url)
     return response.json();
 })
 .then((data) => {
-    var onftsApiData = data.data;
-    onftsPrice = onftsApiData.price;
+    var onftsApiData = await data.data;
+    onftsPrice = await onftsApiData.price;
     onftsPriceBN = new BigNumber(onftsPrice);
     document.getElementById("onftspricebutton").innerText = `$${onftsPriceBN.dp(6)}`;
 })
@@ -690,8 +690,8 @@ renderItem = (item) => {
     itemForSale.getElementsByTagName("p")[1].innerText = item.description;
     itemForSale.getElementsByTagName("p")[2].innerText = `RoyaltyFee ${item.royaltyFee} %`;
     
-    let itemlol = await new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
-    let convertedToUSDPrice = await new BigNumber(onftsPrice).times(itemlol);
+    let itemlol = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
+    let convertedToUSDPrice = new BigNumber(onftsPrice).times(itemlol);
     itemForSale.getElementsByTagName("button")[0].innerText = `BUY ${itemlol} ONFTs`;
     itemForSale.getElementsByTagName("button")[1].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
     itemForSale.getElementsByTagName("button")[0].onclick = async () =>  buyItem(item);
