@@ -61,8 +61,8 @@ init = async () => {
     window.earlyHoldersContract = new web3.eth.Contract(earlyHoldersContractAbi, EARLY_HOLDERS_NFT_ADDRESS);
     await fetchCoinPrice();
     
-    initUser();
-    loadItems();
+    await initUser();
+    await loadItems();
     
     const soldItemsQuery = new Moralis.Query('SoldItemsNSFW');
     const soldItemsSubscription = await soldItemsQuery.subscribe();
@@ -411,8 +411,8 @@ createItem = async () => {
     await createItemRoyaltyFee.value;
     loadingProgress.style.width = 10 + "%";
     const royaltyFee = createItemRoyaltyFee.value;
-    alert(userReferrerAddress);
-    alert(royaltyFee);
+    //alert(userReferrerAddress);
+    //alert(royaltyFee);
     document.getElementById("btnCreateItem").disabled = 1;
     const nftFile = new Moralis.File("nftFile",createItemFile.files[0]);
     await nftFile.saveIPFS();
@@ -436,7 +436,7 @@ createItem = async () => {
     loadingProgress.style.width = 70 + "%";
     loadingStatus.innerText = "Please confirm transaction to mint your NFT";
    
-    alert(creator);
+    //alert(creator);
     switch(createNFTValue){
 
         case "0":
