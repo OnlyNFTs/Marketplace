@@ -211,7 +211,7 @@ login = async () => {
         alert("Loged in Successfully!");
         initUser();
             }else {
-                await Moralis.Web3.authenticate({provider: 'metamask'});
+                await Moralis.Web3.authenticate({provider: 'trustwallet, metamask, walletconnect'});
         alert("Loged in Successfully!");
         initUser(); 
             }
