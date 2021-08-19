@@ -650,7 +650,7 @@ renderUserItem = async (item) => {
    // if (item.askingPrice == null) {hideElement(userItem.getElementsByTagName("button")[1]);};
    // if (item.askingPrice != null) {hideElement(userItem.getElementsByTagName("button")[2]);};
 
-    userItem.getElementsByTagName("button")[1].disabled = await item.askingPrice === null;
+    userItem.getElementsByTagName("button")[1].disabled = await item.askingPrice == null;
    userItem.getElementsByTagName("button")[2].disabled = await item.askingPrice > 0;
     userItem.getElementsByTagName("button")[1].onclick = async () => removeItem(item);
 
