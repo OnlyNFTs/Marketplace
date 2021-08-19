@@ -55,7 +55,7 @@ init = async () => {
     
      window.web3 = await Moralis.Web3.authenticate({provider: 'walletconnect'});
      window.web3 = await Moralis.Web3.enable({provider: 'walletconnect'});
-     Web3Wallet = 'walletconnect';
+     Web3Wallet = "walletconnect";
     }
     window.tokenContract = new web3.eth.Contract(tokenContractAbi, TOKEN_CONTRACT_ADDRESS);
     window.marketplaceContract = new web3.eth.Contract(marketplaceContractAbi, MARKETPLACE_CONTRACT_ADDRESS);
@@ -735,11 +735,11 @@ ensurePaymentTokenIsApproved = async (tokenAddress, amount) => {
     user = await Moralis.User.current();
     console.log(amount);
     const userAddress = user.get('ethAddress');
-    const contract = new web3.eth.Contract(paymentTokenContractAbi, tokenAddress);
-    const approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({from: userAddress});
+    const contract = new web3.eth.Contract(paymentTokenContractAbi, MARKETPLACE_CONTRACT_ADDRESS);
+    const approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({from: userAddress, provider: 'walletconnect'});
     console.log(approvedAddress);
     if (approvedAddress < amount){
-        await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({from: userAddress});
+        await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({from: userAddress, provider: 'walletconnect'});
     }
 }
 
@@ -786,7 +786,7 @@ buyItem = async (item) => {
         return;
     }
     await ensurePaymentTokenIsApproved(PAYMENT_TOKEN_ADDRESS, item.askingPrice); 
-    await marketplaceContract.methods.buyItem(item.uid).send({from: user.get('ethAddress'), provider: Web3Wallet});
+    await marketplaceContract.methods.buyItem(item.uid).send({from: user.get('ethAddress'), provider: 'Web3Wallet'});
     alert("NFT Purchased");
 }
 
