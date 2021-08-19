@@ -735,7 +735,7 @@ ensurePaymentTokenIsApproved = async (tokenAddress, amount) => {
     user = await Moralis.User.current();
     console.log(amount);
     const userAddress = user.get('ethAddress');
-    const contract = new web3.eth.Contract(paymentTokenContractAbi, MARKETPLACE_CONTRACT_ADDRESS);
+    const contract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
     const approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({from: userAddress});
     console.log(approvedAddress);
     if (approvedAddress < amount){
