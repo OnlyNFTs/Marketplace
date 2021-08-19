@@ -644,14 +644,14 @@ renderUserItem = async (item) => {
     userItem.getElementsByTagName("p")[3].innerText = item.royaltyFee;    
     itemPrice = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
     userItem.getElementsByTagName("input")[0].value = await itemPrice ?? 1;
-    userItem.getElementsByTagName("input")[0].disabled = item.askingPrice > 0;
+    userItem.getElementsByTagName("input")[0].disabled = await item.askingPrice > 0;
     //userItem.getElementsByTagName("button")[0].disabled = 1;
-    userItem.getElementsByTagName("button")[0].disabled = item.askingPrice > 0;
+    userItem.getElementsByTagName("button")[0].disabled = await item.askingPrice > 0;
    // if (item.askingPrice == null) {hideElement(userItem.getElementsByTagName("button")[1]);};
    // if (item.askingPrice != null) {hideElement(userItem.getElementsByTagName("button")[2]);};
 
-    userItem.getElementsByTagName("button")[1].disabled = item.askingPrice == null;
-   userItem.getElementsByTagName("button")[2].disabled = item.askingPrice > 0;
+    userItem.getElementsByTagName("button")[1].disabled = await item.askingPrice === null;
+   userItem.getElementsByTagName("button")[2].disabled = await item.askingPrice > 0;
     userItem.getElementsByTagName("button")[1].onclick = async () => removeItem(item);
 
     //userItem.getElementsByTagName("button")[1].disabled = item.askingPrice < 10;
