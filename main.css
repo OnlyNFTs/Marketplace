@@ -1,6 +1,9 @@
 .bg-dark {
   background: rgb(18, 18, 18) !important;
 }
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.0001) !important;
+}
 .bg-moralis {
   background: #f71485 !important;
 }
