@@ -222,7 +222,7 @@ login = async () => {
         initUser(); 
             }
         } else {
-            await Moralis.Web3.authenticate({provider: 'walletconnect'});
+            await Moralis.Web3.authenticate();
             alert("Loged in Successfully!");
             initUser(); 
         }
