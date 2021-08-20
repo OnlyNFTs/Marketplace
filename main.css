@@ -2,7 +2,7 @@
   background: rgb(18, 18, 18) !important;
 }
 
-.modal-open .card {
+.modal-open .itemsForSale {
   -webkit-filter: blur(5px) grayscale(90%);
 }
 .bg-moralis {
