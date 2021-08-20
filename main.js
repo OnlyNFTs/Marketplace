@@ -379,7 +379,7 @@ createItem = async () => {
     if (onftsBalanceBN < onftsHoldersMintRequirements) { 
         document.getElementById("btnCreateItem").disabled = 1;
         alert(`Not Enough Mint Tokens! You need atleast ${onftsHoldersMintRequirements} to mint an NFT!`);
-       return;
+        return;
     } else if (createItemFile.files.length == 0){
         alert("Please select a file!");
         return;
@@ -870,7 +870,8 @@ const openCreateItemButton = document.getElementById("btnOpenCreateItem");
 openCreateItemButton.onclick = handleOpenCreateItem;
 
 
-
+//Age Ver
+const ageVer = document.getElementById("ageVer");
 
 //  User profile
 const userInfo = document.getElementById("userInfo");
