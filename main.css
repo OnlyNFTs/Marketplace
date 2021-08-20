@@ -3,7 +3,7 @@
 }
 
 .modal-open .itemsForSale {
-  -webkit-filter: blur(1px) grayscale(90%);
+  -webkit-filter: blur(7px) grayscale(90%);
 }
 .bg-moralis {
   background: #f71485 !important;
