@@ -57,7 +57,7 @@ init = async () => {
 //      window.web3 = await Moralis.Web3.enable({provider: 'walletconnect'});
 //      Web3Wallet = "walletconnect";
 //     }
-    window.web3 = await Moralis.Web3.authenticate();
+//    window.web3 = await Moralis.Web3.authenticate();
     window.web3 = await Moralis.Web3.enable();
     window.tokenContract = new web3.eth.Contract(tokenContractAbi, TOKEN_CONTRACT_ADDRESS);
     window.marketplaceContract = new web3.eth.Contract(marketplaceContractAbi, MARKETPLACE_CONTRACT_ADDRESS);
