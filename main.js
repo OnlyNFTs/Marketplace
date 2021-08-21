@@ -214,16 +214,16 @@ login = async () => {
             
             if (web3.currentProvider.isMetaMask === true) {
         await Moralis.Web3.authenticate({provider: 'metamask'});
-        alert("Loged in Successfully!");
+        alert("Logged in Successfully!");
         initUser();
             }else {
                 await Moralis.Web3.authenticate({provider: 'trustwallet, metamask, walletconnect'});
-        alert("Loged in Successfully!");
+        alert("Logged in Successfully!");
         initUser(); 
             }
         } else {
             await Moralis.Web3.authenticate();
-            alert("Loged in Successfully!");
+            alert("Logged in Successfully!");
             initUser(); 
         }
 
