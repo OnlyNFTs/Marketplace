@@ -2,7 +2,8 @@
 
 * [Welcome to OnlyNFTs](README.md)
 * [Get Started](get-started/README.md)
-  * [Create a Wallet](get-started/create-a-wallet.md)
+  * [Create a Wallet](get-started/create-a-wallet/README.md)
+    * [MetaMask BSC Setup](get-started/create-a-wallet/metamask-bsc-setup.md)
   * [Get BNB](get-started/get-bnb.md)
   * [Get ONFTs](get-started/get-onfts.md)
   * [Connect Your Wallet to OnlyNFTs](get-started/connect-your-wallet-to-onlynfts.md)

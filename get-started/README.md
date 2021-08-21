@@ -7,7 +7,7 @@ Using anything new can be a bit of a challenge. Don't worry though, we've create
 Follow these guides to get everything set up to use OnlyNFTs, or feel free to jump to the guide you need if you've been doing okay but lost your way.
 
 [Create a Wallet  
-](create-a-wallet.md)[Get BNB  
+](create-a-wallet/)[Get BNB  
 ](get-bnb.md)[Get ONFTs  
 ](get-onfts.md)[Connect your Wallet to OnlyNFTs](connect-your-wallet-to-onlynfts.md)
 

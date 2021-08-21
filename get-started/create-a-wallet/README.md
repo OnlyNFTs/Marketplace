@@ -22,7 +22,7 @@ Smartphone/Mobile wallets allow you to access your crypto almost anywhere. Walle
 
 {% tabs %}
 {% tab title="MetaMask" %}
-![](../.gitbook/assets/image%20%281%29.png)
+![](../../.gitbook/assets/image%20%281%29.png)
 
 MetaMask is a very popular browser-based wallet plugin that supports ERC20 \(Ethereum network\) and BEP2 & BEP20 \(Binance Chain and Binance Smart Chain networks\).
 
@@ -48,7 +48,7 @@ MetaMask is a very popular browser-based wallet plugin that supports ERC20 \(Eth
 {% endtab %}
 
 {% tab title="TrustWallet" %}
-![](../.gitbook/assets/image-1-.png)
+![](../../.gitbook/assets/image-1-.png)
 
 #### ANDROID ONLY
 
@@ -80,7 +80,7 @@ Desktop wallets are available on your home computer or laptop computer. Wallets 
 
 {% tabs %}
 {% tab title="MetaMask" %}
-![](../.gitbook/assets/image%20%281%29.png)
+![](../../.gitbook/assets/image%20%281%29.png)
 
 MetaMask is a very popular browser-based wallet plugin that supports ERC20 \(Ethereum network\) by default, and BEP2 & BEP20 \(Binance Chain and Binance Smart Chain networks\) with a little work.
 
@@ -101,7 +101,7 @@ MetaMask is a very popular browser-based wallet plugin that supports ERC20 \(Eth
 * Extra information and settings may confuse beginners
 
 [**Download MetaMask**](https://metamask.io/download.html) \(Automatically detects browser\)  
-[**MetaMask Setup Guide**](https://academy.binance.com/en/articles/connecting-metamask-to-binance-smart-chain)
+[**MetaMask Setup Guide**](metamask-bsc-setup.md)
 {% endtab %}
 {% endtabs %}
 

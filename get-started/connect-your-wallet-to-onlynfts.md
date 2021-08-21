@@ -8,33 +8,11 @@
 
 To connect MetaMask to OnlyNFTs follow the steps below.
 
-## Android and iOS
+## Android and IOS
 
-1. Open MetaMask and tap on the **burger icon** in the top-left.
+* [ ] Make Sure you are connected to **Binance Smart Chain**
 
-![](../.gitbook/assets/image-5-.png)
-
-1. Tap **Settings** in the menu.
-
-![](../.gitbook/assets/image-8-.png)
-
-1. In the Settings menu, tap on **Network**.
-
-![](../.gitbook/assets/image-6-.png)
-
-1. Tap on the **Add Network** button at the bottom.
-
-![](../.gitbook/assets/image-7-.png)
-
-1. On the page that opens, type in the following details:
-
-**Network Name:** Binance Smart Chain  
-**RPC Url:** [https://bsc-dataseed.binance.org](https://bsc-dataseed.binance.org)  
-**Chain ID:** 56  
-**Symbol:** BNB  
-**Block Explorer URL:** [http://bscscan.com](http://bscscan.com)
-
-1. Once you've confirmed entry of the new network, go back to the burger menu and tap **Browser**.
+1. [ ] Once you've confirmed you are connected to **Binance Smart Chain.** Go to the burger menu and tap **Browser**.
 
 ![](../.gitbook/assets/image-9-.png)
 
