@@ -1,5 +1,7 @@
 # Welcome to OnlyNFTs
 
+![](.gitbook/assets/onlynfts-logo-2021-resize.png)
+
 {% page-ref page="get-started/" %}
 
 

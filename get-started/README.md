@@ -1,5 +1,7 @@
 # Get Started
 
+![](../.gitbook/assets/onlynfts-logo-2021-resize.png)
+
 Using anything new can be a bit of a challenge. Don't worry though, we've created a range of guides to help you get comfortable with OnlyNFTs!
 
 ## Setting up OnlyNFTs
