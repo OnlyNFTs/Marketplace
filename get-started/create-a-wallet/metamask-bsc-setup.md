@@ -41,6 +41,28 @@
 
 {% tab title="Desktop" %}
 ![](../../.gitbook/assets/desktop.jpg)
+
+
+
+## Chrome and Firefox
+
+1. [ ] Open MetaMask and click on the **network selector** at the top. By default it will show "Ethereum Mainnet". Scroll down and click **Custom RPC**.
+
+![](../../.gitbook/assets/image-2-.png)
+
+1. [ ] A window will open. Type in the details below.
+
+**Network Name:** Binance Smart Chain  
+**New RPC URL:** [https://bsc-dataseed.binance.org](https://bsc-dataseed.binance.org)  
+**Chain ID:** 56  
+**Currency Symbol \(optional\):** BNB  
+**Block Explorer URL \(optional\):** [https://bscscan.com](https://bscscan.com/)
+
+![](../../.gitbook/assets/image-3-.png)
+
+1. [ ] Make sure you've typed everything in correctly and click **Save**. Binance Smart Chain will now be one of your network options.
+
+![](../../.gitbook/assets/image-4-.png)
 {% endtab %}
 {% endtabs %}
 
