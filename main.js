@@ -1,3 +1,5 @@
+const { default: BigNumber } = require("bignumber.js");
+
 Moralis.initialize("Yt8nY74340sEhXEWlVCASjPTq5kcBMg4pzqu7iox");
 Moralis.serverURL = 'https://uctux2sj3ina.moralisweb3.com:2053/server';
 
@@ -815,7 +817,7 @@ if (user){
     query.equalTo("token_address", onftsAddress);
     query.equalTo("address", user.get('ethAddress'));
     const results = await query.find();
-
+    onftsBalanceBN = 0;
 // Do something with the returned Moralis.Object values
 for (let i = 0; i < results.length; i++) {
     const object = results[i];
