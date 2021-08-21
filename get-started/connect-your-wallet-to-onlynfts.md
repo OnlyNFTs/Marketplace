@@ -10,19 +10,14 @@ To connect MetaMask to OnlyNFTs follow the steps below.
 
 ## Android and IOS
 
-* [ ] Make Sure you are connected to **Binance Smart Chain**
+* [ ] Make Sure you are connected to [**Binance Smart Chain**](create-a-wallet/metamask-bsc-setup.md)\*\*\*\*
 
-1. [ ] Once you've confirmed you are connected to **Binance Smart Chain.** Go to the burger menu and tap **Browser**.
+1. [ ] Once you've confirmed you are connected to [**Binance Smart Chain**](create-a-wallet/metamask-bsc-setup.md)**.** Go to the burger menu and tap **Browser**.
 
 ![](../.gitbook/assets/image-9-.png)
 
-1. Type "OnlyNFTs Marketplace" into the search field and start the search. The top result will be the OnlyNFTs Marketplace. Tap to enter it.
+1. Type "**OnlyNFTs Marketplace**" into the search field and start the search. The top result will be the OnlyNFTs Marketplace. Tap to enter it.
 2. You wallet will ask you to connect. Tap **Connect** to connect to OnlyNFTs.
-
-## Resources
-
-[**Download MetaMask**](https://metamask.io/download.html) **\(Automatically detects device\)**  
-[**MetaMask Setup Guide**](https://academy.binance.com/en/articles/connecting-metamask-to-binance-smart-chain%29)\*\*\*\*
 {% endtab %}
 {% endtabs %}
 
