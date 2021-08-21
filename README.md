@@ -1,5 +1,9 @@
 # Welcome to OnlyNFTs
 
+{% page-ref page="get-started/" %}
+
+
+
 ## Latest Update
 
 {% hint style="info" %}
