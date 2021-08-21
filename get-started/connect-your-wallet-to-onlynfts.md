@@ -1,5 +1,7 @@
 # Connect Your Wallet to OnlyNFTs
 
+![](../.gitbook/assets/onlynfts-logo-2021-resize.png)
+
 ## Smartphone/Mobile
 
 {% tabs %}
