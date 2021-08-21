@@ -19,6 +19,10 @@ To connect MetaMask to OnlyNFTs follow the steps below.
 1. Type "**OnlyNFTs Marketplace**" into the search field and start the search. The top result will be the OnlyNFTs Marketplace. Tap to enter it.
 2. You wallet will ask you to connect. Tap **Connect** to connect to OnlyNFTs.
 {% endtab %}
+
+{% tab title="TrustWallet" %}
+
+{% endtab %}
 {% endtabs %}
 
 ## **Desktop/Web Browser wallets**
