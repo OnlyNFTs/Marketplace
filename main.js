@@ -688,6 +688,8 @@ renderItem = (item) => {
         itemForSale.getElementsByTagName("img")[0].alt = item.sellerUsername;
      
     }
+    itemForSale.getElementsByTagName("a")[0].onclick = () => $('#nftInfo').modal('show');
+
     itemForSale.getElementsByTagName("p")[0].innerText = item.symbol;
     itemForSale.getElementsByTagName("img")[1].src = item.image;
     itemForSale.getElementsByTagName("img")[1].alt = item.name;
