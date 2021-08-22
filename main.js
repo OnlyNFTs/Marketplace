@@ -688,7 +688,25 @@ renderItem = (item) => {
         itemForSale.getElementsByTagName("img")[0].alt = item.sellerUsername;
      
     }
-    itemForSale.getElementsByTagName("a")[0].onclick = () => $('#nftInfo').modal('show');
+    itemForSale.nftShareValue = 0;
+    hideElement(itemForSale.getElementsByTagName("input")[0]);
+    hideElement(itemForSale.getElementsByTagName("button")[0]);
+    itemForSale.getElementsByTagName("a")[0].onclick = () => {
+        if (itemForSale.nftShareValue === 0) {
+        hideElement(itemForSale.getElementsByTagName("img")[1]);
+        showElement(itemForSale.getElementsByTagName("button")[0]);
+        showElement(itemForSale.getElementsByTagName("input")[0]);
+        itemForSale.nftShareValue = 1;
+        } else {
+            showElement(itemForSale.getElementsByTagName("img")[1]);
+            hideElement(itemForSale.getElementsByTagName("button")[0]);
+            hideElement(itemForSale.getElementsByTagName("input")[0]); 
+            itemForSale.nftShareValue = 0;
+        }
+    };
+    
+    //itemForSale.getElementsByTagName("a")[0].onclick = () => $('#nftInfo').modal('show');
+    itemForSale.getElementsByTagName("input")[0].value = item.creator;
 
     itemForSale.getElementsByTagName("p")[0].innerText = item.symbol;
     itemForSale.getElementsByTagName("img")[1].src = item.image;
@@ -700,9 +718,9 @@ renderItem = (item) => {
     
     let itemlol = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
     let convertedToUSDPrice = new BigNumber(onftsPrice).times(itemlol);
-    itemForSale.getElementsByTagName("button")[0].innerText = `BUY ${itemlol} ONFTs`;
-    itemForSale.getElementsByTagName("button")[1].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
-    itemForSale.getElementsByTagName("button")[0].onclick = async () =>  buyItem(item);
+    itemForSale.getElementsByTagName("button")[1].innerText = `BUY ${itemlol} ONFTs`;
+    itemForSale.getElementsByTagName("button")[2].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
+    itemForSale.getElementsByTagName("button")[1].onclick = async () =>  buyItem(item);
     itemForSale.getElementsByTagName("a")[3].innerText = `Royalties ${item.royaltyFee}%`;
     itemForSale.id = `item-${item.uid}`;
     itemsForSale.appendChild(itemForSale);
