@@ -705,7 +705,16 @@ renderItem = (item) => {
         }
     };
     
-    //itemForSale.getElementsByTagName("a")[0].onclick = () => $('#nftInfo').modal('show');
+    itemForSale.getElementsByTagName("button")[0].onclick = () => {
+        var copyText = itemForSale.getElementsByTagName("input")[0];
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(copyText.value);
+        alert("Copied the text: " + copyText.value);
+    };
+    
+    
+    
     itemForSale.getElementsByTagName("input")[0].value = item.creator;
 
     itemForSale.getElementsByTagName("p")[0].innerText = item.symbol;
