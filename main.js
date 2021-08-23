@@ -64,6 +64,7 @@ init = async () => {
     window.paymentTokenContract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
     window.mintTokenContract = new web3.eth.Contract(mintTokenContractAbi, MINT_TOKEN_ADDRESS);
     window.earlyHoldersContract = new web3.eth.Contract(earlyHoldersContractAbi, EARLY_HOLDERS_NFT_ADDRESS);
+    await checkURL();
     $("#ageVer").modal('show');
     await fetchCoinPrice();
     
@@ -881,13 +882,19 @@ earlyHoldersBalance = object2.get('token_id');
 console.log(object2.get('token_id'));
 if (earlyHoldersBalance !== null) {
     console.log(object2.get('token_id'));}
-    
-
-
 };
 
 };
 }
+
+
+checkURL = async () => {
+    const queryString = window.location.search;
+    const params = new URLSearchParams(queryString);
+    urlNFT = params.get('nft');
+    console.log(urlNFT);
+}
+
 
 
 hideElement = (element) => element.style.display = "none";
