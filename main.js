@@ -715,7 +715,7 @@ renderItem = (item) => {
     
     
     
-    itemForSale.getElementsByTagName("input")[0].value = item.creator;
+    itemForSale.getElementsByTagName("input")[0].value = "https://marketplace.onlynfts/nft=" + item.tokenAddress + "?id=" + item.tokenId;
 
     itemForSale.getElementsByTagName("p")[0].innerText = item.symbol;
     itemForSale.getElementsByTagName("img")[1].src = item.image;
