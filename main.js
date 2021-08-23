@@ -716,7 +716,7 @@ renderItem = (item) => {
     
     
     
-    itemForSale.getElementsByTagName("input")[0].value = "https://marketplace.onlynfts.online/nft?=" + item.tokenAddress + "?id=" + item.tokenId;
+    itemForSale.getElementsByTagName("input")[0].value = "https://marketplace.onlynfts.online/?nft=" + item.tokenAddress + "&id=" + item.tokenId;
 
     itemForSale.getElementsByTagName("p")[0].innerText = item.symbol;
     itemForSale.getElementsByTagName("img")[1].src = item.image;
@@ -892,7 +892,9 @@ checkURL = async () => {
     const queryString = window.location.search;
     const params = new URLSearchParams(queryString);
     urlNFT = params.get('nft');
+    urlNFTID = params.get('id');
     console.log(urlNFT);
+    console.log(urlNFTID);
 }
 
 
