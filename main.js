@@ -633,7 +633,7 @@ loadItems = async () => {
             getAndRenderItemData(item, renderUserItem);
             
             }
-
+        }
             
         getAndRenderItemData(item, renderItem);
     });
