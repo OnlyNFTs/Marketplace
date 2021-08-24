@@ -903,7 +903,7 @@ checkURL = async () => {
     console.log(urlNFTID);
     return urlNFT, urlNFTID;
     } else {
-        alert("nourl");
+        //alert("nourl");
         }
 }
 
