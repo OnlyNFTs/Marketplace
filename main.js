@@ -624,6 +624,16 @@ loadItems = async () => {
                 getAndRenderItemData(item, renderUserItem);
                 return;
             }
+        } else if (urlNFT, urlNFTID) { 
+            urlNFTIDLC = urlNFTID.toLowerCase();
+            urlNFTLC = urlNFT.toLowerCase();
+            if (urlNFTLC != item.tokenAddress, urlNFTIDLC != item.tokenId) {
+            const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
+            if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
+            getAndRenderItemData(item, renderUserItem);
+            return;
+            }
+
         }
         getAndRenderItemData(item, renderItem);
     });
