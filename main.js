@@ -542,19 +542,17 @@ mintNft = async (metadataUrl, RoyaltyFee, referrerAddress) => {
     console.log(receipt);
     return receipt.events.Transfer.returnValues.tokenId;
 } else {
-     const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({from: ethereum.selectedAddress});
-     console.log(receipt);
-     return receipt.events.Transfer.returnValues.tokenId;
+    const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({from: ethereum.selectedAddress});
+    console.log(receipt);
+    return receipt.events.Transfer.returnValues.tokenId;
     }
     
 }
 
 mintEANft = async (metadataUrl, creator, RoyaltyFee, referrerAddress) => {
-  
     const receipt = await earlyHoldersContract.methods.createItem(metadataUrl, creator, RoyaltyFee, referrerAddress).send({from: ethereum.selectedAddress});
     console.log(receipt);
     return receipt.events.Transfer.returnValues.tokenId;
-    
 }
 
 
@@ -611,15 +609,22 @@ loadItems = async () => {
     user = await Moralis.User.current();
     items.forEach(item => {
         if (user){
-            if (user.attributes.accounts.includes(item.ownerOf)){
+            if (urlNFT, urlNFTID) { 
+                urlNFTIDLC = urlNFTID.toLowerCase();
+                urlNFTLC = urlNFT.toLowerCase();
+                if (urlNFTLC != item.tokenAddress, urlNFTIDLC != item.tokenId) {
+                const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
+                if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
+                getAndRenderItemData(item, renderUserItem);
+                return;
+                }
+             } else if (user.attributes.accounts == item.ownerOf){
                 const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
                 if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
                 getAndRenderItemData(item, renderUserItem);
                 return;
             }
-
         }
-
         getAndRenderItemData(item, renderItem);
     });
 }
@@ -651,11 +656,11 @@ renderUserItem = async (item) => {
     userItem.getElementsByTagName("input")[0].disabled = await item.askingPrice > 0;
     //userItem.getElementsByTagName("button")[0].disabled = 1;
     userItem.getElementsByTagName("button")[0].disabled = await item.askingPrice > 0;
-   // if (item.askingPrice == null) {hideElement(userItem.getElementsByTagName("button")[1]);};
-   // if (item.askingPrice != null) {hideElement(userItem.getElementsByTagName("button")[2]);};
+    // if (item.askingPrice == null) {hideElement(userItem.getElementsByTagName("button")[1]);};
+    // if (item.askingPrice != null) {hideElement(userItem.getElementsByTagName("button")[2]);};
 
     userItem.getElementsByTagName("button")[1].disabled = await item.askingPrice == null;
-   userItem.getElementsByTagName("button")[2].disabled = await item.askingPrice > 0;
+    userItem.getElementsByTagName("button")[2].disabled = await item.askingPrice > 0;
     userItem.getElementsByTagName("button")[1].onclick = async () => removeItem(item);
 
     //userItem.getElementsByTagName("button")[1].disabled = item.askingPrice < 10;
@@ -669,12 +674,12 @@ renderUserItem = async (item) => {
             alert("Max 5Mil");
             return;
         }
-         await ensureMarketplaceIsApproved(item.tokenId, item.tokenAddress);
+        await ensureMarketplaceIsApproved(item.tokenId, item.tokenAddress);
         await userItem.getElementsByTagName("input")[0].value;
         let test1 = userItem.getElementsByTagName("input")[0].value;
         let askingPriceBN = new BigNumber(test1).times(1000000000).times(1000000000);
-     await marketplaceContract.methods.addItemToMarket(item.tokenId, item.tokenAddress, askingPriceBN, item.creator, item.royaltyFee, item.referrer).send({from: user.get('ethAddress')});
-     alert("NFT Added To Marketplace!");
+        await marketplaceContract.methods.addItemToMarket(item.tokenId, item.tokenAddress, askingPriceBN, item.creator, item.royaltyFee, item.referrer).send({from: user.get('ethAddress')});
+        alert("NFT Added To Marketplace!");
     };
 
     userItem.id = `user-item-${item.tokenObjectId}`
@@ -893,8 +898,13 @@ checkURL = async () => {
     const params = new URLSearchParams(queryString);
     urlNFT = params.get('nft');
     urlNFTID = params.get('id');
+    if (urlNFT) {
     console.log(urlNFT);
     console.log(urlNFTID);
+    return urlNFT, urlNFTID;
+    } else {
+        alert("nourl");
+        }
 }
 
 
