@@ -615,7 +615,7 @@ loadItems = async () => {
                 if (urlNFTLC != item.tokenAddress, urlNFTIDLC != item.tokenId) {
                 const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
                 if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
-                getAndRenderItemData(item, renderItem);
+                getAndRenderItemData(item, renderUserItem);
                 return;
                 }
              } else if (user.attributes.accounts == item.ownerOf){
@@ -630,11 +630,11 @@ loadItems = async () => {
             if (urlNFTLC != item.tokenAddress, urlNFTIDLC != item.tokenId) {
             const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
             if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
-            getAndRenderItemData(item, renderItem);
-            return;
+            getAndRenderItemData(item, renderUserItem);
+            
             }
 
-        }
+            
         getAndRenderItemData(item, renderItem);
     });
 }
