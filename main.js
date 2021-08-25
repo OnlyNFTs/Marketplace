@@ -43,7 +43,7 @@ init = async () => {
      
    }
  });
-//  if (typeof web3 !== 'undefined') {
+  if (typeof web3 !== 'undefined') {
     
 //     if (web3.currentProvider.isMetaMask === true) {
 //         alert("MetaMask");
@@ -52,7 +52,7 @@ init = async () => {
 //         alert("TrustWallet");
 //         window.web3 = await Moralis.Web3.enable({provider: 'trustwallet'});
 //     }
-//  } else {
+  } else {
 //     alert("WalletConnect");
     
 //      window.web3 = await Moralis.Web3.authenticate({provider: 'walletconnect'});
@@ -67,6 +67,7 @@ init = async () => {
     window.mintTokenContract = new web3.eth.Contract(mintTokenContractAbi, MINT_TOKEN_ADDRESS);
     window.earlyHoldersContract = new web3.eth.Contract(earlyHoldersContractAbi, EARLY_HOLDERS_NFT_ADDRESS);
     window.pancakeswapRouterContract = new web3.eth.Contract(pancakeswapRouterAbi, PANCAKESWAP_ROUTER_ADDRESS);
+  }
     await checkURL();
     $("#ageVer").modal('show');
     await fetchCoinPrice();
