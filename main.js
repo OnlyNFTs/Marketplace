@@ -221,18 +221,18 @@ login = async () => {
             if (web3.currentProvider.isMetaMask === true) {
         await Moralis.Web3.authenticate({provider: 'metamask'});
         alert("Logged in Successfully!");
-        $('#connectWalletModal').modal('close'); 
+        $('#connectWalletModal').modal('hide'); 
         initUser();
             }else {
                 await Moralis.Web3.authenticate({provider: 'trustwallet, metamask, walletconnect'});
         alert("Logged in Successfully!");
-        $('#connectWalletModal').modal('close'); 
+        $('#connectWalletModal').modal('hide'); 
         initUser(); 
             }
         } else {
             await Moralis.Web3.authenticate();
             alert("Logged in Successfully!");
-            $('#connectWalletModal').modal('close'); 
+            $('#connectWalletModal').modal('hide'); 
             initUser(); 
         }
 
@@ -248,7 +248,7 @@ loginTW = async () => {
     try {
         await Moralis.Web3.authenticate({provider: 'trustwallet'});
         alert("Logged in Successfully!");
-        $('#connectWalletModal').modal('close'); 
+        $('#connectWalletModal').modal('hide'); 
         initUser(); 
 
     } catch (error) {
@@ -262,7 +262,7 @@ loginWC = async () => {
     try {
         await Moralis.Web3.authenticate({provider: 'walletconnect'});
         alert("Logged in Successfully!");
-        $('#connectWalletModal').modal('close'); 
+        $('#connectWalletModal').modal('hide'); 
         initUser();
 
     } catch (error) {
