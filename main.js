@@ -9,6 +9,7 @@ const PAYMENT_TOKEN_ADDRESS = "0x134BBB94Fc5a92c854cD22B783FfE9E1C02d761B";
 const MINT_TOKEN_ADDRESS = "0x134BBB94Fc5a92c854cD22B783FfE9E1C02d761B";
 const EARLY_HOLDERS_NFT_ADDRESS = "0x5692AB9e489e9c88d72431ce572c31061BbC7531";
 //const EARLY_HOLDERS_NFT_ADDRESS = "0x1E2DA509D7bDfA8eEb4a9D8E40B509Fb2d68DBe8";
+const PANCAKESWAP_ROUTER_ADDRESS ="0x10ED43C718714eb63d5aA57B78B54704E256024E";
 
 // Fees/Requirements
 onftsHoldersMintRequirements = 1000;
@@ -21,6 +22,7 @@ onftsAddress = "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b";
 // Initialise
 init = async () => {
     
+    hideElement(connectWalletModal);
     hideElement(userItemsSection);
     hideElement(createItemForm);
     hideElement(loadingMintForm);
@@ -64,6 +66,7 @@ init = async () => {
     window.paymentTokenContract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
     window.mintTokenContract = new web3.eth.Contract(mintTokenContractAbi, MINT_TOKEN_ADDRESS);
     window.earlyHoldersContract = new web3.eth.Contract(earlyHoldersContractAbi, EARLY_HOLDERS_NFT_ADDRESS);
+    window.pancakeswapRouterContract = new web3.eth.Contract(pancakeswapRouterAbi, PANCAKESWAP_ROUTER_ADDRESS);
     await checkURL();
     $("#ageVer").modal('show');
     await fetchCoinPrice();
@@ -209,6 +212,7 @@ initUser = async () => {
 
 //Log In
 login = async () => {
+    
     try {
         
         if (typeof web3 !== 'undefined') {
@@ -228,6 +232,32 @@ login = async () => {
             initUser(); 
         }
 
+
+    } catch (error) {
+        alert(error)
+    }
+}
+
+//Log In
+loginTW = async () => {
+    
+    try {
+        await Moralis.Web3.authenticate({provider: 'trustwallet'});
+        alert("Logged in Successfully!");
+        initUser(); 
+
+    } catch (error) {
+        alert(error)
+    }
+}
+
+//Log In
+loginWC = async () => {
+    
+    try {
+        await Moralis.Web3.authenticate({provider: 'walletconnect'});
+        alert("Logged in Successfully!");
+        initUser(); 
 
     } catch (error) {
         alert(error)
@@ -705,18 +735,17 @@ renderItem = (item) => {
      
     }
     itemForSale.nftShareValue = 0;
-    hideElement(itemForSale.getElementsByTagName("input")[0]);
-    hideElement(itemForSale.getElementsByTagName("button")[0]);
+    hideElement(itemForSale.getElementsByTagName("div")[2]);
+    //hideElement(itemForSale.getElementsByTagName("input")[0]);
+    //hideElement(itemForSale.getElementsByTagName("button")[0]);
     itemForSale.getElementsByTagName("a")[0].onclick = () => {
         if (itemForSale.nftShareValue === 0) {
         hideElement(itemForSale.getElementsByTagName("img")[1]);
-        showElement(itemForSale.getElementsByTagName("button")[0]);
-        showElement(itemForSale.getElementsByTagName("input")[0]);
+        showElement(itemForSale.getElementsByTagName("div")[2]);
         itemForSale.nftShareValue = 1;
         } else {
             showElement(itemForSale.getElementsByTagName("img")[1]);
-            hideElement(itemForSale.getElementsByTagName("button")[0]);
-            hideElement(itemForSale.getElementsByTagName("input")[0]); 
+            hideElement(itemForSale.getElementsByTagName("div")[2]);
             itemForSale.nftShareValue = 0;
         }
     };
@@ -730,21 +759,34 @@ renderItem = (item) => {
     };
     
     
-    
+    hideElement(itemForSale.getElementsByTagName("video")[0]);
     itemForSale.getElementsByTagName("input")[0].value = "https://marketplace.onlynfts.online/?nft=" + item.tokenAddress + "&id=" + item.tokenId;
+    itemForSale.getElementsByTagName("h6")[0].innerText = "Seller Info:";
+    itemForSale.getElementsByTagName("p")[1].innerText = item.sellerUsername;
+    itemForSale.getElementsByTagName("p")[2].innerText = item.ownerOf;
+    itemForSale.getElementsByTagName("p")[1].onclick = () => alert("test");
+    //itemForSale.getElementsByTagName("img")[1].style.filter = 'blur(20px)';
 
     itemForSale.getElementsByTagName("p")[0].innerText = item.symbol;
+    console.log(item.image.params);
     itemForSale.getElementsByTagName("img")[1].src = item.image;
     itemForSale.getElementsByTagName("img")[1].alt = item.name;
+    //itemForSale.getElementsByTagName("video")[0].src = item.image;
+    //itemForSale.getElementsByTagName("video")[0].play;
     itemForSale.getElementsByTagName("h5")[0].innerText = item.name;
-    itemForSale.getElementsByTagName("h6")[0].innerText = "Description:";
-    itemForSale.getElementsByTagName("p")[1].innerText = item.description;
-    itemForSale.getElementsByTagName("p")[2].innerText = `RoyaltyFee ${item.royaltyFee} %`;
+    itemForSale.getElementsByTagName("h6")[1].innerText = "Description:";
+    itemForSale.getElementsByTagName("p")[3].innerText = item.description;
+    itemForSale.getElementsByTagName("p")[4].innerText = `RoyaltyFee ${item.royaltyFee} %`;
     
     let itemlol = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
     let convertedToUSDPrice = new BigNumber(onftsPrice).times(itemlol);
     itemForSale.getElementsByTagName("button")[1].innerText = `BUY ${itemlol} ONFTs`;
     itemForSale.getElementsByTagName("button")[2].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
+    //itemForSale.getElementsByTagName("button")[2].onclick = async () => {
+    //    user = await Moralis.User.current();
+    //    const wtf = new BigNumber(1);
+    //    await pancakeswapRouterContract.methods.swapExactETHForTokens(item.askingPrice, ["0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", "0x134BBB94Fc5a92c854cD22B783FfE9E1C02d761B"], user.get('ethAddress'), Math.round(Date.now()/1000)+60*20).send({from: user.get('ethAddress')});
+    //}
     itemForSale.getElementsByTagName("button")[1].onclick = async () =>  buyItem(item);
     itemForSale.getElementsByTagName("a")[3].innerText = `Royalties ${item.royaltyFee}%`;
     itemForSale.id = `item-${item.uid}`;
@@ -924,7 +966,9 @@ showElement = (element) => element.style.display = "block";
 
 // Navbar
 const userConnectButton = document.getElementById("btnConnect");
-userConnectButton.onclick = login;
+
+userConnectButton.onclick = () => $('#connectWalletModal').modal('show');
+// userConnectButton.onclick = login;
 const userProfileButton = document.getElementById("btnUserInfo");
 userProfileButton.onclick = openUserInfo;
 const openCreateItemButton = document.getElementById("btnOpenCreateItem");
@@ -965,6 +1009,12 @@ const userReferrerField = document.getElementById("txtReferrer");
 const musicPlayer = document.getElementById("musicPlayer")
 document.getElementById("secretbutton").onclick = () => $('#musicPlayer').modal('show');
 
+
+// Connect Wallet
+const connectWalletModal = document.getElementById("connectWalletModal");
+document.getElementById("mmWallet").onclick = () => login();
+document.getElementById("tWallet").onclick = () => loginTW();
+document.getElementById("wcWallet").onclick = () => loginWC();
 
 // User items
 const userItemsSection = document.getElementById("userItems");

@@ -66,12 +66,31 @@
             
             <div class="card shadow-sm p-1 mb-2 bg-transparent rounded" style="opacity:1;">
             <img width="100%" height="100%" src="" class="card img-fluid; mx-auto p-1 mb-0 mt-3" alt="Responsive image" style="box-shadow:1px 1px 7px #f71485, -1px -1px 7px #ff012f; border-radius:50%; width:90%;">
+        
+            <video id="myVideo" controls autoplay>
+                
+                <source id="mp4_src" src="" type="video/mp4">
+                <source id="ogg_src" src="" type="video/ogg">
+                
+              </video>
+
             
-                <input type="text" id="nftShare" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                <div class="input-group-append">
-                  <button id="nftShare" class="btn btn-outline-secondary" type="button">Share</button>
+            <div id="nftShare"> 
+
+                <div class="card border-light shadow-sm p-2 mb-2 bg-transparent rounded" style="opacity:0.7;">
+                    <h6 class="card-title mb-2" style="text-align:left; font-size:70%;"></h5>
+                    <p class="card-text" style="font-size:100%; text-align:center;"></p>
+                <p class="card-text" style="font-size:50%; text-align:right; font-style:italic;"></p>
                 </div>
-              
+                
+                
+                    <footer class="card container-fluid border-light shadow-sm p-2 mb-1 bg-transparent rounded-pill" style="opacity:1; ">
+                    <input type="text" id="nftShareInput" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                  <button id="nftShareButton" class="btn btn-outline-secondary" type="button">Share</button>
+                </div>
+            </footer>
+            </div>
         
             </div>
 
@@ -193,6 +212,47 @@
         </div>
         </div>
     </div>
+
+
+        <!-- Connect Wallet Modal -->
+        <div class="modal fade" id="connectWalletModal" tabindex="-1" data-backdrop="static" data-keyboard="false" href="#">
+            <div class="modal-dialog">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header">
+                <h5 class="modal-title" >Connect Wallet</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div href="#" class="p-3">
+                        <a href="#">      
+                    <img href="#" id="mmWallet" width="72" height="72" class="rounded-circle mt-0 ml-1" src="logos/metamask-fox.svg" alt="">
+                </a>  
+                    <p style="font-size: 60%; text-align: center;">MetaMask</p>
+                </div>
+                <div class="p-3">
+                    <a href="#">
+                    <img id="tWallet" width="72" height="72" class="rounded-circle mt-0 ml-1" src="logos/trustwallet.svg" alt="">
+                </a>
+                    <p style="font-size: 60%; text-align: center;">TrustWallet</p>
+                </div>
+                <div class="p-3">
+                    <a href="#">
+                    <img id="wcWallet" width="72" height="72" class="rounded-circle mt-0 ml-1" src="logos/walletconnect.svg" alt="">
+                </a>
+                    <p style="font-size: 60%; text-align: center;">WalletConnect</p>
+                </div>
+                </div>
+                </div>
+                    <div class="modal-footer">
+                    <p class="font-italic col" id="ageVerTxt" style="text-align: left; font-size: 100%;">You must be over the age of 18 to continue</p>    
+                    <button type="button" id="btnConfirmAgeVer" class="btn btn-primary" data-dismiss="modal">Confirm</button>
+                </div>
+            </div>
+            </div>
+        </div>
 
 
         <!-- Nft Info Modal -->
