@@ -27,24 +27,32 @@ init = async () => {
     hideElement(createItemForm);
     hideElement(loadingMintForm);
     hideElement(musicPlayer);
+    
      window.addEventListener('load', function() {
+         
      if (typeof web3 !== 'undefined') {
+        walletProvider = 'active';
      console.log('web3 is enabled')
      if (web3.currentProvider.isMetaMask === true) {
+        walletProvider = 'metamask';
        console.log('MetaMask is active');
        //window.web3 = Moralis.Web3.enable({provider: 'metamask'});
-     } else {
+       initWeb3();
+    } else {
        console.log('MetaMask is not available');
        //window.web3 = Moralis.Web3.enable({provider: 'walletconnect, trustwallet'});
-     }
+       initWeb3();
+    }
    } else {
-     //alert('No Web3 Browser Has Been Detected. Please visit https://metamask.io/download And install Metamask!');
+    walletProvider = 'undefined';
+     alert('No Web3 Browser Has Been Detected. Please visit https://metamask.io/download And install Metamask!');
      //window.web3 = Moralis.Web3.enable({provider: 'walletconnect'});
      
    }
  });
-  if (typeof web3 !== 'undefined') {
-    
+// if (walletProvider !== 'undefined') {
+// if (typeof web3 !== 'undefined') {
+ //   initWeb3();
 //     if (web3.currentProvider.isMetaMask === true) {
 //         alert("MetaMask");
 //     window.web3 = await Moralis.Web3.enable({provider: 'metmask'});
@@ -52,7 +60,7 @@ init = async () => {
 //         alert("TrustWallet");
 //         window.web3 = await Moralis.Web3.enable({provider: 'trustwallet'});
 //     }
-  } else {
+ // } else {
 //     alert("WalletConnect");
     
 //      window.web3 = await Moralis.Web3.authenticate({provider: 'walletconnect'});
@@ -60,14 +68,15 @@ init = async () => {
 //      Web3Wallet = "walletconnect";
 //     }
 //    window.web3 = await Moralis.Web3.authenticate();
-    window.web3 = await Moralis.Web3.enable();
-    window.tokenContract = new web3.eth.Contract(tokenContractAbi, TOKEN_CONTRACT_ADDRESS);
-    window.marketplaceContract = new web3.eth.Contract(marketplaceContractAbi, MARKETPLACE_CONTRACT_ADDRESS);
-    window.paymentTokenContract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
-    window.mintTokenContract = new web3.eth.Contract(mintTokenContractAbi, MINT_TOKEN_ADDRESS);
-    window.earlyHoldersContract = new web3.eth.Contract(earlyHoldersContractAbi, EARLY_HOLDERS_NFT_ADDRESS);
-    window.pancakeswapRouterContract = new web3.eth.Contract(pancakeswapRouterAbi, PANCAKESWAP_ROUTER_ADDRESS);
-  }
+
+    // window.web3 = await Moralis.Web3.enable();
+    // window.tokenContract = new web3.eth.Contract(tokenContractAbi, TOKEN_CONTRACT_ADDRESS);
+    // window.marketplaceContract = new web3.eth.Contract(marketplaceContractAbi, MARKETPLACE_CONTRACT_ADDRESS);
+    // window.paymentTokenContract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
+    // window.mintTokenContract = new web3.eth.Contract(mintTokenContractAbi, MINT_TOKEN_ADDRESS);
+    // window.earlyHoldersContract = new web3.eth.Contract(earlyHoldersContractAbi, EARLY_HOLDERS_NFT_ADDRESS);
+    // window.pancakeswapRouterContract = new web3.eth.Contract(pancakeswapRouterAbi, PANCAKESWAP_ROUTER_ADDRESS);
+ // }
     await checkURL();
     $("#ageVer").modal('show');
     await fetchCoinPrice();
@@ -219,7 +228,8 @@ login = async () => {
         if (typeof web3 !== 'undefined') {
             
             if (web3.currentProvider.isMetaMask === true) {
-        await Moralis.Web3.authenticate({provider: 'metamask'});
+                walletProvider = 'metamask';
+        await Moralis.Web3.authenticate({provider: walletProvider});
         alert("Logged in Successfully!");
         $('#connectWalletModal').modal('hide'); 
         initUser();
@@ -260,9 +270,12 @@ loginTW = async () => {
 loginWC = async () => {
     
     try {
-        await Moralis.Web3.authenticate({provider: 'walletconnect'});
+        walletProvider = "walletconnect";
+        console.log(walletProvider);
+        await Moralis.Web3.authenticate({provider: walletProvider});
         alert("Logged in Successfully!");
         $('#connectWalletModal').modal('hide'); 
+        initWeb3();
         initUser();
 
     } catch (error) {
@@ -831,11 +844,12 @@ ensurePaymentTokenIsApproved = async (tokenAddress, amount) => {
     user = await Moralis.User.current();
     console.log(amount);
     const userAddress = user.get('ethAddress');
+    console.log(walletProvider);
     const contract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
-    const approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({from: userAddress});
+    const approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({provider: walletProvider, from: userAddress});
     console.log(approvedAddress);
     if (approvedAddress < amount){
-        await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({from: userAddress});
+        await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({provider: walletProvider, from: userAddress});
     }
 }
 
@@ -882,7 +896,7 @@ buyItem = async (item) => {
         return;
     }
     await ensurePaymentTokenIsApproved(PAYMENT_TOKEN_ADDRESS, item.askingPrice); 
-    await marketplaceContract.methods.buyItem(item.uid).send({from: user.get('ethAddress')});
+    await marketplaceContract.methods.buyItem(item.uid).send({provider: walletProvider, from: user.get('ethAddress')});
     alert("NFT Purchased");
 }
 
@@ -965,6 +979,27 @@ checkURL = async () => {
         }
 }
 
+unsub => await (Moralis.Web3.onAccountsChanged) = console.log("change");
+  
+
+//INIT WEB3
+initWeb3 = async () => {
+    
+
+        window.web3 = await Moralis.Web3.enable({provider: walletProvider});
+    window.tokenContract = new web3.eth.Contract(tokenContractAbi, TOKEN_CONTRACT_ADDRESS);
+    window.marketplaceContract = new web3.eth.Contract(marketplaceContractAbi, MARKETPLACE_CONTRACT_ADDRESS);
+    window.paymentTokenContract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
+    window.mintTokenContract = new web3.eth.Contract(mintTokenContractAbi, MINT_TOKEN_ADDRESS);
+    window.earlyHoldersContract = new web3.eth.Contract(earlyHoldersContractAbi, EARLY_HOLDERS_NFT_ADDRESS);
+    window.pancakeswapRouterContract = new web3.eth.Contract(pancakeswapRouterAbi, PANCAKESWAP_ROUTER_ADDRESS);
+    console.log(walletProvider);
+    //const chainId = await web3.eth.chainId();
+    //console.log(chainId);
+    const networkId = await web3.eth.net.getId();
+    console.log(networkId);
+
+}
 
 
 hideElement = (element) => element.style.display = "none";
