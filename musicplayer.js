@@ -32,8 +32,8 @@ function loadSong(song) {
 
 function playSong() {
     musicContainer.classList.add('play')
-    playBtn.querySelector('i.fas').classList.remove('fa-play')
-    playBtn.querySelector('i.fas').classList.add('fa-pause')
+    //playBtn.querySelector('i.fas').classList.remove('fa-play')
+   // playBtn.querySelector('i.fas').classList.add('fa-pause')
    notificationHeader.innerText = "Now Playing!";
         notificationBody.innerText = "Now Playing! " + title.innerText;
         //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
@@ -43,8 +43,8 @@ function playSong() {
 
 function pauseSong() {
     musicContainer.classList.remove('play')
-    playBtn.querySelector('i.fas').classList.add('fa-play')
-    playBtn.querySelector('i.fas').classList.remove('fa-pause')
+    //playBtn.querySelector('i.fas').classList.add('fa-play')
+    //playBtn.querySelector('i.fas').classList.remove('fa-pause')
     audio.pause()
 }
 
