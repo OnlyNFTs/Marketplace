@@ -89,9 +89,9 @@ init = async () => {
     await checkURL();
     $("#ageVer").modal('show');
     await fetchCoinPrice();
-    
-    await initUser();
     await loadItems();
+    await initUser();
+    
     
     const soldItemsQuery = new Moralis.Query('SoldItemsNSFW');
     const soldItemsSubscription = await soldItemsQuery.subscribe();
