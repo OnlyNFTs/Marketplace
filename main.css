@@ -1,5 +1,8 @@
 .bg-dark {
-  background: rgb(18, 18, 18) !important;
+  background: rgb(241, 241, 241) !important;
+}
+.navbar-toggler-icon {
+  background: rgb(255, 162, 224);
 }
 
 .modal-open .itemsForSale {
@@ -186,4 +189,10 @@
   width: 1%;
   height: 30px;
   background-color: #04aa6d;
+}
+
+#toast-container * {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
 }

@@ -10,15 +10,19 @@
 </head>
 <body class="bg-dark">
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-transparent border-bottom border-light">
+    <nav class="navbar navbar-expand-lg navbar-dark text-dark bg-transparent border-bottom border-dark">
         <a id="secretbutton" class="navbar-brand btn btn-outline-moralis"  href="#">OnlyNFTs  v1.1.1</a>
         <a id="onftspricebutton" style="font-size:80%" class="navbar-price btn rounded-pill btn-primary" href="https://pancakeswap.finance/swap#/swap?outputCurrency=0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
+            <a href="#" class="badge badge-dark rounded-circle p-1 mb-0 badge-dark ml-2 mr-1" style="text-align:center;">
+                <svg href="#" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+              </svg>
+            </a>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <form class="mx-2 d-inline flex-md-fill">
-                <input type="search" class="bg-transparent border-light form-control text-light mr-sm-2 rounded-pill" placeholder="Search by item or creator">
+                <input type="search" class="bg-transparent border-dark form-control text-dark mr-sm-2 rounded-pill" placeholder="Search by item or creator">
             </form>
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
@@ -34,19 +38,53 @@
         </div>
       </nav>
 
+
+
+      <div id="toast-container" class="toast-container" id="toasttest" aria-live="assertive" aria-atomic="true" style="position:relative; margin-inline: 3%;">
+        <!-- Position it -->
+        <div style="position:relative" >
+      
+          <!-- Then put toasts within -->
+          <div class="toast text-dark" style="position:relative " role="alert" aria-live="assertive" aria-atomic="true" data-delay="30000">
+            <div class="toast-header">
+              <img src="favicon.ico" class="rounded mr-2" alt="...">
+              <strong id="notificationHeader" class="mr-auto"></strong>
+              <small id="notificationTime" class="text-muted">Just Now</small>
+              <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div id="notificationBody" class="toast-body">
+              
+            </div>
+          </div>
+      
+        
+        </div>
+      </div>
+
+
+
+
+
+
     <div class="container itemsForSale">
-        <div class="row row-cols-1 row-cols-md-4 mt-3" id="itemsForSale">
+        <div class="row row-cols-1 row-cols-md-4 mt-2" id="itemsForSale">
 
         </div>
     </div>
   
 
 
+
+
+    
+
     <div class="col mb-4" id="marketplaceItemTemplate">
         
-        <div class="card h-100 w-100 border-light bg-transparent text-light" style="box-shadow:1px 1px 7px #f71485, -1px -1px 7px #ff012f; border-radius:50%; width:90%;">
+        <div class="card h-100 w-100 border-light bg-transparent text-dark" style="box-shadow:1px 1px 7px #f71485, -1px -1px 7px #ff012f; border-radius:50%; width:90%;">
             
-            <nav class="mt-0 card-header border-bottom rounded navbar navbar-expand-lg navbar-dark bg-transparent text-light p-0" style="box-shadow:0px 0px 7px #f71485, -0px -0px 7px #ff012f; border-radius:50%;">
+            <nav class="mt-0 card-header border-bottom rounded navbar navbar-expand-lg navbar-dark bg-transparent text-dark p-0" style="box-shadow:0px 0px 7px #f71485, -0px -0px 7px #ff012f; border-radius:50%;">
                 <img width="36" height="36" class="rounded-circle mt-0 ml-1" src="" alt="">
                 
                 <p class="card-text mt-3 mx-auto" style="font-size:100%; text-align:center;"></p>
@@ -145,8 +183,8 @@
     <!-- User Item Template -->
     <div class="col mb-4" id="itemTemplate">
         
-        <div class="card h-100 border-light bg-transparent text-light">
-            <nav class="mt-0 card-header border-bottom rounded navbar navbar-expand-lg navbar-dark bg-transparent text-light p-0">
+        <div class="card h-100 border-light bg-transparent text-dark">
+            <nav class="mt-0 card-header border-bottom rounded navbar navbar-expand-lg navbar-dark bg-transparent p-0">
                 <img width="36" height="36" class="rounded-circle mt-0 ml-1" src="" alt="">
                 
                 <p class="card-text mt-3 mx-auto" style="font-size:100%; text-align:center;"></p>
@@ -196,7 +234,7 @@
     <!-- Age Verification Modal -->
     <div class="modal fade" id="ageVer" tabindex="-1" data-backdrop="static" data-keyboard="false" href="#">
         <div class="modal-dialog">
-        <div class="modal-content bg-dark text-light">
+        <div class="modal-content bg-dark ">
             <div class="modal-header">
             <h5 class="modal-title" >Age Verification</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -217,7 +255,7 @@
         <!-- Connect Wallet Modal -->
         <div class="modal fade" id="connectWalletModal" tabindex="-1" data-backdrop="static" data-keyboard="false" href="#">
             <div class="modal-dialog">
-            <div class="modal-content bg-dark text-light">
+            <div class="modal-content bg-dark ">
                 <div class="modal-header">
                 <h5 class="modal-title" >Connect Wallet</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -258,7 +296,7 @@
         <!-- Nft Info Modal -->
         <div class="modal fade" id="nftInfo" tabindex="-1" href="#">
             <div class="modal-dialog">
-            <div class="modal-content bg-dark text-light">
+            <div class="modal-content bg-dark ">
                 <div class="modal-header">
                 <h5 class="modal-title" >Info</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -277,7 +315,7 @@
     <!-- User Info Modal -->
     <div class="modal fade" id="userInfo" tabindex="-1">
         <div class="modal-dialog">
-        <div class="modal-content bg-dark text-light">
+        <div class="modal-content bg-dark text-dark">
             <div class="modal-header">
             <h5 class="modal-title" >User Profile</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -329,7 +367,7 @@
         <!-- Create Item Modal -->
         <div class="modal fade" id="createItem" tabindex="-1">
             <div class="modal-dialog">
-            <div class="modal-content bg-dark text-light">
+            <div class="modal-content bg-dark text-dark">
                 <div class="modal-header">
                 <h5 class="modal-title" >Create Item</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -426,7 +464,7 @@
         <!-- Modal -->
         <div class="modal fade" id="userItems" tabindex="-1">
             <div class="modal-dialog modal-xl">
-            <div class="modal-content bg-dark text-light">
+            <div class="modal-content bg-dark text-dark">
                 <div class="modal-header">
                 <h5 class="modal-title" >My Items</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -465,7 +503,7 @@
 
         <div class="modal fade" id="loadingMint" tabindex="-1">
             <div class="modal-dialog">
-            <div class="modal-content bg-dark text-light">
+            <div class="modal-content bg-dark text-dark">
                 <div class="modal-header">
                 <h5 class="modal-title" >Loading</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -494,7 +532,7 @@
 
         <div class="modal fade" id="enterReferrer" tabindex="-1">
             <div class="modal-dialog">
-            <div class="modal-content bg-dark text-light">
+            <div class="modal-content bg-dark text-dark">
                 <div class="modal-header">
                 <h5 class="modal-title" >Enter Referrer ID</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -527,7 +565,7 @@
 
         <div class="modal fade" id="waitforApproval" tabindex="-1">
             <div class="modal-dialog">
-            <div class="modal-content bg-dark text-light">
+            <div class="modal-content bg-dark text-dark">
                 <div class="modal-header">
                 <h5 class="modal-title" >Account Approval</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -551,49 +589,13 @@
 
 
 
-        <div aria-live="polite" aria-atomic="true" style="position:absolute; top: 7%; right: 3%; min-width: 100%; min-height: 200px;">
-            <!-- Position it -->
-            <div style="position: absolute; top: 0; right: 0;">
-          
-              <!-- Then put toasts within -->
-              <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="30000">
-                <div class="toast-header">
-                  <img src="favicon.ico" class="rounded mr-2" alt="...">
-                  <strong id="notificationHeader" class="mr-auto"></strong>
-                  <small id="notificationTime" class="text-muted">Just Now</small>
-                  <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div id="notificationBody" class="toast-body">
-                  
-                </div>
-              </div>
-          
-              <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="toast-header">
-                  <img src="..." class="rounded mr-2" alt="...">
-                  <strong class="mr-auto">Bootstrap</strong>
-                  <small class="text-muted">2 seconds ago</small>
-                  <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="toast-body">
-                  Heads up, toasts will stack automatically
-                </div>
-              </div>
-            </div>
-          </div>
-
-
 
 
 
             <!-- Modal -->
     <div class="modal" id="musicPlayer" tabindex="-1" role="dialog">     
         <body class="music-container-border"  role="document">
-            <div class="music-container" style="margin-right: 10%; margin-top: 30%; margin-bottom: 15%; width: fit-content;">
+            <div class="music-container" style="margin-right: 10%; margin-top: 30%; margin-bottom: 15%;">
             <div class="music-info">
                 <h4 class="" id="title">Playa</h4>
                 <div class="progress-container">

@@ -22,6 +22,7 @@ onftsAddress = "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b";
 // Initialise
 init = async () => {
     
+    //Element(toastTest);
     hideElement(connectWalletModal);
     hideElement(userItemsSection);
     hideElement(createItemForm);
@@ -236,7 +237,13 @@ login = async () => {
             if (web3.currentProvider.isMetaMask === true) {
                 walletProvider = 'metamask';
         await Moralis.Web3.authenticate({provider: walletProvider});
-        alert("Logged in Successfully!");
+        //alert("Logged in Successfully!");
+        user = await Moralis.User.current();
+        notificationHeader.innerText = "Logged in Successfully!";
+        notificationBody.innerText = "You have successfully logged in as " + user.get('username');
+        //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
+        $('.toast').toast('show');        
+
         $('#connectWalletModal').modal('hide'); 
         initUser();
             }else {
@@ -293,7 +300,12 @@ loginWC = async () => {
 logout = async () => {
     await Moralis.User.logOut();
     hideElement(userInfo);
-    alert("Logged Out Successfully!");
+    //alert("Logged Out Successfully!");
+
+    notificationHeader.innerText = "Logged Out";
+    notificationBody.innerText = "Logged Out Successfully!";
+    //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
+    $('.toast').toast('show');
     initUser();
 }
 
@@ -780,7 +792,12 @@ renderItem = (item) => {
         copyText.select();
         copyText.setSelectionRange(0, 99999);
         navigator.clipboard.writeText(copyText.value);
-        alert("Copied the text: " + copyText.value);
+       // alert("Copied the text: " + copyText.value);
+
+        notificationHeader.innerText = "Copied!";
+    notificationBody.innerText = "Copied the text: " + copyText.value;
+    //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
+    $('.toast').toast('show');
     };
     
     
@@ -1026,6 +1043,7 @@ openCreateItemButton.onclick = handleOpenCreateItem;
 const notificationHeader = document.getElementById("notificationHeader")
 const notificationBody = document.getElementById("notificationBody")
 const notificationTime = document.getElementById("notificationTime")
+//const toastTest = document.getElementById("toastTest");
 
 //Age Ver
 const ageVer = document.getElementById("ageVer");
