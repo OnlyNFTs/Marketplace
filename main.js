@@ -1,7 +1,9 @@
+
 Moralis.initialize("Yt8nY74340sEhXEWlVCASjPTq5kcBMg4pzqu7iox");
 Moralis.serverURL = 'https://uctux2sj3ina.moralisweb3.com:2053/server';
 
 // Contract Addresses
+const WBNB_TOKEN_ADDRESS = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
 const TOKEN_CONTRACT_ADDRESS = "0x67A3C573bE9edca87f5097e3A3F8f1111E51a6cd";
 const MARKETPLACE_CONTRACT_ADDRESS = "0x09a13f95bBcDf87C92412ba42d849Bb852C8795e";
 const PAYMENT_TOKEN_ADDRESS = "0x134BBB94Fc5a92c854cD22B783FfE9E1C02d761B";
@@ -675,7 +677,8 @@ loadItems = async () => {
     const items = await Moralis.Cloud.run("getItems");
     user = await Moralis.User.current();
     items.forEach(item => {
-        if (user){
+        //if (user){
+            try {
             if (urlNFT, urlNFTID) { 
                 urlNFTIDLC = urlNFTID.toLowerCase();
                 urlNFTLC = urlNFT.toLowerCase();
@@ -824,11 +827,34 @@ renderItem = (item) => {
     let convertedToUSDPrice = new BigNumber(onftsPrice).times(itemlol);
     itemForSale.getElementsByTagName("button")[1].innerText = `BUY ${itemlol} ONFTs`;
     itemForSale.getElementsByTagName("button")[2].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
-    //itemForSale.getElementsByTagName("button")[2].onclick = async () => {
-    //    user = await Moralis.User.current();
-    //    const wtf = new BigNumber(1);
-    //    await pancakeswapRouterContract.methods.swapExactETHForTokens(item.askingPrice, ["0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", "0x134BBB94Fc5a92c854cD22B783FfE9E1C02d761B"], user.get('ethAddress'), Math.round(Date.now()/1000)+60*20).send({from: user.get('ethAddress')});
-    //}
+    // itemForSale.getElementsByTagName("button")[2].onclick = async () => {
+    //     user = await Moralis.User.current();
+    //     const amountIn = new BigNumber(1).times(1000000000).times(100000000);
+    //     console.log(amountIn);
+    //     amountsOut = await pancakeswapRouterContract.methods.getAmountsOut(amountIn, [WBNB_TOKEN_ADDRESS, PAYMENT_TOKEN_ADDRESS]).call({from: user.get('ethAddress')});
+        
+    //     console.log(amountsOut);
+    //     const amountInFriendly = amountIn;
+    //     console.log(amountInFriendly);
+    //     const amountsoutMinyWork = amountsOut[1] / 10;
+    //     const amountsOutMiny = amountsOut[1] - amountsoutMinyWork;
+    //     const amountsOutMin = amountsOut[1];
+    //     const amountsOutMinBN = new BigNumber(amountsOutMin).times(90).div(100);
+    //     const amountsOutMinTest = amountsOutMin;
+    //     const amountsOutMinTest2 = new BigNumber(amountsOutMinTest).times(90).div(100);
+    //     const amountsOutMinTest3 = amountsOutMinTest2;
+    //     console.log(amountsOutMinTest3);
+    //     console.log(amountsOutMinTest2);
+    //     console.log(amountsOutMinTest);
+    //     console.log(amountsOutMin);
+    //     console.log(amountsOutMinBN);
+    //     console.log(amountsOutMiny);
+
+        //const contract = new web3.eth.Contract(paymentTokenContractAbi, WBNB_TOKEN_ADDRESS);
+        //await contract.methods.approve(PANCAKESWAP_ROUTER_ADDRESS, amountIn).send({provider: walletProvider, from: user.get('ethAddress')});
+
+ // await pancakeswapRouterContract.methods.swapTokensForExactTokens(amountIn, amountsOutMiny, [WBNB_TOKEN_ADDRESS, PAYMENT_TOKEN_ADDRESS], user.get('ethAddress'), Math.round(Date.now()/1000)+60*20).send({from: user.get('ethAddress')});
+    }
     itemForSale.getElementsByTagName("button")[1].onclick = async () =>  buyItem(item);
     itemForSale.getElementsByTagName("a")[3].innerText = `Royalties ${item.royaltyFee}%`;
     itemForSale.id = `item-${item.uid}`;
@@ -1002,7 +1028,7 @@ checkURL = async () => {
         }
 }
 
-unsub => await (Moralis.Web3.onAccountsChanged) = console.log("change");
+//unsub => await (Moralis.Web3.onAccountsChanged) = console.log("change");
   
 
 //INIT WEB3
