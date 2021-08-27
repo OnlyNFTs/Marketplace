@@ -701,7 +701,7 @@ loadItems = async () => {
             const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
             if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
             getAndRenderItemData(item, renderUserItem);
-            
+            return;
             }
         }
             
