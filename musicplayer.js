@@ -8,6 +8,12 @@ const progressContainer = document.querySelector('.progress-container');
 const title = document.querySelector('#title');
 const cover = document.querySelector('#cover');
 
+
+//Notification
+// const notificationHeader = document.getElementById("notificationHeader")
+// const notificationBody = document.getElementById("notificationBody")
+// const notificationTime = document.getElementById("notificationTime")
+
 //Song Titles
 const songs = ['sickickvol3', 'diamonds', 'pumpitup', 'elephants']
 
@@ -28,6 +34,10 @@ function playSong() {
     musicContainer.classList.add('play')
     //playBtn.querySelector('i.fas').classList.remove('fa-play')
    // playBtn.querySelector('i.fas').classList.add('fa-pause')
+   notificationHeader.innerText = "Now Playing!";
+        notificationBody.innerText = "Now Playing! " + title.innerText;
+        //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
+        $('.toast').toast('show');
    audio.play()
 }
 
