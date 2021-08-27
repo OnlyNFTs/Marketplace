@@ -677,8 +677,8 @@ loadItems = async () => {
     const items = await Moralis.Cloud.run("getItems");
     user = await Moralis.User.current();
     items.forEach(item => {
-        //if (user){
-            try {
+        if (user){
+            //try {
             if (urlNFT, urlNFTID) { 
                 urlNFTIDLC = urlNFTID.toLowerCase();
                 urlNFTLC = urlNFT.toLowerCase();
