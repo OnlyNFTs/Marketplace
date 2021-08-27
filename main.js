@@ -685,7 +685,7 @@ loadItems = async () => {
                 if (urlNFTLC != item.tokenAddress, urlNFTIDLC != item.tokenId) {
                 const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
                 if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
-                //getAndRenderItemData(item, renderUserItem);
+                getAndRenderItemData(item, renderUserItem);
                 return;
                 }
              } else if (user.attributes.accounts == item.ownerOf){
@@ -694,13 +694,13 @@ loadItems = async () => {
                 getAndRenderItemData(item, renderUserItem);
                 return;
             }
-        } else if (urlNFT, urlNFTID) { 
+            } else if (urlNFT, urlNFTID) { 
             urlNFTIDLC = urlNFTID.toLowerCase();
             urlNFTLC = urlNFT.toLowerCase();
             if (urlNFTLC != item.tokenAddress, urlNFTIDLC != item.tokenId) {
             const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
             if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
-            // getAndRenderItemData(item, renderUserItem);
+            getAndRenderItemData(item, renderUserItem);
             
             }
         }
