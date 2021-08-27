@@ -45,7 +45,13 @@ init = async () => {
     }
    } else {
     walletProvider = 'undefined';
-     alert('No Web3 Browser Has Been Detected. Please visit https://metamask.io/download And install Metamask!');
+   //  alert('No Web3 Browser Has Been Detected. Please visit https://metamask.io/download And install Metamask!');
+    // $('.toast').toast(data-delay="10000");
+    
+    notificationHeader.innerText = "No Web3 Browser Detected";
+    notificationBody.innerText = "Please visit https://metamask.io/download And install Metamask!";
+    //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
+    $('.toast').toast('show');
      //window.web3 = Moralis.Web3.enable({provider: 'walletconnect'});
      
    }
@@ -1015,6 +1021,11 @@ userProfileButton.onclick = openUserInfo;
 const openCreateItemButton = document.getElementById("btnOpenCreateItem");
 openCreateItemButton.onclick = handleOpenCreateItem;
 
+
+//Notification
+const notificationHeader = document.getElementById("notificationHeader")
+const notificationBody = document.getElementById("notificationBody")
+const notificationTime = document.getElementById("notificationTime")
 
 //Age Ver
 const ageVer = document.getElementById("ageVer");
