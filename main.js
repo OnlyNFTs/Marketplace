@@ -854,7 +854,7 @@ renderItem = (item) => {
         //await contract.methods.approve(PANCAKESWAP_ROUTER_ADDRESS, amountIn).send({provider: walletProvider, from: user.get('ethAddress')});
 
  // await pancakeswapRouterContract.methods.swapTokensForExactTokens(amountIn, amountsOutMiny, [WBNB_TOKEN_ADDRESS, PAYMENT_TOKEN_ADDRESS], user.get('ethAddress'), Math.round(Date.now()/1000)+60*20).send({from: user.get('ethAddress')});
-    }
+  //  }
     itemForSale.getElementsByTagName("button")[1].onclick = async () =>  buyItem(item);
     itemForSale.getElementsByTagName("a")[3].innerText = `Royalties ${item.royaltyFee}%`;
     itemForSale.id = `item-${item.uid}`;
