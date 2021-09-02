@@ -11,72 +11,73 @@
 <body class="bg-dark">
 
     <nav class="justify-content-between navbar navbar-expand-lg navbar-dark text-dark bg-transparent border-bottom border-dark">
-        <a id="secretbutton" class="navbar-brand rounded-pill btn btn-outline-moralis"  href="#"><img class=" rounded-circle" src="favicon.ico" alt="..."></a>
-        <h3 class="p-0 " >OnlyNFTs</h3>
-        <button class="btn btn-outline-moralis rounded-pill my-2 my-sm-0 " id="btnConnect">Connect wallet</button>
-
-
-
-
+        <a id="secretbutton" class="ml-0 rounded-pill btn my-2 my-sm-0"  href="#"><img class=" rounded-circle" src="favicon.ico" alt="..."></a>
+        <h3 class="p-0 ml-0" >OnlyNFTs</h3>
+        
+        
+        
+        <nav class=" row">
+      
             <button class="toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <a href="#" class="badge badge-dark rounded-circle p-1 mb-0 badge-dark ml-2 mr-1" style="text-align:center;">
+                <a href="#" class="badge badge-dark rounded-circle p-1 mb-0 badge-dark " style="text-align:center;">
                     <svg href="#" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
                       </svg>
                 </a>
             </button>
-        
+        </nav> 
         
        
     </nav>
 
     <div class="">
         <div class="collapse" id="navbarNav">
-          <div class="bg-dark p-4">
-            <div class="d-flex p-1">
-            <button class="btn btn-primary rounded-pill my-2 my-sm-0 mr-md-2 " id="btnOpenCreateItem">Create</button>
-            <button class="btn btn-outline-moralis rounded-pill my-2 my-sm-0 m-2" id="btnUserInfo">Profile</button>
-        </div>
+            <div class="bg-dark p-4">
+                <div class="d-flex p-1">
+                    <button class="btn btn-primary rounded-pill my-2 my-sm-0 " id="btnConnect">Connect wallet</button>
+                     <button class="btn btn-primary rounded-pill my-2 my-sm-0 mr-md-2 " id="btnOpenCreateItem">Create</button>
+                    <button class="btn btn-outline-moralis rounded-pill my-2 my-sm-0 m-2" id="btnUserInfo">Profile</button>
+                </div>
                 
               
           
-            <div class="p-1">
+                <div class="p-1">
 
-              <a class="btn btn-primary rounded-pill my-2 my-sm-0 mr-md-2" id="btnMyItems" href="#">My items</a>
+                    <a class="btn btn-primary rounded-pill my-2 my-sm-0 mr-md-2" id="btnMyItems" href="#">My items</a>
            
-              <div class="p-1">
-              <a id="onftspricebutton" style="font-size:80%" class="btn rounded-pill btn-outline-moralis my-2 my-sm-0" href="https://pancakeswap.finance/swap?outputCurrency=0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b"></a>
-            </div>
-            </div>
+                     <div class="p-1">
+                     <a id="onftspricebutton" style="font-size:80%" class="btn rounded-pill btn-outline-moralis my-2 my-sm-0" href="https://pancakeswap.finance/swap?outputCurrency=0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b"></a>
+                    </div>
+                </div>
          
-          </div>
+            </div>
         </div>
+    </div>
 
 
 
-
-      <div id="toast-container" class="toast-container" id="toasttest" aria-live="assertive" aria-atomic="true" style="position:relative; margin-inline: 3%;">
+    <div id="toast-container" class="toast-container" id="toasttest" aria-live="assertive" aria-atomic="true" style="position:relative; margin-inline: 3%;">
         <!-- Position it -->
         <div style="position:relative" >
       
           <!-- Then put toasts within -->
-          <div class="toast text-dark" style="position:relative " role="alert" aria-live="assertive" aria-atomic="true" data-delay="30000">
-            <div class="toast-header">
-              <img src="favicon.ico" class="rounded mr-2" alt="...">
-              <strong id="notificationHeader" class="mr-auto"></strong>
-              <small id="notificationTime" class="text-muted">Just Now</small>
-              <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            <div class="toast text-dark" style="position:relative " role="alert" aria-live="assertive" aria-atomic="true" data-delay="30000">
+                <div class="toast-header">
+                <img src="favicon.ico" class="rounded mr-2" alt="...">
+                <strong id="notificationHeader" class="mr-auto"></strong>
+                <small id="notificationTime" class="text-muted">Just Now</small>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div id="notificationBody" class="toast-body">
+                </button>
+                </div>
+                <div id="notificationBody" class="toast-body ">
               
+                </div>
             </div>
-          </div>
       
         
         </div>
-      </div>
+    </div>
 
 
 
