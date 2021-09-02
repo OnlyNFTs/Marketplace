@@ -10,8 +10,11 @@
 
 ## Products <a id="products-1"></a>
 
-* [Content Creator](products-1/content-creator.md)
-* [Marketplace](products-1/marketplace.md)
+* [Content Creator](products-1/content-creator/README.md)
+  * [Creating NFT](products-1/content-creator/creating-nft.md)
+* [Marketplace](products-1/marketplace/README.md)
+  * [Buying NFTs](products-1/marketplace/buying-nfts.md)
+  * [Listing NFT for Sale](products-1/marketplace/listing-nft-for-sale.md)
 
 ## Tokenomics
 
