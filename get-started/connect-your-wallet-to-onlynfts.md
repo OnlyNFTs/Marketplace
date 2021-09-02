@@ -32,6 +32,10 @@ To connect MetaMask to OnlyNFTs follow the steps below.
 {% tab title="TrustWallet" %}
 
 {% endtab %}
+
+{% tab title="WalletConnect" %}
+
+{% endtab %}
 {% endtabs %}
 
 ## **Desktop/Web Browser wallets**
@@ -51,6 +55,10 @@ To connect MetaMask to OnlyNFTs follow the steps below.
 * [ ] Click S**ign** to Connect/Log in.
 
 ![](../.gitbook/assets/sign.png)
+{% endtab %}
+
+{% tab title="WalletConnect" %}
+
 {% endtab %}
 {% endtabs %}
 
