@@ -1,11 +1,9 @@
 .bg-dark {
   background: rgb(241, 241, 241) !important;
 }
-.navbar-toggler-icon {
-  background: rgb(255, 162, 224);
-}
 
 .modal-open .itemsForSale {
+  filter: blur(10px) grayscale(90%);
   -webkit-filter: blur(10px) grayscale(90%);
 }
 .bg-moralis {
