@@ -1,6 +1,6 @@
 # Create a Wallet
 
-![](../../.gitbook/assets/onlynfts-logo-2021-resize.png)
+![](../../.gitbook/assets/onfts_diamond_logo-2-.png)
 
 To get started on OnlyNFTs, the first thing you'll need is to set up a wallet that supports Binance Smart Chain \(BSC\). Wallets are available both on desktop computers and on smartphone devices. You'll need to choose the wallet that fits your needs best.
 
