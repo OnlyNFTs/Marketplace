@@ -944,8 +944,9 @@ buyItem = async (item) => {
         login();
         return;
     }
+    console.log(walletProvider);
     await ensurePaymentTokenIsApproved(PAYMENT_TOKEN_ADDRESS, item.askingPrice); 
-    await marketplaceContract.methods.buyItem(item.uid).send({provider: walletProvider, from: user.get('ethAddress')});
+    await marketplaceContract.methods.buyItem(item.uid).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
     alert("NFT Purchased");
 }
 
