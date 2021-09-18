@@ -1,17 +1,5 @@
-
 Moralis.initialize("Yt8nY74340sEhXEWlVCASjPTq5kcBMg4pzqu7iox");
 Moralis.serverURL = 'https://uctux2sj3ina.moralisweb3.com:2053/server';
-
-// Contract Addresses
-const WBNB_TOKEN_ADDRESS = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
-const TOKEN_CONTRACT_ADDRESS = "0x67A3C573bE9edca87f5097e3A3F8f1111E51a6cd";
-const MARKETPLACE_CONTRACT_ADDRESS = "0x09a13f95bBcDf87C92412ba42d849Bb852C8795e";
-const PAYMENT_TOKEN_ADDRESS = "0x134BBB94Fc5a92c854cD22B783FfE9E1C02d761B";
-//const MINT_TOKEN_ADDRESS = "0xa1aFA0F5F11B5fF4700883Ed76fb2Baa98c94E83";
-const MINT_TOKEN_ADDRESS = "0x134BBB94Fc5a92c854cD22B783FfE9E1C02d761B";
-const EARLY_HOLDERS_NFT_ADDRESS = "0x5692AB9e489e9c88d72431ce572c31061BbC7531";
-//const EARLY_HOLDERS_NFT_ADDRESS = "0x1E2DA509D7bDfA8eEb4a9D8E40B509Fb2d68DBe8";
-const PANCAKESWAP_ROUTER_ADDRESS ="0x10ED43C718714eb63d5aA57B78B54704E256024E";
 
 // Fees/Requirements
 onftsHoldersMintRequirements = 1000;
@@ -20,79 +8,52 @@ onftsEarlyHoldersNFTAddress = "0x5692ab9e489e9c88d72431ce572c31061bbc7531";
 onftsNSFWAddress = "0x67a3c573be9edca87f5097e3a3f8f1111e51a6cd";
 onftsAddress = "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b";
 
-
 // Initialise
 init = async () => {
-    
-    //Element(toastTest);
+
     hideElement(connectWalletModal);
     hideElement(userItemsSection);
     hideElement(createItemForm);
     hideElement(loadingMintForm);
     hideElement(musicPlayer);
-    
-     window.addEventListener('load', function() {
+    hideElement(editProfilePageButton);
+    window.addEventListener('load', function() {
          
-     if (typeof web3 !== 'undefined') {
+    if (typeof web3 !== 'undefined') {
         walletProvider = 'active';
-     console.log('web3 is enabled')
-     if (web3.currentProvider.isMetaMask === true) {
-        walletProvider = 'metamask';
-       console.log('MetaMask is active');
-       //window.web3 = Moralis.Web3.enable({provider: 'metamask'});
-       initWeb3();
+        console.log('web3 is enabled')
+        if (web3.currentProvider.isMetaMask === true) {
+            walletProvider = 'metamask';
+            console.log('MetaMask is active');
+            //window.web3 = Moralis.Web3.enable({provider: 'metamask'});
+            initWeb3();
+        } else {
+            console.log('MetaMask is not available');
+            //window.web3 = Moralis.Web3.enable({provider: 'walletconnect, trustwallet'});
+            initWeb3();
+        }
     } else {
-       console.log('MetaMask is not available');
-       //window.web3 = Moralis.Web3.enable({provider: 'walletconnect, trustwallet'});
-       initWeb3();
+        walletProvider = 'undefined';
+        //  alert('No Web3 Browser Has Been Detected. Please visit https://metamask.io/download And install Metamask!');
+        // $('.toast').toast(data-delay="10000");
+        notificationHeader.innerText = "No Web3 Browser Detected";
+        notificationBody.innerText = "Please visit https://metamask.io/download And install Metamask!";
+        //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
+        $('.toast').toast('show');
+        //window.web3 = Moralis.Web3.enable({provider: 'walletconnect'});
     }
-   } else {
-    walletProvider = 'undefined';
-   //  alert('No Web3 Browser Has Been Detected. Please visit https://metamask.io/download And install Metamask!');
-    // $('.toast').toast(data-delay="10000");
-    
-    notificationHeader.innerText = "No Web3 Browser Detected";
-    notificationBody.innerText = "Please visit https://metamask.io/download And install Metamask!";
-    //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
-    $('.toast').toast('show');
-     //window.web3 = Moralis.Web3.enable({provider: 'walletconnect'});
-     
-   }
- });
-// if (walletProvider !== 'undefined') {
-// if (typeof web3 !== 'undefined') {
- //   initWeb3();
-//     if (web3.currentProvider.isMetaMask === true) {
-//         alert("MetaMask");
-//     window.web3 = await Moralis.Web3.enable({provider: 'metmask'});
-//     }else{
-//         alert("TrustWallet");
-//         window.web3 = await Moralis.Web3.enable({provider: 'trustwallet'});
-//     }
- // } else {
-//     alert("WalletConnect");
-    
-//      window.web3 = await Moralis.Web3.authenticate({provider: 'walletconnect'});
-//      window.web3 = await Moralis.Web3.enable({provider: 'walletconnect'});
-//      Web3Wallet = "walletconnect";
-//     }
-//    window.web3 = await Moralis.Web3.authenticate();
+});
 
-    // window.web3 = await Moralis.Web3.enable();
-    // window.tokenContract = new web3.eth.Contract(tokenContractAbi, TOKEN_CONTRACT_ADDRESS);
-    // window.marketplaceContract = new web3.eth.Contract(marketplaceContractAbi, MARKETPLACE_CONTRACT_ADDRESS);
-    // window.paymentTokenContract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
-    // window.mintTokenContract = new web3.eth.Contract(mintTokenContractAbi, MINT_TOKEN_ADDRESS);
-    // window.earlyHoldersContract = new web3.eth.Contract(earlyHoldersContractAbi, EARLY_HOLDERS_NFT_ADDRESS);
-    // window.pancakeswapRouterContract = new web3.eth.Contract(pancakeswapRouterAbi, PANCAKESWAP_ROUTER_ADDRESS);
- // }
     await checkURL();
     $("#ageVer").modal('show');
     await fetchCoinPrice();
     await loadItems();
     await initUser();
-    
-    
+    await profilePageOwner();
+    await renderProfilePageInfo();
+    await Moralis.initPlugins();
+    await getMarketQuote();
+
     const soldItemsQuery = new Moralis.Query('SoldItemsNSFW');
     const soldItemsSubscription = await soldItemsQuery.subscribe();
     soldItemsSubscription.on("create", onItemSold);
@@ -105,6 +66,41 @@ init = async () => {
 
 }
 
+getSupportedTokens = async () => {
+    const tokens = await Moralis.Plugins.oneInch.getSupportedTokens({
+      chain: 'bsc', // The blockchain you want to use (eth/bsc/polygon)
+    });
+    console.log(tokens);
+  }
+
+  getMarketQuote = async () => {
+       var priceTest = new BigNumber(onftsPriceBNB * 5000000 *10);
+       console.log(priceTest);
+       var pricelol = priceTest.toString();
+       console.log(pricelol);
+    const quote = await Moralis.Plugins.oneInch.quote({
+        
+      chain: 'bsc', // The blockchain you want to use (eth/bsc/polygon)
+      fromTokenAddress: WBNB_TOKEN_ADDRESS, // The token you want to swap
+      toTokenAddress: PAYMENT_TOKEN_ADDRESS, // The token you want to receive
+      amount: pricelol,
+    });
+    console.log(quote);
+    console.log(quote.toTokenAmount);
+    if (quote.toTokenAmount) {
+        const quote2 = await Moralis.Plugins.oneInch.quote({
+        chain: 'bsc', // The blockchain you want to use (eth/bsc/polygon)
+        fromTokenAddress: PAYMENT_TOKEN_ADDRESS, // The token you want to swap
+        toTokenAddress: WBNB_TOKEN_ADDRESS, // The token you want to receive
+        amount: 1,
+      });
+      console.log(quote2);
+      
+    }
+  }
+
+
+
 const livecoindata_api_url = 'https://api.livecoinwatch.com/coins/single';
 const pancakeswap_api_url = 'https://api.pancakeswap.info/api/v2/tokens/0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b';
 
@@ -116,8 +112,11 @@ const response = await fetch(pancakeswap_api_url)
 })
 .then((data) => {
     var onftsApiData = data.data;
+    console.log(onftsApiData);
     onftsPrice = onftsApiData.price;
+    onftsPriceBNB = onftsApiData.price_BNB;
     onftsPriceBN = new BigNumber(onftsPrice);
+    onftsPriceBNBBN = new BigNumber(onftsPriceBNB);
     document.getElementById("onftspricebutton").innerText = `$${onftsPriceBN.dp(6)}`;
 })
 }
@@ -221,94 +220,13 @@ initUser = async () => {
         showElement(openUserItemsButton);
         loadBalances();
         loadUserItems();
+        loadUserListedItems();
     }else{
         showElement(userConnectButton);
         hideElement(userProfileButton);
         hideElement(openCreateItemButton);
         hideElement(openUserItemsButton);
     }
-}
-
-//Log In
-login = async () => {
-    
-    try {
-        
-        if (typeof web3 !== 'undefined') {
-            
-            if (web3.currentProvider.isMetaMask === true) {
-                walletProvider = 'metamask';
-        await Moralis.Web3.authenticate({provider: walletProvider});
-        //alert("Logged in Successfully!");
-        user = await Moralis.User.current();
-        notificationHeader.innerText = "Logged in Successfully!";
-        notificationBody.innerText = "You have successfully logged in as " + user.get('username');
-        //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
-        $('.toast').toast('show');        
-
-        $('#connectWalletModal').modal('hide'); 
-        initUser();
-            }else {
-                await Moralis.Web3.authenticate({provider: 'trustwallet, metamask, walletconnect'});
-        alert("Logged in Successfully!");
-        $('#connectWalletModal').modal('hide'); 
-        initUser(); 
-            }
-        } else {
-            await Moralis.Web3.authenticate();
-            alert("Logged in Successfully!");
-            $('#connectWalletModal').modal('hide'); 
-            initUser(); 
-        }
-
-
-    } catch (error) {
-        alert(error)
-    }
-}
-
-//Log In
-loginTW = async () => {
-    
-    try {
-        await Moralis.Web3.authenticate({provider: 'trustwallet'});
-        alert("Logged in Successfully!");
-        $('#connectWalletModal').modal('hide'); 
-        initUser(); 
-
-    } catch (error) {
-        alert(error)
-    }
-}
-
-//Log In
-loginWC = async () => {
-    
-    try {
-        walletProvider = "walletconnect";
-        console.log(walletProvider);
-        await Moralis.Web3.authenticate({provider: walletProvider});
-        alert("Logged in Successfully!");
-        $('#connectWalletModal').modal('hide'); 
-        initWeb3();
-        initUser();
-
-    } catch (error) {
-        alert(error)
-    }
-}
-
-// Logout
-logout = async () => {
-    await Moralis.User.logOut();
-    hideElement(userInfo);
-    //alert("Logged Out Successfully!");
-
-    notificationHeader.innerText = "Logged Out";
-    notificationBody.innerText = "Logged Out Successfully!";
-    //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
-    $('.toast').toast('show');
-    initUser();
 }
 
 // Load/Open User Info Modal
@@ -378,6 +296,7 @@ saveUserInfo = async () => {
     }
 
     await user.save();
+    await createProfilePage();
     alert("User info saved successfully!");
     openUserInfo();
 }
@@ -629,6 +548,7 @@ mintEANft = async (metadataUrl, creator, RoyaltyFee, referrerAddress) => {
 openUserItems = async () => {
     user = await Moralis.User.current(); 
     loadUserItems();
+    loadUserListedItems();
     if (user){ 
         const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
         const query = new Moralis.Query(BscTokenBalance);
@@ -677,37 +597,46 @@ loadItems = async () => {
     const items = await Moralis.Cloud.run("getItems");
     user = await Moralis.User.current();
     items.forEach(item => {
-        if (user){
-            //try {
-            if (urlNFT, urlNFTID) { 
-                urlNFTIDLC = urlNFTID.toLowerCase();
-                urlNFTLC = urlNFT.toLowerCase();
-                if (urlNFTLC != item.tokenAddress, urlNFTIDLC != item.tokenId) {
-                const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
-                if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
-                getAndRenderItemData(item, renderItem);
-                return;
+        if (user)   { 
+            if (urlProfile) { 
+                urlProfileLC = urlProfile.toLowerCase();
+                if (urlProfileLC != item.creator) {
+                    const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
+                    if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
+                    return;
                 }
-             } else if (user.attributes.accounts == item.ownerOf){
+            }   
+        }  if (urlProfile) { 
+            urlProfileLC = urlProfile.toLowerCase();
+            if (urlProfileLC != item.creator) {
                 const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
                 if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
-                getAndRenderItemData(item, renderItem);
                 return;
-            }
-            } else if (urlNFT, urlNFTID) { 
-            urlNFTIDLC = urlNFTID.toLowerCase();
-            urlNFTLC = urlNFT.toLowerCase();
-            if (urlNFTLC != item.tokenAddress, urlNFTIDLC != item.tokenId) {
-            const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
-            if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
-            getAndRenderItemData(item, renderItem);
-            return;
             }
         }
-            
         getAndRenderItemData(item, renderItem);
     });
 }
+
+
+// Load Listed User Items
+loadUserListedItems = async () => {
+    const items = await Moralis.Cloud.run("getItems");
+    user = await Moralis.User.current();
+    items.forEach(item => {
+        if (user)   { 
+                if (user.attributes.accounts != item.ownerOf) {
+                    console.log(item.ownerOf);
+                    console.log("work");
+                    const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
+                    if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
+                    return;
+                }
+                getAndRenderItemData(item, renderUserListedItems);
+            }   
+            
+        });  
+    }
 
 // Init NFT Template
 initTemplate = (id) => {
@@ -764,102 +693,207 @@ renderUserItem = async (item) => {
 
     userItem.id = `user-item-${item.tokenObjectId}`
     userItems.appendChild(userItem);
+   
 }
 
-// Render Marketplace Item
-renderItem = (item) => {
-    const itemForSale = marketplaceItemTemplate.cloneNode(true);
-    if (item.sellerAvatar){
-        itemForSale.getElementsByTagName("img")[0].src = item.sellerAvatar.url();
-        itemForSale.getElementsByTagName("img")[0].alt = item.sellerUsername;
-     
-    }
-    itemForSale.nftShareValue = 0;
-    hideElement(itemForSale.getElementsByTagName("div")[2]);
-    //hideElement(itemForSale.getElementsByTagName("input")[0]);
-    //hideElement(itemForSale.getElementsByTagName("button")[0]);
-    itemForSale.getElementsByTagName("a")[0].onclick = () => {
-        if (itemForSale.nftShareValue === 0) {
-        hideElement(itemForSale.getElementsByTagName("img")[1]);
-        showElement(itemForSale.getElementsByTagName("div")[2]);
-        itemForSale.nftShareValue = 1;
-        } else {
-            showElement(itemForSale.getElementsByTagName("img")[1]);
-            hideElement(itemForSale.getElementsByTagName("div")[2]);
-            itemForSale.nftShareValue = 0;
+// Render User Items
+renderUserListedItems = async (item) => {
+    const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
+    if (userItemListing) return;
+
+    const userItem = userItemTemplate.cloneNode(true);
+    userItem.getElementsByTagName("img")[1].src = item.image;
+    userItem.getElementsByTagName("img")[1].alt = item.name;
+    userItem.getElementsByTagName("h5")[0].innerText = item.name;
+    userItem.getElementsByTagName("p")[0].innerText = item.symbol; 
+    userItem.getElementsByTagName("p")[1].innerText = item.description; 
+    userItem.getElementsByTagName("h6")[0].innerText = "Creator";
+    userItem.getElementsByTagName("p")[2].innerText = item.creator;
+    userItem.getElementsByTagName("p")[3].innerText = item.royaltyFee;    
+    itemPrice = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
+    userItem.getElementsByTagName("input")[0].value = await itemPrice ?? 1;
+    userItem.getElementsByTagName("input")[0].disabled = await item.askingPrice > 0;
+    //userItem.getElementsByTagName("button")[0].disabled = 1;
+    userItem.getElementsByTagName("button")[0].disabled = await item.askingPrice > 0;
+    // if (item.askingPrice == null) {hideElement(userItem.getElementsByTagName("button")[1]);};
+    // if (item.askingPrice != null) {hideElement(userItem.getElementsByTagName("button")[2]);};
+
+    userItem.getElementsByTagName("button")[1].disabled = await item.askingPrice == null;
+    userItem.getElementsByTagName("button")[2].disabled = await item.askingPrice > 0;
+    userItem.getElementsByTagName("button")[1].onclick = async () => removeItem(item);
+
+    //userItem.getElementsByTagName("button")[1].disabled = item.askingPrice < 10;
+    userItem.getElementsByTagName("button")[2].onclick = async () => burnNFT(item);
+    userItem.getElementsByTagName("button")[0].onclick = async () => {
+        user = await Moralis.User.current();
+        if (!user){
+            login();
+            return;
+        }else if (userItem.getElementsByTagName("input")[0].value > 5000000) {
+            alert("Max 5Mil");
+            return;
         }
+        await ensureMarketplaceIsApproved(item.tokenId, item.tokenAddress);
+        await userItem.getElementsByTagName("input")[0].value;
+        let test1 = userItem.getElementsByTagName("input")[0].value;
+        let askingPriceBN = new BigNumber(test1).times(1000000000).times(1000000000);
+        await marketplaceContract.methods.addItemToMarket(item.tokenId, item.tokenAddress, askingPriceBN, item.creator, item.royaltyFee, item.referrer).send({from: user.get('ethAddress')});
+        alert("NFT Added To Marketplace!");
     };
-    
-    itemForSale.getElementsByTagName("button")[0].onclick = () => {
-        var copyText = itemForSale.getElementsByTagName("input")[0];
-        copyText.select();
-        copyText.setSelectionRange(0, 99999);
-        navigator.clipboard.writeText(copyText.value);
-       // alert("Copied the text: " + copyText.value);
 
-        notificationHeader.innerText = "Copied!";
-    notificationBody.innerText = "Copied the text: " + copyText.value;
-    //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
-    $('.toast').toast('show');
-    };
+    userItem.id = `user-item-${item.tokenObjectId}`
     
-    
-    hideElement(itemForSale.getElementsByTagName("video")[0]);
-    itemForSale.getElementsByTagName("input")[0].value = "https://marketplace.onlynfts.online/?nft=" + item.tokenAddress + "&id=" + item.tokenId;
-    itemForSale.getElementsByTagName("h6")[0].innerText = "Seller Info:";
-    itemForSale.getElementsByTagName("p")[1].innerText = item.sellerUsername;
-    itemForSale.getElementsByTagName("p")[2].innerText = item.ownerOf;
-    itemForSale.getElementsByTagName("p")[1].onclick = () => alert("test");
-    //itemForSale.getElementsByTagName("img")[1].style.filter = 'blur(20px)';
-
-    itemForSale.getElementsByTagName("p")[0].innerText = item.symbol;
-    console.log(item.image.params);
-    itemForSale.getElementsByTagName("img")[1].src = item.image;
-    itemForSale.getElementsByTagName("img")[1].alt = item.name;
-    //itemForSale.getElementsByTagName("video")[0].src = item.image;
-    //itemForSale.getElementsByTagName("video")[0].play;
-    itemForSale.getElementsByTagName("h5")[0].innerText = item.name;
-    itemForSale.getElementsByTagName("h6")[1].innerText = "Description:";
-    itemForSale.getElementsByTagName("p")[3].innerText = item.description;
-    itemForSale.getElementsByTagName("p")[4].innerText = `RoyaltyFee ${item.royaltyFee} %`;
-    
-    let itemlol = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
-    let convertedToUSDPrice = new BigNumber(onftsPrice).times(itemlol);
-    itemForSale.getElementsByTagName("button")[1].innerText = `BUY ${itemlol} ONFTs`;
-    itemForSale.getElementsByTagName("button")[2].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
-    // itemForSale.getElementsByTagName("button")[2].onclick = async () => {
-    //     user = await Moralis.User.current();
-    //     const amountIn = new BigNumber(1).times(1000000000).times(100000000);
-    //     console.log(amountIn);
-    //     amountsOut = await pancakeswapRouterContract.methods.getAmountsOut(amountIn, [WBNB_TOKEN_ADDRESS, PAYMENT_TOKEN_ADDRESS]).call({from: user.get('ethAddress')});
-        
-    //     console.log(amountsOut);
-    //     const amountInFriendly = amountIn;
-    //     console.log(amountInFriendly);
-    //     const amountsoutMinyWork = amountsOut[1] / 10;
-    //     const amountsOutMiny = amountsOut[1] - amountsoutMinyWork;
-    //     const amountsOutMin = amountsOut[1];
-    //     const amountsOutMinBN = new BigNumber(amountsOutMin).times(90).div(100);
-    //     const amountsOutMinTest = amountsOutMin;
-    //     const amountsOutMinTest2 = new BigNumber(amountsOutMinTest).times(90).div(100);
-    //     const amountsOutMinTest3 = amountsOutMinTest2;
-    //     console.log(amountsOutMinTest3);
-    //     console.log(amountsOutMinTest2);
-    //     console.log(amountsOutMinTest);
-    //     console.log(amountsOutMin);
-    //     console.log(amountsOutMinBN);
-    //     console.log(amountsOutMiny);
-
-        //const contract = new web3.eth.Contract(paymentTokenContractAbi, WBNB_TOKEN_ADDRESS);
-        //await contract.methods.approve(PANCAKESWAP_ROUTER_ADDRESS, amountIn).send({provider: walletProvider, from: user.get('ethAddress')});
-
- // await pancakeswapRouterContract.methods.swapTokensForExactTokens(amountIn, amountsOutMiny, [WBNB_TOKEN_ADDRESS, PAYMENT_TOKEN_ADDRESS], user.get('ethAddress'), Math.round(Date.now()/1000)+60*20).send({from: user.get('ethAddress')});
-  //  }
-    itemForSale.getElementsByTagName("button")[1].onclick = async () =>  buyItem(item);
-    itemForSale.getElementsByTagName("a")[3].innerText = `Royalties ${item.royaltyFee}%`;
-    itemForSale.id = `item-${item.uid}`;
-    itemsForSale.appendChild(itemForSale);
+    userItemsListed.appendChild(userItem);
 }
+
+ // Render Marketplace Item
+ renderItem = (item) => {
+     const itemForSale = marketplaceItemTemplate.cloneNode(true);
+     itemForSale.getElementsByTagName("img")[0].src = item.image;
+     itemForSale.getElementsByTagName("img")[0].alt = item.name;
+     hideElement(itemForSale.getElementsByTagName("video")[0]);
+    item.creator 
+     itemForSale.getElementsByTagName("h2")[0].innerText = item.creator;
+     itemForSale.getElementsByTagName("h3")[0].innerText = item.name;
+     itemForSale.getElementsByTagName("p")[0].innerText = item.description;
+
+    
+     const itemaskingPriceBN = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
+     const convertedToUSDPrice = new BigNumber(onftsPrice).times(itemaskingPriceBN);
+     itemForSale.getElementsByTagName("button")[1].innerText = `${itemaskingPriceBN} ONFTs`;
+     itemForSale.getElementsByTagName("button")[2].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
+
+     itemForSale.isFlipped = '';
+     itemForSale.getElementsByTagName("div")[0].onclick = () => {
+                
+         
+                if (itemForSale.isFlipped != 'triggered')  {
+                    $(itemForSale.getElementsByTagName("div")[0]).toggleClass('is-flipped');
+                    itemForSale.isFlipped = 'triggered';
+                    console.log(itemForSale.isFlipped);
+                }
+            }
+
+    itemForSale.getElementsByTagName("a")[0].onclick = () => {       
+        
+            
+            $(itemForSale.getElementsByTagName("div")[2]).toggleClass('is-flipped');
+            itemForSale.isFlipped = '';
+            console.log(itemForSale.isFlipped);
+       
+    }
+
+
+itemsForSale.appendChild(itemForSale);
+}
+
+// // Render Marketplace Item
+// renderItem = (item) => {
+//     const itemForSale = marketplaceItemTemplate.cloneNode(true);
+//     if (item.sellerAvatar){
+//         itemForSale.getElementsByTagName("img")[1].src = item.sellerAvatar.url();
+//         itemForSale.getElementsByTagName("img")[1].alt = item.sellerUsername;
+     
+//     }
+//     itemForSale.nftShareValue = 0;
+//     //hideElement(itemForSale.getElementsByTagName("div")[2]);
+//     //hideElement(itemForSale.getElementsByTagName("input")[0]);
+//     //hideElement(itemForSale.getElementsByTagName("button")[0]);
+//     itemForSale.getElementsByTagName("a")[1].onclick = () => {
+     
+//             // $(itemForSale.getElementsByTagName("img")[0]).toggleClass('rotate-180');
+        
+//     };
+//     //$(itemForSale.getElementsByTagName("div")[0]).toggleClass('card__inner');
+//     // $(itemForSale.getElementsByTagName("div")[1]).toggleClass('card__face');
+//     //$(itemForSale.getElementsByTagName("div")[1]).toggleClass('card__face', 'card__face--front');
+//     // $(itemForSale.getElementsByTagName("div")[2]).toggleClass('card__face');
+//     //$(itemForSale.getElementsByTagName("div")[2]).toggleClass( 'card__face--back');
+//     //$(itemForSale.getElementsByTagName("div")[3]).toggleClass('card__content');
+//     //$(itemForSale.getElementsByTagName("div")[4]).toggleClass('card__header');
+//     //$(itemForSale.getElementsByTagName("div")[5]).toggleClass('card__body');
+
+    
+    
+//     itemForSale.getElementsByTagName("div")[0].onclick = () => {
+//         if (itemForSale.nftShareValue === 0) {
+            
+//             $(itemForSale.getElementsByTagName("div")[0]).toggleClass('rotate-180');
+//             const hmmwtf = $(itemForSale.getElementsByTagName("div")[0]).toggleClass('card__inner');
+           
+//             hmmwtf.classList.toggle('is-flipped');
+//         // itemForSale.nftShareValue = 1;
+//         }
+//     }
+//     itemForSale.getElementsByTagName("button")[0].onclick = () => {
+//         var copyText = itemForSale.getElementsByTagName("input")[0];
+//         copyText.select();
+//         copyText.setSelectionRange(0, 99999);
+//         navigator.clipboard.writeText(copyText.value);
+//        // alert("Copied the text: " + copyText.value);
+
+//         notificationHeader.innerText = "Copied!";
+//     notificationBody.innerText = "Copied the text: " + copyText.value;
+//     //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
+//     $('.toast').toast('show');
+//     };
+    
+//     hideElement(itemForSale.getElementsByTagName("video")[0]);
+//     itemForSale.getElementsByTagName("input")[0].value = "https://marketplace.onlynfts.online/?nft=" + item.tokenAddress + "&id=" + item.tokenId;
+//     itemForSale.getElementsByTagName("h6")[0].innerText = "Seller Info:";
+//     itemForSale.getElementsByTagName("p")[0].innerText = item.sellerUsername;
+//     itemForSale.getElementsByTagName("p")[1].innerText = item.ownerOf;
+//     itemForSale.getElementsByTagName("p")[1].onclick = () => alert("test");
+//     //itemForSale.getElementsByTagName("img")[1].style.filter = 'blur(20px)';
+
+//    // itemForSale.getElementsByTagName("p")[0].innerText = item.symbol;
+//     console.log(item.image.params);
+//     itemForSale.getElementsByTagName("img")[0].src = item.image;
+//     itemForSale.getElementsByTagName("img")[0].alt = item.name;
+//     //itemForSale.getElementsByTagName("video")[0].src = item.image;
+//     //itemForSale.getElementsByTagName("video")[0].play;
+//     itemForSale.getElementsByTagName("h5")[0].innerText = item.name;
+//     itemForSale.getElementsByTagName("h6")[1].innerText = "Description:";
+//     itemForSale.getElementsByTagName("p")[2].innerText = item.description;
+//     itemForSale.getElementsByTagName("p")[3].innerText = `RoyaltyFee ${item.royaltyFee} %`;
+    
+//     let itemlol = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
+//     let convertedToUSDPrice = new BigNumber(onftsPrice).times(itemlol);
+//     itemForSale.getElementsByTagName("button")[1].innerText = `BUY ${itemlol} ONFTs`;
+//     itemForSale.getElementsByTagName("button")[2].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
+//     // itemForSale.getElementsByTagName("button")[2].onclick = async () => {
+//     //     user = await Moralis.User.current();
+//     //     const amountIn = new BigNumber(1).times(1000000000).times(100000000);
+//     //     console.log(amountIn);
+//     //     amountsOut = await pancakeswapRouterContract.methods.getAmountsOut(amountIn, [WBNB_TOKEN_ADDRESS, PAYMENT_TOKEN_ADDRESS]).call({from: user.get('ethAddress')});
+        
+//     //     console.log(amountsOut);
+//     //     const amountInFriendly = amountIn;
+//     //     console.log(amountInFriendly);
+//     //     const amountsoutMinyWork = amountsOut[1] / 10;
+//     //     const amountsOutMiny = amountsOut[1] - amountsoutMinyWork;
+//     //     const amountsOutMin = amountsOut[1];
+//     //     const amountsOutMinBN = new BigNumber(amountsOutMin).times(90).div(100);
+//     //     const amountsOutMinTest = amountsOutMin;
+//     //     const amountsOutMinTest2 = new BigNumber(amountsOutMinTest).times(90).div(100);
+//     //     const amountsOutMinTest3 = amountsOutMinTest2;
+//     //     console.log(amountsOutMinTest3);
+//     //     console.log(amountsOutMinTest2);
+//     //     console.log(amountsOutMinTest);
+//     //     console.log(amountsOutMin);
+//     //     console.log(amountsOutMinBN);
+//     //     console.log(amountsOutMiny);
+
+//         //const contract = new web3.eth.Contract(paymentTokenContractAbi, WBNB_TOKEN_ADDRESS);
+//         //await contract.methods.approve(PANCAKESWAP_ROUTER_ADDRESS, amountIn).send({provider: walletProvider, from: user.get('ethAddress')});
+
+//  // await pancakeswapRouterContract.methods.swapTokensForExactTokens(amountIn, amountsOutMiny, [WBNB_TOKEN_ADDRESS, PAYMENT_TOKEN_ADDRESS], user.get('ethAddress'), Math.round(Date.now()/1000)+60*20).send({from: user.get('ethAddress')});
+//   //  }
+//     itemForSale.getElementsByTagName("button")[1].onclick = async () =>  buyItem(item);
+//     itemForSale.getElementsByTagName("a")[3].innerText = `Royalties ${item.royaltyFee}%`;
+//     itemForSale.id = `item-${item.uid}`;
+//     itemsForSale.appendChild(itemForSale);
+// }
 
 // Render Item Data
 getAndRenderItemData = (item, renderFunction) => {
@@ -902,18 +936,6 @@ ensurePaymentTokenIsApproved = async (tokenAddress, amount) => {
     }
 }
 
-
-
-// ensurePaymentTokenIsApproved = async (tokenAddress, amount) => {
-//     user = await Moralis.User.current();
-//     const userAddress = user.get('ethAddress');
-//     const contract = new web3.eth.Contract(paymentTokenContractAbi, tokenAddress);
-//     const approvedAddress = await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, web3.utils.toWei('1', 'ether')).call({from: userAddress});
-//     if (approvedAddress != PAYMENT_TOKEN_ADDRESS){
-//         await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, web3.utils.toWei('1', 'tether')).send({from: userAddress});
-//     }
-// }
-
 // Mint Token Approval
 ensureMintTokenIsApproved = async (tokenAddress, amount) => {
     user = await Moralis.User.current();
@@ -926,16 +948,21 @@ ensureMintTokenIsApproved = async (tokenAddress, amount) => {
     }
 }
 
+createProfilePage = async () => {
+    var Item = Moralis.Object.extend("ProfilePages");
+    var profilePages = new Item();
+    profilePages.set('username', createItemNameField.value);
+    profilePages.set('bio', createItemDescriptionField.value);
+    profilePages.set('avatar', createItemFile.files[0]);
+    profilePages.set('link', 'https://onlynfts.online');
+    profilePages.set('creator_address', user.get('ethAddress'));
+    profilePages.set('referrer_address', userReferrerAddress);
+    
+    
+    await profilePages.save();
 
-// ensureMintTokenIsApproved = async (tokenAddress, amount) => {
-//     user = await Moralis.User.current();
-//     const userAddress = user.get('ethAddress');
-//     const contract = new web3.eth.Contract(mintTokenContractAbi, tokenAddress);
-//     const approvedAddress = await contract.methods.approve(TOKEN_CONTRACT_ADDRESS, web3.utils.toWei('1', 'ether')).call({from: userAddress});
-//     if (approvedAddress != MINT_TOKEN_ADDRESS){
-//         await contract.methods.approve(TOKEN_CONTRACT_ADDRESS, web3.utils.toWei('1', 'tether')).send({from: userAddress});
-//     }
-// }
+}
+
 
 // Buy Item
 buyItem = async (item) => {
@@ -1010,103 +1037,81 @@ console.log(object2.get('token_id'));
 if (earlyHoldersBalance !== null) {
     console.log(object2.get('token_id'));}
 };
-
 };
 }
 
-
-checkURL = async () => {
-
-    const user = Moralis.User.current();
-    if (user) {const userAddress = user.get('ethAddress'); }
-    
-    const queryString = window.location.search;
-    const params = new URLSearchParams(queryString);
-    urlNFT = params.get('nft');
-    urlNFTID = params.get('id');
-    urlProfile = params.get('p');
-
-    if (urlNFT) {
-    console.log(urlNFT);
-    console.log(urlNFTID);
-    return urlNFT, urlNFTID;
-    } else if (urlProfile){
-        console.log(urlProfile);
-        hideElement(itemsForSaleUI);
-        const userProfile = Moralis.Object.extend('OnlyNFTs');
-        const query = new Moralis.Query(userProfile);
-        const results = await query.find();
-        for (let i = 0; i < results.length; i++) {
-            const object = results[i];
-            //alert(object.id + ' - ' + object.get('balance'));
-            const test = object.get('creator_address');
-
-            if (test == userAddress){
-                console.log("Great Success");
-            }
-            
+//Show edit button profile
+profilePageOwner = async () => {
+    alert(urlProfile);
+    if (user) {
+    if (user.get('ethAddress') == urlProfile) {
+        alert("test");
+        showElement(editProfilePageButton);
         }
-    
-        //alert(test);
-    } else {
-        console.log(params);
-        } 
+    }
 }
 
-//unsub => await (Moralis.Web3.onAccountsChanged) = console.log("change");
-  
-
-//INIT WEB3
-initWeb3 = async () => {
+// Render Profile Page Info
+renderProfilePageInfo = async () => {
+    if (urlProfile) {
+    const profilePage = Moralis.Object.extend("ProfilePages");
+    console.log(urlProfile);
+    const query = new Moralis.Query(profilePage);
+    console.log(query);
+    query.equalTo("creator_address", urlProfile);
+   
+    const results = await query.find();
+    for (let i = 0; i < results.length; i++) {
+        
+        const profilePageInfo = results[i];
+        console.log(profilePageInfo);
+   
     
 
-        window.web3 = await Moralis.Web3.enable({provider: walletProvider});
-    window.tokenContract = new web3.eth.Contract(tokenContractAbi, TOKEN_CONTRACT_ADDRESS);
-    window.marketplaceContract = new web3.eth.Contract(marketplaceContractAbi, MARKETPLACE_CONTRACT_ADDRESS);
-    window.paymentTokenContract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
-    window.mintTokenContract = new web3.eth.Contract(mintTokenContractAbi, MINT_TOKEN_ADDRESS);
-    window.earlyHoldersContract = new web3.eth.Contract(earlyHoldersContractAbi, EARLY_HOLDERS_NFT_ADDRESS);
-    window.pancakeswapRouterContract = new web3.eth.Contract(pancakeswapRouterAbi, PANCAKESWAP_ROUTER_ADDRESS);
-    console.log(walletProvider);
-    //const chainId = await web3.eth.chainId();
-    //console.log(chainId);
-    const networkId = await web3.eth.net.getId();
-    console.log(networkId);
+        document.getElementById("profileAvatar").src = '';
+    
+        document.getElementById("username").innerText = profilePageInfo.attributes.username;
+        document.getElementById("profileDescription").innerText = profilePageInfo.attributes.bio;
 
+        document.getElementById("profileLink1").innerText = profilePageInfo.attributes.link;
+        document.getElementById("profileLink1").href = profilePageInfo.attributes.link;
+        document.getElementById("profileLink2").innerText = "test";
+        document.getElementById("profileLink2").href = "https://google.com";
+        document.getElementById("profileLink3").innerText = "test";
+        document.getElementById("profileLink3").href = "https://google.com";
+    };
+    }
 }
 
-
+// Hide Elements
 hideElement = (element) => element.style.display = "none";
 showElement = (element) => element.style.display = "block";
 
 // Navbar
 const userConnectButton = document.getElementById("btnConnect");
-
 userConnectButton.onclick = () => $('#connectWalletModal').modal('show');
-// userConnectButton.onclick = login;
 const userProfileButton = document.getElementById("btnUserInfo");
 userProfileButton.onclick = openUserInfo;
 const openCreateItemButton = document.getElementById("btnOpenCreateItem");
 openCreateItemButton.onclick = handleOpenCreateItem;
 
 
-//Notification
+// Notification
 const notificationHeader = document.getElementById("notificationHeader")
 const notificationBody = document.getElementById("notificationBody")
 const notificationTime = document.getElementById("notificationTime")
-//const toastTest = document.getElementById("toastTest");
 
-//Age Ver
+// Age Ver
 const ageVer = document.getElementById("ageVer");
 
-//  User profile
+// User profile
 const userInfo = document.getElementById("userInfo");
 const userUsernameField = document.getElementById("txtUsername");
-//const userReferrerField = document.getElementById("txtReferrer");
 const userEmailField = document.getElementById("txtEmail");
 const userAvatarImg = document.getElementById("imgAvatar");
 const userAvatarFile = document.getElementById("fileAvatar");
 const onftsBalanceButton = document.getElementById("onftsBalanceButton");
+const editProfilePageButton = document.getElementById("editProfilePageButton");
 document.getElementById("btnCloseUserInfo").onclick = () => hideElement(userInfo);
 document.getElementById("btnLogout").onclick = logout;
 document.getElementById("btnSaveUserInfo").onclick = saveUserInfo;
@@ -1126,10 +1131,10 @@ document.getElementById("btnCreateItem").onclick = async () => createItem();
 // Referral
 document.getElementById("btnSubmitReferrer").onclick = async () => submitRefferal();
 const userReferrerField = document.getElementById("txtReferrer");
-//Music Player
+
+// Music Player
 const musicPlayer = document.getElementById("musicPlayer")
 document.getElementById("secretbutton").onclick = () => $('#musicPlayer').modal('show');
-
 
 // Connect Wallet
 const connectWalletModal = document.getElementById("connectWalletModal");
@@ -1140,6 +1145,7 @@ document.getElementById("wcWallet").onclick = () => loginWC();
 // User items
 const userItemsSection = document.getElementById("userItems");
 const userItems = document.getElementById("userItemsList");
+const userItemsListed = document.getElementById("userItemsListedList");
 document.getElementById("btnCloseUserItems").onclick = () => hideElement(userItemsSection);
 const openUserItemsButton = document.getElementById("btnMyItems");
 openUserItemsButton.onclick = openUserItems;
@@ -1151,50 +1157,51 @@ const itemsForSale = document.getElementById("itemsForSale");
 var   usdPrice = new BigNumber(0.000025);
 const removeNftButton = document.getElementById("remove-nft-button");
 
-
 // Loading
 const loadingMintForm = document.getElementById("loadingMint");
 const loadingProgress = document.getElementById("myBar");
-
 const NFToptions = document.getElementById("options");
 const addToMarketplaceSwitch = document.getElementById("customSwitch1");  
 const devSwitch = document.getElementById("customSwitch2");
 const devSwitchButton = document.getElementById("devSwitch");
 const itemsForSaleUI = document.getElementById("itemsForSale");
 
+// Mint NFT Options
 optionsBox = async() => {
-    
     if (addToMarketplaceValue == 1) {
         addToMarketplaceValue = "0";
         console.log(addToMarketplaceValue);
         createItemPriceField.disabled = 1;
     }
     else if (addToMarketplaceSwitch.checked) {
-        
         addToMarketplaceValue = "1";
         console.log(addToMarketplaceValue);
         createItemPriceField.disabled = 0;
         return;
     }
-    
 }
 
+//Mint NFT Dev Options
 devsBox = async() => {
-    
     if (createNFTValue == 1) {
         createNFTValue = "0";
         console.log(createNFTValue);
-     
     }
     else if (devSwitch.checked) {
-        
         createNFTValue = "1";
         console.log(createNFTValue);
-    
         return;
     }
-    
 }
+
+
+const card = document.querySelector('.card__inner');
+console.log(card);
+
+    card.addEventListener('click', function() {
+    card.classList.toggle('is-flipped');
+    });
+
 
 init();
 
