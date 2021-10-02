@@ -558,9 +558,8 @@ mintEANft = async (metadataUrl, creator, RoyaltyFee, referrerAddress) => {
 // Open User Items Modal
 openUserItems = async () => {
     user = await Moralis.User.current(); 
-    await loadItems();
-    await loadUserItems();
-    await loadUserListedItems();
+    await initUser();
+
     if (user){ 
         const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
         const query = new Moralis.Query(BscTokenBalance);
