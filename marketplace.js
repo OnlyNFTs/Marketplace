@@ -796,9 +796,13 @@ renderUserListedItems = async (item) => {
                 $('.toast').toast('show');
             };  
 
-    itemForSale.getElementsByTagName("a")[0].onclick = () => {  
-        $('.toast').toast('show');
+    itemForSale.getElementsByTagName("h2")[0].onclick = () => {  
+        window.open("https://onlynfts.online/profile?p=" + item.creatorUsername).focus();
     };    
+
+    itemForSale.getElementsByTagName("img")[1].onclick = () => {  
+        window.open("https://onlynfts.online/profile?p=" + item.creatorUsername).focus();
+    };  
 itemsForSale.appendChild(itemForSale);
 }
 
