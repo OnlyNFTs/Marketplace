@@ -206,7 +206,7 @@
   perspective: 1000px;
 }
 .card__inner:hover {
-  transform: rotateY(-180.5deg);
+  transform: rotateY(180deg);
 }
 
 .card__inner {
@@ -219,7 +219,7 @@
 }
 
 .card__inner.is-flipped {
-  transform: rotateY(-180.5deg);
+  transform: rotateY(-180deg);
   cursor: auto;
 }
 

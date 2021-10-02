@@ -792,7 +792,13 @@ renderUserListedItems = async (item) => {
         $('.toast').toast('show');
             };
 
+            itemForSale.getElementsByTagName("button")[1].onclick = () => {  
+                $('.toast').toast('show');
+            };  
 
+    itemForSale.getElementsByTagName("a")[0].onclick = () => {  
+        $('.toast').toast('show');
+    };    
 itemsForSale.appendChild(itemForSale);
 }
 
