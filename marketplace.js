@@ -17,6 +17,7 @@ init = async () => {
     hideElement(loadingMintForm);
     hideElement(musicPlayer);
    
+  
     window.addEventListener('load', function() {
          
     if (typeof web3 !== 'undefined') {
@@ -25,10 +26,16 @@ init = async () => {
         if (web3.currentProvider.isMetaMask === true) {
             walletProvider = 'metamask';
             console.log('MetaMask is active');
+            notificationHeader.innerText = "MetaMask Detected";
+            notificationBody.innerText = "MetaMask has been Detected! ";
+            $('.toast').toast('show');
             //window.web3 = Moralis.Web3.enable({provider: 'metamask'});
             initWeb3();
         } else {
             console.log('MetaMask is not available');
+            notificationHeader.innerText = "Web3 Browser Detected";
+            notificationBody.innerText = "Web3 Browser has been Detected! ";
+            $('.toast').toast('show');
             //window.web3 = Moralis.Web3.enable({provider: 'walletconnect, trustwallet'});
             initWeb3();
         }
@@ -45,12 +52,12 @@ init = async () => {
 });
 
     await checkURL();
-    $("#ageVer").modal('show');
+    // $("#ageVer").modal('show');
     await fetchCoinPrice();
     await loadItems();
     await initUser();
-    
-    await renderProfilePageInfo();
+
+
     await Moralis.initPlugins();
     await getMarketQuote();
 
@@ -215,17 +222,21 @@ initUser = async () => {
         userReferrerSubmited = await user.attributes.referrerSubmited;
         //alert(mintApprovedStatus);
         hideElement(userConnectButton);
+        hideElement(userConnectButton1);
         showElement(userProfileButton);
         showElement(openCreateItemButton);
         showElement(openUserItemsButton);
+        showElement(userSubscriptionsButton);
         loadBalances();
         loadUserItems();
         loadUserListedItems();
     }else{
         showElement(userConnectButton);
+        showElement(userConnectButton1);
         hideElement(userProfileButton);
         hideElement(openCreateItemButton);
         hideElement(openUserItemsButton);
+        hideElement(userSubscriptionsButton);
     }
 }
 
@@ -752,36 +763,28 @@ renderUserListedItems = async (item) => {
      itemForSale.getElementsByTagName("img")[0].src = item.image;
      itemForSale.getElementsByTagName("img")[0].alt = item.name;
      hideElement(itemForSale.getElementsByTagName("video")[0]);
- 
-    //  itemForSale.getElementsByTagName("h2")[0].innerText = item.creator;
+    item.creator 
+     itemForSale.getElementsByTagName("h2")[0].innerText = item.creator;
      itemForSale.getElementsByTagName("h3")[0].innerText = item.name;
      itemForSale.getElementsByTagName("p")[0].innerText = item.description;
 
     
      const itemaskingPriceBN = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
      const convertedToUSDPrice = new BigNumber(onftsPrice).times(itemaskingPriceBN);
-     itemForSale.getElementsByTagName("button")[0].innerText = `${itemaskingPriceBN} ONFTs`;
-     itemForSale.getElementsByTagName("button")[1].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
-
-     itemForSale.isFlipped = false;
-     itemForSale.getElementsByTagName("div")[0].onclick = () => {
-                
-         
-            
-                    $(itemForSale.getElementsByTagName("div")[0]).toggleClass('is-flipped');
-                    itemForSale.isFlipped = true;
-                    console.log(itemForSale.isFlipped);
-              
-            }
-
-    itemForSale.getElementsByTagName("a")[0].onclick = () => {       
-        if (itemForSale.isFlipped === true) {
-            
-            $(itemForSale.getElementsByTagName("div")[2]).toggleClass('is-flipped');
-            itemForSale.isFlipped = false;
-            console.log(itemForSale.isFlipped);
-        };
-    }
+     itemForSale.getElementsByTagName("button")[1].innerText = `${itemaskingPriceBN} ONFTs`;
+     itemForSale.getElementsByTagName("button")[2].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
+     itemForSale.getElementsByTagName("button")[1].onclick = async () =>  buyItem(item);
+     itemForSale.getElementsByTagName("button")[0].onclick = () => {
+             var copyText = "https://marketplace.onlynfts.online/?nft=" + item.tokenAddress + "&id=" + item.tokenId;
+            //  copyText.select();
+            //  copyText.setSelectionRange(0, 99999);
+             navigator.clipboard.writeText(copyText);
+        
+             notificationHeader.innerText = "Copied!";
+         notificationBody.innerText = "Copied: " + copyText;
+        //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
+        $('.toast').toast('show');
+            };
 
 
 itemsForSale.appendChild(itemForSale);
@@ -1041,37 +1044,6 @@ if (earlyHoldersBalance !== null) {
 }
 
 
-// Render Profile Page Info
-renderProfilePageInfo = async () => {
-    if (urlProfile) {
-    const profilePage = Moralis.Object.extend("ProfilePages");
-    console.log(urlProfile);
-    const query = new Moralis.Query(profilePage);
-    console.log(query);
-    query.equalTo("creator_address", urlProfile);
-   
-    const results = await query.find();
-    for (let i = 0; i < results.length; i++) {
-        
-        const profilePageInfo = results[i];
-        console.log(profilePageInfo);
-   
-    
-
-        document.getElementById("profileAvatar").src = '';
-    
-        document.getElementById("username").innerText = profilePageInfo.attributes.username;
-        document.getElementById("profileDescription").innerText = profilePageInfo.attributes.bio;
-
-        document.getElementById("profileLink1").innerText = profilePageInfo.attributes.link;
-        document.getElementById("profileLink1").href = profilePageInfo.attributes.link;
-        document.getElementById("profileLink2").innerText = "test";
-        document.getElementById("profileLink2").href = "https://google.com";
-        document.getElementById("profileLink3").innerText = "test";
-        document.getElementById("profileLink3").href = "https://google.com";
-    };
-    }
-}
 
 // Hide Elements
 hideElement = (element) => element.style.display = "none";
@@ -1080,11 +1052,13 @@ showElement = (element) => element.style.display = "block";
 // Navbar
 const userConnectButton = document.getElementById("btnConnect");
 userConnectButton.onclick = () => $('#connectWalletModal').modal('show');
+const userConnectButton1 = document.getElementById("btnConnect1");
+userConnectButton1.onclick = () => $('#connectWalletModal').modal('show')
 const userProfileButton = document.getElementById("btnUserInfo");
 userProfileButton.onclick = openUserInfo;
 const openCreateItemButton = document.getElementById("btnOpenCreateItem");
 openCreateItemButton.onclick = handleOpenCreateItem;
-
+const userSubscriptionsButton = document.getElementById("btnUserSubscriptions");
 
 // Notification
 const notificationHeader = document.getElementById("notificationHeader")
@@ -1101,6 +1075,7 @@ const userEmailField = document.getElementById("txtEmail");
 const userAvatarImg = document.getElementById("imgAvatar");
 const userAvatarFile = document.getElementById("fileAvatar");
 const onftsBalanceButton = document.getElementById("onftsBalanceButton");
+const editProfilePageButton = document.getElementById("editProfilePageButton");
 document.getElementById("btnCloseUserInfo").onclick = () => hideElement(userInfo);
 document.getElementById("btnLogout").onclick = logout;
 document.getElementById("btnSaveUserInfo").onclick = saveUserInfo;
@@ -1153,7 +1128,8 @@ const NFToptions = document.getElementById("options");
 const addToMarketplaceSwitch = document.getElementById("customSwitch1");  
 const devSwitch = document.getElementById("customSwitch2");
 const devSwitchButton = document.getElementById("devSwitch");
-const itemsForSaleUI = document.getElementById("itemsForSale");
+const itemsForSaleList = document.getElementById("itemsForSale");
+const itemsForSaleUI = document.getElementById("itemsForSaleUI");
 
 // Mint NFT Options
 optionsBox = async() => {
@@ -1182,7 +1158,6 @@ devsBox = async() => {
         return;
     }
 }
-
 
 
 

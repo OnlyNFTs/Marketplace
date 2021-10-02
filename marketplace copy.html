@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8YKWYE6Q3G"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-8YKWYE6Q3G');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link rel="stylesheet" href="test.css">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="profile.css">
+   
+    <title>OnlyNFTs</title>
+</head>
+
+<header class="bg-dark">
+    <nav class=" justify-content-between navbar navbar-expand-lg navbar-dark text-dark bg-transparent border-bottom border-dark" >
+        <a id="secretbutton" class="ml-0 rounded-pill btn " style="vertical-align: bottom;" href="#"><img class=" rounded-circle" src="favicon.ico" alt="..."></a>
+        <h3 class="p-0 mb-0 ml-0 mr-2" style="vertical-align: bottom; ">OnlyNFTs</h3>   
+        <nav class="row">
+            <button class="btn btn-primary rounded-pill mr-1 ml-2 " id="btnConnect">Connect</button>
+                <a href="#" type="button" class=" toggler badge ml-1 mr-2 p-1 rounded-circle" style="vertical-align: middle;" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <svg href="#" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="" class="bi bi-list" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+                    </svg>
+                </a>
+        </nav>   
+    </nav>
+    <div class="" style="background-color: white;">
+        <div class="collapse" id="navbarNav">
+            <div class=" p-2">
+                <div class="mt-0 p-1 " style="text-align: center; align-items: center;">
+                    <a class="" href="index.html" role="button">
+                        <h3 style="color: black; font-size:100%; font-weight: bold;">Home</h3>  
+                    </a>
+                    <a class="" data-toggle="collapse" href="#collapseNFTs" role="button" aria-expanded="false" aria-controls="collapseNFTs">
+                        <h4 style="color: black; font-size:100%; font-weight: bold;">NFTs</h4>  
+                    </a>
+                    <div class="dropdown">  
+                        <div class="collapse" id="collapseNFTs">
+                            <div class="">
+                                <a class="" role="button" id="btnOpenCreateItem">
+                                    <h4 style="color: pink; font-size:100%; font-weight: bold;">Create</h4>  
+                                </a>
+                                <a class="" href="marketplace.html" role="button">
+                                    <h4 style="color: pink; font-size:100%; font-weight: bold;">Marketplace</h4>  
+                                </a>
+                            </div>
+                        </div>
+                    </div>     
+                    <a class="" data-toggle="collapse" href="#collapseProfile" role="button" aria-expanded="false" aria-controls="collapseProfile">
+                        <h2 style="color: black; font-size:100%; font-weight: bold;">Profile</h2>  
+                    </a>
+                    <div class="dropdown">  
+                        <div class="collapse" id="collapseProfile">
+                            <div class="">
+                                <a class="" role="button" id="btnUserInfo">
+                                    <h4 style="color: pink; font-size:100%; font-weight: bold;">My Profile</h4>  
+                                </a>
+                                <a class=""  role="button" id="btnMyItems">
+                                    <h4 style="color: pink; font-size:100%; font-weight: bold;">My Collectibles</h4>  
+                                </a>
+                                <a class=""  role="button">
+                                    <h4 style="color: pink; font-size:100%; font-weight: bold;">My Subscriptions</h4>  
+                                </a>
+                                <a class=""  role="button" id="buyCryptoButton">
+                                    <h4 style="color: pink; font-size:100%; font-weight: bold;">Buy Crypto <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                                        <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                                      </svg></h4>  
+                                    
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="" data-toggle="collapse" href="#collapseFarms" role="button" aria-expanded="false" aria-controls="collapseFarms">
+                        <h2 style="color: black; font-size:100%; font-weight: bold;">Staking</h2>  
+                    </a>
+                    <div class="dropdown">  
+                        <div class="collapse" id="collapseFarms">
+                            <div class="">
+                                <a class="" role="button" id="">
+                                    <h4 style="color: pink; font-size:100%; font-weight: bold;">Farms</h4>  
+                                </a>
+                                <a class="" href="#rewards" role="button">
+                                    <h4 style="color: pink; font-size:100%; font-weight: bold;">Rewards</h4>  
+                                </a>
+                            </div>
+                        </div>
+                    </div>   
+                    <div class="d-flex col-md-auto">
+                        <div class="col">
+                            <a href="https://theonlynfts.medium.com/" class="btn">
+                                <img  src="logos/medium-tile.svg" class="button "  width="32" height="32"> 
+                                <span style="font-weight: bold;">Blog</span>
+                            </a>
+                            <a href="https://github.com" class="btn">
+                                <img  src="logos/github-tile.svg" class="button "  width="32" height="32"> 
+                                <span style="font-weight: bold;">Git</span>
+                            </a>
+                        <a href="https://docs.onlynfts.online" role="" class="btn">
+                            <img  src="logos/gitbook-icon.svg" class="button  "  width="32" height="32"> 
+                            <span style="font-weight: bold;">Docs</span>
+                        </a>
+                      
+                        </div>
+                        <div class="col">
+                            <a href="https://pancakeswap.finance/swap?outputCurrency=0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b" role="" class="btn" style="font-size:100%; color: grey; font-weight: bold; ">
+                            <img src="favicon.ico" class=" "  width="28" height="28"> 
+                            <span id="onftspricebutton"></span>
+                            
+                            
+                            <!-- <a id="onftspricebutton" style="font-size:100%; font-weight: bold; vertical-align: bottom; " class="btn-outline-secondary my-2 my-sm-0" href="https://pancakeswap.finance/swap?outputCurrency=0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b"></a> -->
+                        
+                        </div>
+
+                        <a class="" data-toggle="collapse" href="#collapseFarms" role="button" aria-expanded="false" aria-controls="collapseFarms">
+                            <h2 style="color: black; font-size:100%; font-weight: bold;">Staking</h2>  
+                        </a>
+                        <div class="col dropdown">
+                            <div class="collapse" id="collapseFarms">
+                                <div class=""> 
+                            <a href="https://t.me/theonlynfts" class="button" >
+                            <img  src="logos/telegram-icon.svg" class="button rounded-circle p-1 "  width="32" height="32"> 
+                            </a>
+                            <a href="https://www.instagram.com/theonlynfts/" class="button">
+                                <img  src="logos/instagram-tile.svg" class="button rounded-circle ml-0 mr-0 p-1 "  width="32" height="32"> 
+                            </a>
+                            <a href="https://twitter.com/theonlynfts" class="button">
+                                <img  src="logos/twitter-tile.svg" class="button rounded-circle p-1 "  width="32" height="32"> 
+                            </a>
+                            <a href="" class="button">
+                                <img  src="logos/facebook-tile.svg" class="button rounded-circle p-1 "  width="32" height="32"> 
+                            </a>
+                            <a href="#" class="button">
+                                <img  src="logos/youtube-tile.svg" class="button rounded-circle p-1 "  width="32" height="32"> 
+                            </a>
+                            <a href="#" class="button">
+                                <img  src="logos/discordapp-tile.svg" class="button rounded-circle p-1 "  width="32" height="32"> 
+                            </a>
+                        </div>
+                    </div>
+                
+                    </div>     
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications -->
+    <div id="toast-container" class="toast-container" id="toasttest" aria-live="assertive" aria-atomic="true" style="position:relative; margin-inline: 3%;">
+        <!-- Position -->
+        <div style="position:relative" >  
+            <!-- Toasts -->
+            <div class="toast text-dark" style="position:relative " role="alert" aria-live="assertive" aria-atomic="true" data-delay="30000">
+                <div class="toast-header">
+                    <img src="favicon.ico" class="rounded mr-2" alt="...">
+                    <strong id="notificationHeader" class="mr-auto"></strong>
+                    <small id="notificationTime" class="text-muted">Just Now</small>
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="notificationBody" class="toast-body">          
+                </div>
+            </div>       
+        </div>
+    </div>
+    </header>
+
+
+
+    <body class="bg-dark">
+    <!-- Marketplace Items -->
+    <div class="container itemsForSale "  >
+
+        <h1 class="p-4 col" style="color: pink; text-align: center; align-items: center;">Marketplace</h1>
+        <div  class="p-4 rounded"  style="background-color: white; ">
+        <div  class=" row row-cols-1 row-cols-md-3" id="itemsForSale" >
+        </div>
+        </div>
+    </div>
+
+   
+    <!-- Marketplace Item Template  -->
+    <div class="col mb-4" id="marketplaceItemTemplate">
+        <div class="card card__inner">   
+            <div  class=" rounded card__face card__face--front" style="opacity:1;">   
+                
+                    <img  width="100%" height="100%" src="" class="card   p-1 " alt="Responsive image" >
+                
+                <video id="myVideo" controls autoplay> 
+                    <source id="mp4_src" src="" type="video/mp4">
+                    <source id="ogg_src" src="" type="video/ogg">  
+                </video>
+            
+            </div> 
+            <div id="nftShare" class=""> 
+                <div class=" card__face--back">
+                <div class="card__content">   
+                <div class=" card__header" style="opacity:0.7;">
+                    <img class="profile__pic" width="36" height="36" class="rounded-circle mt-0 ml-1 " src="" alt="" style="position: absolute; left: 10%; top: 10%;">
+                   
+                   
+                    <h2>test</h2>
+                
+                    <a  type="button" style="position: relative; top: -60px; left: 250px;" class=" toggler badge ml-1 mr-2 p-1 rounded-circle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-back" viewBox="0 0 16 16">
+                            <path d="M0 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2H2a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H2z"/>
+                          </svg>
+                    </a>
+    
+
+
+                </div>
+                <div class="card__body">
+                    <h3>test</h3>
+                    <p>TEADSDASDASDasdasd</p>
+                
+                        <div class="" style="opacity:1;">
+                        <h5 class="card-title mt-0 mb-0" style="text-align:center;"></h5>
+                        </div>
+                        <div class="" style="opacity:0.7;">
+                            <h6 class="card-title mb-2" style="text-align:left; font-size:70%;"></h5>
+                            <p class="card-text" style="font-size:70%; text-align:center;"></p>
+                            <p class="card-text" style="font-size:50%; text-align:right; font-style:italic;"></p>
+                        </div>
+                        <!-- <div class="" style="opacity:1; ">
+                            <input type="text" id="nftShareInput" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button id="nftShareButton" class="btn btn-outline-secondary" type="button">Share</button>
+                            </div>
+                        </div> -->
+                    </div>
+                
+                <footer class="card container-fluid border-light shadow-sm p-2 mb-1 bg-transparent rounded-pill" style="opacity:1; ">
+                    <div class="btn-group row-cols-2" role="group">
+                        <button class="btn btn-primary p-1 col-md-auto" type=button style="font-size:100%;"> </button>
+                        <button class="btn btn-outline-secondary p-1 col-md-auto" type=button style="font-size:70%;"></button>
+                    </div>  
+                    <nav class="container p-0">
+                        <div class="row">
+                           
+                            <div class="col col-md-auto mt-2 ml-0">
+                                <a class="badge badge-dark mr-auto mb-0" >
+                                    <img width="30" height="30" class="rounded-circle mt-0 ml-0" src="favicon.ico" alt="" style="text-align:right;">
+                                </a>
+                            </div>
+                        </div>
+                    </nav>
+                </footer>
+                </div>  
+                </div>
+            </div>     
+        </div>
+    </div>
+
+
+
+
+
+    <!-- User Item Template -->
+    <div class="col mb-4" id="itemTemplate">
+        <div class="card h-100 border-light bg-transparent text-dark">
+            <nav class="mt-0 card-header border-bottom rounded navbar navbar-expand-lg navbar-dark bg-transparent p-0">
+                <img width="36" height="36" class="rounded-circle mt-0 ml-1" src="" alt="">
+                <p class="card-text mt-3 mx-auto" style="font-size:100%; text-align:center;"></p>
+                <a href="#" class="badge badge-dark rounded-circle p-1 mb-0 badge-dark ml-2 mr-1" style="text-align:center;">
+                    <svg href="#" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+                    </svg>
+                </a>
+                <a href="#" class="badge badge-dark rounded-circle p-1 mb-0 badge-dark mr-1" style="text-align:center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart p-1 mt-1" viewBox="0 0 16 16">
+                        <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                    </svg>
+                </a>
+            </nav>
+            <img src="" class="card-img-top" alt="...">
+            <div class="card-body d-flex align-items-end">
+                <div class="w-100">
+                    <div class="shadow-sm p-3 mb-2 bg-transparent rounded" style="opacity:0.9;">
+                        <h5 class="card-title" style="text-align:center;"></h5>
+                        <p class= "card-text" style="font-size:90%; text-align:center;"></p>
+                    </div>
+                    <h6 class="card-title-creator" style="font-size:80%;"></h6>
+                    <p class="card-text" style="font-size:50%;"></p>
+                    <p class="card-text" style="font-size:50%;"></p>
+                    <div class="input-group mb-3">
+                        <input type="number" min="1" max="5000000" step="1" class="form-control" required placeholder="Enter Price - Max 5mil" style="text-align:center;">
+                        <button class="btn btn-outline-secondary" type="button">List NFT</button>
+                    </div>      
+                    <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group" role="group" aria-label="First group">  
+                            <button id ="remove-nft-button" class="btn btn-primary" type="button">Remove NFT</button>
+                            <button id ="burn-nft-button" class="btn btn-primary" type="button">Burn NFT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Age Verification Modal -->
+    <div class="modal fade" id="ageVer" tabindex="-1" data-backdrop="static" data-keyboard="false" href="#">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark ">
+                <div class="modal-header">
+                    <h5 class="modal-title" >Age Verification</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="font-italic col" id="ageVerTxt" style="text-align: left; font-size: 100%;">You must be over the age of 18 to continue</p>
+                </div>
+                <div class="modal-footer">    
+                    <button type="button" id="btnConfirmAgeVer" class="btn btn-primary" data-dismiss="modal">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Connect Wallet Modal -->
+    <div class="modal fade" id="connectWalletModal" tabindex="-1" data-backdrop="static" data-keyboard="false" href="#">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark ">
+                <div class="modal-header">
+                    <h5 class="modal-title" >Connect Wallet</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div href="#" class="p-3">
+                            <a href="#">      
+                                <img href="#" id="mmWallet" width="72" height="72" class="rounded-circle mt-0 ml-1" src="logos/metamask-fox.svg" alt="">
+                            </a>  
+                            <p style="font-size: 60%; text-align: center;">MetaMask</p>
+                        </div>
+                        <div class="p-3">
+                            <a href="#">
+                                <img id="tWallet" width="72" height="72" class="rounded-circle mt-0 ml-1" src="logos/trustwallet.svg" alt="">
+                            </a>
+                            <p style="font-size: 60%; text-align: center;">TrustWallet</p>
+                        </div>
+                        <div class="p-3">
+                            <a href="#">
+                                <img id="wcWallet" width="72" height="72" class="rounded-circle mt-0 ml-1" src="logos/walletconnect.svg" alt="">
+                            </a>
+                            <p style="font-size: 60%; text-align: center;">WalletConnect</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <p class="font-italic col" id="ageVerTxt" style="text-align: left; font-size: 100%;">You must be over the age of 18 to continue</p>    
+                    <button type="button" id="btnConfirmAgeVer" class="btn btn-primary" data-dismiss="modal">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nft Info Modal -->
+    <div class="modal fade" id="nftInfo" tabindex="-1" href="#">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark ">
+                <div class="modal-header">
+                    <h5 class="modal-title" >Info</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="font-italic col" id="nftInfoTXT" style="text-align: left; font-size: 100%;">Nft info</p>
+                </div>
+                <div class="modal-footer">    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Info Modal -->
+    <div class="modal fade" id="userInfo" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark text-dark">
+                <div class="modal-header">
+                    <h5 class="modal-title" >User Profile</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="font-italic col" id="earlyNFT" style="text-align: left; font-size: 70%;"></p>
+                    <div class="form-group">
+                        <label for="txtUsername">Username</label>
+                        <input type="text" class="form-control" id="txtUsername" required placeholder="Enter username">
+                    </div>
+                    <div class="form-group">
+                        <label for="txtEmail">Email address</label>
+                        <input type="email" class="form-control" id="txtEmail" aria-describedby="emailHelp" placeholder="Enter email">
+                        <small id="emailHelp" class="form-text text-muted">Optional</small>     
+                    </div>
+                    <img class="rounded-circle" width="50" height="50" src="" id="imgAvatar" alt="">
+                    <div class="form-group mb-0">
+                        <label for="fileAvatar" >Select Avatar</label>
+                        <input style="font-size: 50%" type="file" class="form-control-file" id="fileAvatar">
+                    </div>  
+                </div>
+                <div>
+                    <label class="col mt-0 mb-0" for="refferalId" style="align-self: left; font-size: 70%;">Refferal Id:</label>
+                    <p class="font-italic col" id="refferalId" style="text-align: left; font-size: 70%;"></p> 
+                </div>
+                <div class="modal-footer">        
+                    <button type="button" id="btnLogout" class="btn btn-secondary" data-dismiss="modal">Log out</button>
+                    <button type="button" id="btnCloseUserInfo" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="btnSaveUserInfo" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>    
+
+    <!-- Create Item Modal -->
+    <div class="modal fade" id="createItem" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark text-dark">
+                <div class="modal-header">
+                    <h5 class="modal-title" >Create Item</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="txtUsername">Name</label>
+                        <input type="text" class="form-control" id="txtCreateItemName" required placeholder="Enter name">
+                    </div>
+                    <div class="form-group">
+                        <label for="txtCreateItemDescription">Description</label>
+                        <textarea class="form-control" id="txtCreateItemDescription"  cols="30" rows="3" placeholder="Enter description"></textarea>
+                    </div>
+                    <div class="form-group container">
+                        <div class="row">
+                            <label class="col" for="numCreateItemPrice" style="text-align: center;">Creator</label>
+                            <label class="col" for="numCreateRoyaltyFee" style="text-align: center;">Royalty Fee</label>
+                        </div>
+                        <div class="row">
+                            <input class="col form-control" type="text" id="textCreateItemCreator" required placeholder="" style="text-align: center;">
+                            <input class="col form-control" type="number" min="2" max="30" step="1" id="numCreateRoyaltyFee" required placeholder="Max royalty fee 30%" style="text-align: center;">
+                        </div>
+                    </div>
+                    <div class="form-group container">  
+                        <label class="col" for="fileCreateItemFile">Select file</label>
+                        <input class="col" type="file" class="form-control-file" id="fileCreateItemFile">
+                    </div>   
+                    <p style="text-align: right">
+                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#options" aria-expanded="false" aria-controls="collapseExample">
+                    Options
+                    </button>
+                    </p>
+                    <div class="collapse" id="options">
+                        <div class="form-group" id="">
+                            <div class="form-group container">
+                                <div class="row">
+                                    <label class="col" for="numCreateItemPrice" style="text-align: center;">Price</label>                            
+                                </div>
+                                <div class="row">
+                                    <input class="col form-control" type="number" min="1" max="5000000" step="10000" id="numCreateItemPrice" required placeholder="Max price 5,000,000" style="text-align: center;">
+                                </div>
+                                <div class="custom-control custom-switch">
+                                    <input onclick="optionsBox();" type="checkbox" class="custom-control-input" id="customSwitch1" >
+                                    <label class="custom-control-label" for="customSwitch1">Add NFT to marketplace</label>
+                                </div>
+                                <div class="custom-control custom-switch mt-2" id="devSwitch">
+                                    <input onclick="devsBox();" type="checkbox" class="custom-control-input" id="customSwitch2" >
+                                    <label class="custom-control-label" for="customSwitch2">Dev</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>               
+                </div>
+                <div class="modal-footer container">
+                    <h6>Balance</h6>
+                    <button type="button" class="col btn btn-outline-moralis " id="mint-balance" data-toggle="tooltip" data-html="true" title="Please Refresh is balance doesn't show">Loading</button>
+                    <h6>Mint Fee</h6>
+                    <button type="button" class="col btn btn-outline-secondary" id="mint-fee" data-toggle="tooltip" data-html="true" title="Mint Fee in ONFTs">Loading</button>
+                </div>
+                <div class="mt-0">
+                    <p class="font-italic" style="text-align: left; font-size: 70%;">Note: 1% of all NFT sales will be sent to your referrer!</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnCloseCreateItem" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="btnCreateItem" class="btn btn-primary">Create!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+
+        
+        <!-- Modal -->
+        <div class="modal fade" id="userItems" tabindex="-1">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content bg-dark text-dark">
+                    <div class="modal-header">
+                    <h5 class="modal-title" >My Items</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-header">
+                        <h5 class="modal-title" >My Tokens</h5>
+                    </div>
+                    <div class="modal-body row row-cols-1 row-cols-md-4 mt-5" id="userTokenList">
+                        <a type="button" id="onftsBalanceButton" class="btn btn-outline-moralis" href="https://exchange.pancakeswap.finance/#/swap?outputCurrency=0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b" target="_blank"></a>
+                        <a type="button" id="mintTokenBalanceButton" class="btn btn-outline-secondary" href="https://exchange.pancakeswap.finance/#/swap?outputCurrency=0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b" target="_blank"></a>
+                        <!-- <button type="button" id="btnCloseUserItems" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+                    </div>
+                    <div class="modal-body">
+                    <h5 class="modal-title" >Listed NFTs</h5>
+                    <div class="modal-body row row-cols-1 row-cols-md-4 mt-5" id="userItemsListedList">
+                    </div>
+                    </div>
+                    
+                    <div class="modal-body">
+                        <h5 class="modal-title" >My NFTs</h5>
+                        <div class="modal-body row row-cols-1 row-cols-md-4 mt-5" id="userItemsList">
+                        </div>
+                        </div>
+
+                    <div class="modal-footer">
+                        <button type="button" id="btnCloseUserItems" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal Loading Mint -->
+        <div class="modal fade" id="loadingMint" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content bg-dark text-dark">
+                    <div class="modal-header">
+                        <h5 class="modal-title" >Loading</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="myProgress">
+                            <div id="myBar"></div>
+                            </div>
+                            <div class="modal-footer">
+                                <h6 id="loadingStatus"></h6>
+                                <button type="button" id="btnCloseCreateItem" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <!-- <button type="button" id="btnCreateItem" class="btn btn-primary">Create!</button> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+        </div> 
+
+        <!-- Modal Enter Referrer -->
+        <div class="modal fade" id="enterReferrer" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content bg-dark text-dark">
+                    <div class="modal-header">
+                        <h5 class="modal-title" >Enter Referrer ID</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="txtReferrer">Referrer</label>
+                            <input type="text" class="form-control" id="txtReferrer" aria-describedby="referrerHelp" placeholder="Enter referrer ID">
+                            <small id="referrerHelp" class="form-text text-muted">Required for minting</small>     
+                        </div>
+                        <p>If you don't have a "Referrer ID" please join our telegram chat and ask for one!</p>
+                        <div class="modal-footer">
+                            <button type="button" id="btnCloseCreateItem" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" id="btnSubmitReferrer" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+
+
+        <div class="modal fade" id="waitforApproval" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content bg-dark text-dark">
+                    <div class="modal-header">
+                        <h5 class="modal-title" >Account Approval</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h6>Please wait for your account to be approved.</h6>
+                        <div class="modal-footer">
+                            <button type="button" id="btnCloseCreateItem" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <!-- <button type="button" id="btnCreateItem" class="btn btn-primary">Create!</button> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            <!-- Music Player Modal -->
+            <div class="modal" id="musicPlayer" tabindex="-1" role="dialog">     
+                <body class="music-container-border"  role="document">
+                <div class="music-container" style="margin-right: 10%; margin-top: 30%; margin-bottom: 15%;">
+                    <div class="music-info">
+                        <h4 class="" id="title">Playa</h4>
+                        <div class="progress-container">
+                            <div class="progress"></div>
+                        </div>
+                    </div> 
+                    <audio src="music/" id="audio"></audio>  
+                    <div class="img-container">
+                        <img src="" alt="music-cover" id="cover"/>
+                    </div>
+                    <div class="navigation">
+                        <button id="prev" class="action-btn">
+                            <i class=""><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
+                                <path d="M10 12.796V3.204L4.519 8 10 12.796zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753z"/>
+                              </svg></i>
+                        </button>
+                        <button id="play" class="action-btn action-btn-big">
+                            <i class=""><svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-play" viewBox="0 0 16 16">
+                                <path d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>
+                              </svg></i>
+                        </button>
+                        <button id="next" class="action-btn">
+                            <i class="fas-pause"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-caret-right" viewBox="0 0 16 16">
+                                <path d="M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z"/>
+                              </svg></i>
+                        </button>
+                    </div>
+                </div>    
+                </body>
+            </div>
+</body>        
+<footer class="d-flex col-md-auto rounded" style="background-color: white;">
+    <div class="col">
+        <a  class="">
+            <img  src="logos/binance-logo.svg" class="rounded-circle p-1 "  width="32" height="32"> 
+            <span></span>
+        </a>
+        <a  class="">
+            <img  src="logos/pancakeswap-cake-logo.svg" class="rounded-circle p-1 "  width="32" height="32"> 
+            <span></span>
+        </a>
+    </div>
+   <div class="col">
+    <h6 style="text-align: center;">Copyright © 2021 OnlyNFTs. </h6>
+</div>
+<div class="col">
+ 
+</div>
+</footer>      
+                
+        
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="https://github.com/WalletConnect/walletconnect-monorepo/releases/download/1.6.2/web3-provider.min.js"></script>
+    <script src="https://unpkg.com/moralis/dist/moralis.js"></script>
+    <script scr="https://github.com/trustwallet/trust-web3-provider/blob/master/dist/trust-min.js"></script>
+    <!-- Import JS Modules -->
+    <script src="modules/auth/moralis.js"></script>
+    <script src="abi.js"></script>
+    <script src="modules/apps/musicplayer.js"></script>
+    <script src='modules/plugins/bignumber.js'></script>
+    <script src="modules/auth/web3.js"></script>
+    <script src="modules/functions/checkURL.js"></script>
+    <script src="modules/auth/auth.js"></script>
+    <script src="marketplace.js"></script>
+
+</html>

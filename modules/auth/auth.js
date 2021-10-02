@@ -1,3 +1,5 @@
+userConnectButton = document.getElementById("btnConnect");
+userConnectButton.onclick = () => $('#connectWalletModal').modal('show');
 //Log In
 async function login() {
     
