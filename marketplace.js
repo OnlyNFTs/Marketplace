@@ -44,6 +44,7 @@ init = async () => {
         //  alert('No Web3 Browser Has Been Detected. Please visit https://metamask.io/download And install Metamask!');
         // $('.toast').toast(data-delay="10000");
         notificationHeader.innerText = "No Web3 Browser Detected";
+        
         notificationBody.innerText = "Please visit https://metamask.io/download And install Metamask!";
         //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
         $('.toast').toast('show');
@@ -227,6 +228,8 @@ initUser = async () => {
         showElement(openCreateItemButton);
         showElement(openUserItemsButton);
         showElement(userSubscriptionsButton);
+        showElement(userDashboardButton);
+        showElement(userLogoutButton);
         loadBalances();
         loadUserItems();
         loadUserListedItems();
@@ -237,6 +240,8 @@ initUser = async () => {
         hideElement(openCreateItemButton);
         hideElement(openUserItemsButton);
         hideElement(userSubscriptionsButton);
+        hideElement(userDashboardButton);
+        hideElement(userLogoutButton);
     }
 }
 
@@ -1075,6 +1080,9 @@ userProfileButton.onclick = openUserInfo;
 const openCreateItemButton = document.getElementById("btnOpenCreateItem");
 openCreateItemButton.onclick = handleOpenCreateItem;
 const userSubscriptionsButton = document.getElementById("btnUserSubscriptions");
+const userDashboardButton = document.getElementById("btnUserDashboard");
+const userLogoutButton = document.getElementById("btnLogout1");
+userLogoutButton.onclick = logout;
 
 // Notification
 const notificationHeader = document.getElementById("notificationHeader")
