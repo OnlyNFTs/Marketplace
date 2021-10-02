@@ -1064,7 +1064,14 @@ if (earlyHoldersBalance !== null) {
 };
 }
 
-
+//Buy Crypto
+buyCrypto = async () => {
+   if (user) {
+       Moralis.Plugins.fiat.buy({ coin: 'bnb', receiver: userAddress, });
+    } else {
+        Moralis.Plugins.fiat.buy({ coin: 'ETH'})
+    }
+}
 
 // Hide Elements
 hideElement = (element) => element.style.display = "none";
@@ -1083,6 +1090,8 @@ const userSubscriptionsButton = document.getElementById("btnUserSubscriptions");
 const userDashboardButton = document.getElementById("btnUserDashboard");
 const userLogoutButton = document.getElementById("btnLogout1");
 userLogoutButton.onclick = logout;
+const buyCryptoButton = document.getElementById("buyCryptoButton");
+buyCryptoButton.onclick = buyCrypto;
 
 // Notification
 const notificationHeader = document.getElementById("notificationHeader")
