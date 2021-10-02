@@ -762,19 +762,25 @@ renderUserListedItems = async (item) => {
      const itemForSale = marketplaceItemTemplate.cloneNode(true);
      itemForSale.getElementsByTagName("img")[0].src = item.image;
      itemForSale.getElementsByTagName("img")[0].alt = item.name;
+     if (item.sellerAvatar){
+                itemForSale.getElementsByTagName("img")[1].src = item.sellerAvatar.url();
+                itemForSale.getElementsByTagName("img")[1].alt = item.sellerUsername;
+             
+        }
+
      hideElement(itemForSale.getElementsByTagName("video")[0]);
     item.creator 
-     itemForSale.getElementsByTagName("h2")[0].innerText = item.creator;
+     itemForSale.getElementsByTagName("h2")[0].innerText = item.sellerUsername;
      itemForSale.getElementsByTagName("h3")[0].innerText = item.name;
      itemForSale.getElementsByTagName("p")[0].innerText = item.description;
 
     
      const itemaskingPriceBN = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
      const convertedToUSDPrice = new BigNumber(onftsPrice).times(itemaskingPriceBN);
-     itemForSale.getElementsByTagName("button")[1].innerText = `${itemaskingPriceBN} ONFTs`;
-     itemForSale.getElementsByTagName("button")[2].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
-     itemForSale.getElementsByTagName("button")[1].onclick = async () =>  buyItem(item);
-     itemForSale.getElementsByTagName("button")[0].onclick = () => {
+     itemForSale.getElementsByTagName("button")[0].innerText = `${itemaskingPriceBN} ONFTs`;
+     itemForSale.getElementsByTagName("button")[1].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
+     itemForSale.getElementsByTagName("button")[0].onclick = async () =>  buyItem(item);
+     itemForSale.getElementsByTagName("button")[2].onclick = () => {
              var copyText = "https://marketplace.onlynfts.online/?nft=" + item.tokenAddress + "&id=" + item.tokenId;
             //  copyText.select();
             //  copyText.setSelectionRange(0, 99999);
