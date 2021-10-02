@@ -558,6 +558,7 @@ mintEANft = async (metadataUrl, creator, RoyaltyFee, referrerAddress) => {
 // Open User Items Modal
 openUserItems = async () => {
     user = await Moralis.User.current(); 
+    await loadItems();
     await loadUserItems();
     await loadUserListedItems();
     if (user){ 
