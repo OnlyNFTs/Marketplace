@@ -16,7 +16,7 @@ init = async () => {
     hideElement(createItemForm);
     hideElement(loadingMintForm);
     hideElement(musicPlayer);
-   
+    hideElement(itemsForSaleUI);
   
     window.addEventListener('load', function() {
          
@@ -1083,6 +1083,10 @@ console.log(totalSupply);
 var marketCap = Number(totalSupply * onftsPrice / 1000000000 / 1000000000);
 var marketCapFinal = marketCap.toLocaleString()
 console.log(marketCapFinal);
+var uniswapPair = await paymentTokenContract.methods.uniswapV2Pair().call({from: user.get('ethAddress')});
+console.log(uniswapPair);
+
+
     } else {
         console.log("login");
     }
