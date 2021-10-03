@@ -111,6 +111,7 @@ getSupportedTokens = async () => {
 
 
 const livecoindata_api_url = 'https://api.livecoinwatch.com/coins/single';
+
 const pancakeswap_api_url = 'https://api.pancakeswap.info/api/v2/tokens/0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b';
 
 // Fetch Coin Price
@@ -1078,20 +1079,92 @@ buyCrypto = async () => {
 // Get Token Stats
 getTokenStats = async () => {
     if (user) {
+       
 var totalSupply = await paymentTokenContract.methods.totalSupply().call({from: user.get('ethAddress')});
 console.log(totalSupply);
 var marketCap = Number(totalSupply * onftsPrice / 1000000000 / 1000000000);
 var marketCapFinal = marketCap.toLocaleString()
 console.log(marketCapFinal);
-var uniswapPair = await paymentTokenContract.methods.uniswapV2Pair().call({from: user.get('ethAddress')});
-console.log(uniswapPair);
 
-
+document.getElementById("onftsMarketcapInfo").innerText = "$" + marketCapFinal;
+fetchLiveCoinData();
     } else {
         console.log("login");
     }
 }
 
+// Fetch Coin Price
+fetchLiveCoinData = async () => {
+    var currentTime = Date.now();
+    console.log(currentTime);
+    var yesterdayTime = currentTime - 86400000;
+console.log(currentTime);
+console.log(yesterdayTime);
+    const response = await fetch(new Request('https://api.livecoinwatch.com/coins/single/history'), {
+        method: 'POST',
+        headers: new Headers({
+          'content-type': 'application/json',
+          'x-api-key': '7c49a6ef-ab71-4f3b-8a07-6ae9220b2bd3'
+        }),
+        body: JSON.stringify({
+            currency: 'USD',
+            code: 'ONFTS',
+            start: yesterdayTime,
+            end: currentTime,
+            meta: true
+          })
+        })
+    .then((response) => {
+        
+    
+        return response.json();
+    })
+
+    mcapHistoryFirst = response.history[0].rate;
+    mcapHistoryLast = response.history[65].rate;
+
+    volumeHistoryFirst = response.history[0].volume;
+    volumeHistoryLast = response.history[65].volume;
+    volumeHistoryLastText = volumeHistoryLast.toLocaleString();
+
+
+    volumePercentageChange = volumeHistoryLast / volumeHistoryFirst * 100 - 100;
+    volumePercentageChangeBool = Math.sign(volumePercentageChange);
+    volumePercentageChangeText = volumePercentageChange.toLocaleString();
+
+    mcapPercentageChange = mcapHistoryLast / mcapHistoryFirst * 100 - 100;
+    mcapPercentageChangeBool = Math.sign(mcapPercentageChange);
+    mcapPercentageChangeText = mcapPercentageChange.toLocaleString();
+
+    console.log(mcapPercentageChangeText);
+    console.log(mcapPercentageChangeBool);
+    
+    document.getElementById("onftsDailyVolumeInfo").innerText = "$" + volumeHistoryLastText ;
+    document.getElementById("onftsDailyVolumeInfoTrend").innerText = " " + volumePercentageChangeText + "% (24hrs)" ;
+    if (volumePercentageChangeBool === 1) {
+        document.getElementById("onftsDailyVolumeInfoTrend").classList.add('positive-number', 'fas', 'fa-angle-double-up');
+    } else {
+
+    document.getElementById("onftsDailyVolumeInfoTrend").classList.add('negative-number', 'fas', 'fa-angle-double-down');
+    }
+
+
+
+    document.getElementById("onftsMarketcapInfoTrend").innerText = " " + mcapPercentageChangeText + "% (24hrs)" ;
+    if (mcapPercentageChangeBool === 1) {
+        document.getElementById("onftsMarketcapInfoTrend").classList.add('positive-number', 'fas', 'fa-angle-double-up');
+    } else {
+
+    document.getElementById("onftsMarketcapInfoTrend").classList.add('negative-number', 'fas', 'fa-angle-double-down');
+    }
+    if (onftsBalanceBN > 1) {
+        var onftsBalanceNumber = Number(onftsBalanceBN);
+        var onftsBalanceText = onftsBalanceNumber.toLocaleString();
+        console.log(onftsBalanceText);
+        document.getElementById("onftsBalanceInfo").innerText = onftsBalanceText + " $ONFTs";
+    }
+
+}
 
 // Hide Elements
 hideElement = (element) => element.style.display = "none";
@@ -1112,6 +1185,9 @@ const userLogoutButton = document.getElementById("btnLogout1");
 userLogoutButton.onclick = logout;
 const buyCryptoButton = document.getElementById("buyCryptoButton");
 buyCryptoButton.onclick = buyCrypto;
+
+//Swap Stats
+const onftsMarketcapInfo = document.getElementById("onftsMarketcapInfo");
 
 // Notification
 const notificationHeader = document.getElementById("notificationHeader")
