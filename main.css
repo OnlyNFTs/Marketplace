@@ -460,3 +460,23 @@
   background-color: #464646;
   cursor: pointer;
 }
+
+.token_list_img,
+.token_image {
+  width: 40px;
+  height: 40px;
+}
+
+.token-modal-body {
+  height: 400px;
+  overflow: scroll;
+}
+
+.token_row {
+  padding: 5px 10px;
+}
+
+.token_row:hover {
+  background-color: var(--primary);
+  cursor: pointer;
+}

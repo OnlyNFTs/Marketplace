@@ -8,6 +8,10 @@ onftsEarlyHoldersNFTAddress = "0x5692ab9e489e9c88d72431ce572c31061bbc7531";
 onftsNSFWAddress = "0x67a3c573be9edca87f5097e3a3f8f1111e51a6cd";
 onftsAddress = "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b";
 
+let currentTrade = {};
+let currentSelectSide;
+let tokens;
+
 // Initialise
 init = async () => {
 
@@ -61,7 +65,10 @@ init = async () => {
     await getTokenStats();
 
     await Moralis.initPlugins();
+    await getSupportedTokens();
     await getMarketQuote();
+
+ 
 
     const soldItemsQuery = new Moralis.Query('SoldItemsNSFW');
     const soldItemsSubscription = await soldItemsQuery.subscribe();
@@ -76,10 +83,85 @@ init = async () => {
 }
 
 getSupportedTokens = async () => {
-    const tokens = await Moralis.Plugins.oneInch.getSupportedTokens({
-      chain: 'bsc', // The blockchain you want to use (eth/bsc/polygon)
-    });
-    console.log(tokens);
+     const result = await Moralis.Plugins.oneInch.getSupportedTokens({
+       chain: 'bsc', // The blockchain you want to use (eth/bsc/polygon)
+     });
+     console.log(result);
+
+    tokens = {
+        "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b":
+        {
+        symbol: "ONFTs",
+        name: "OnlyNFTs",
+        decimals: 18,
+        address: "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b",
+        logoURI: 'favicon.ico'
+        },
+        "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee":
+        {
+            symbol: "BNB",
+            name: "BNB",
+            decimals: 18,
+            address: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            logoURI: "https://tokens.1inch.io/0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c.png"
+            },
+        "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c":
+        {
+        symbol: "WBNB",
+        name: "Wrapped BNB",
+        decimals: 18,
+        address: "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        logoURI: "https://tokens.1inch.io/0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c.png"
+        },
+        "0xe9e7cea3dedca5984780bafc599bd69add087d56":
+        {
+        symbol: "BUSD Token",
+        name: "BUSD",
+        decimals: 18,
+        address: "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+        logoURI: "https://tokens.1inch.io/0x4fabb145d64652a948d72533023f6e7a623c7c53.png"
+        },
+        "0x55d398326f99059ff775485246999027b3197955":
+        {
+        symbol: "USDT",
+        name: "Tether USD",
+        decimals: 18,
+        address: "0x55d398326f99059ff775485246999027b3197955",
+        logoURI: "https://tokens.1inch.io/0xdac17f958d2ee523a2206206994597c13d831ec7.png"
+        }
+    }
+    // tokens = result.tokens;
+    let parent = document.getElementById("token_list");
+    for (const address in tokens){
+        let token = tokens[address];
+        let div = document.createElement("div");
+        div.setAttribute("data-address", address)
+        div.className = "token_row";
+        let html = `
+        <img class="token_list_img" src="${token.logoURI}">
+        <span class="token_list_text">${token.symbol}</span>
+        `
+        div.innerHTML = html;
+        div.onclick = (() => {selectToken(address, parent, div)});
+        parent.appendChild(div);        
+        //  if(address != "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c" && address != "0x55d398326f99059ff775485246999027b3197955" && address != "0xe9e7cea3dedca5984780bafc599bd69add087d56" && address != "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b") {
+        //       parent.removeChild(div);
+        //  }  
+      
+    }
+  }
+
+  function selectToken(address, parent, div) {
+    $('#tokenSwapModal').modal('hide');
+    // let address = event.target.getAttribute("data-address");
+    currentTrade[currentSelectSide] = tokens[address];
+    console.log(currentTrade);
+    if(address === address) {
+        parent.appendChild(div);
+    }
+
+    renderInterface()
+    getQuote();
   }
 
   getMarketQuote = async () => {
@@ -1166,6 +1248,80 @@ console.log(yesterdayTime);
 
 }
 
+function handleTokenSwapModal(side) {
+    currentSelectSide = side;
+    $('#tokenSwapModal').modal('show');
+}
+
+function renderInterface() {
+    if(currentTrade.from){
+    document.getElementById("from_token_img").src = currentTrade.from.logoURI;
+    document.getElementById("from_token_txt").innerHTML = currentTrade.from.symbol;
+    }
+
+    if(currentTrade.to){
+    document.getElementById("to_token_img").src = currentTrade.to.logoURI;
+    document.getElementById("to_token_txt").innerHTML = currentTrade.to.symbol;
+    }
+}
+
+async function getQuote() {
+    if(!currentTrade.from || !currentTrade.to || !document.getElementById("from_amount").value) return;
+    var fromAmountValue = document.getElementById("from_amount").value;
+    let amountBN = Number (fromAmountValue * 10**currentTrade.from.decimals);
+    let amount = Number (Moralis.Units.ETH(fromAmountValue));
+    console.log(amountBN);
+  console.log(amount);
+    const quote = await Moralis.Plugins.oneInch.quote({
+       chain: 'bsc',
+       fromTokenAddress: currentTrade.from.address,
+       toTokenAddress: currentTrade.to.address,
+       amount: amount,
+   })
+   console.log(quote);
+   document.getElementById("to_amount").value = quote.toTokenAmount / 10**currentTrade.to.decimals;
+   document.getElementById("gas_amount").innerHTML = quote.estimatedGas;
+
+}
+
+async function trySwap() {
+    alert("tryingswap");
+    let address = await user.get('ethAddress');
+    var fromAmountValue = document.getElementById("from_amount").value;
+    let amount = Number (fromAmountValue * 10**currentTrade.from.decimals);
+    if (currentTrade.from.symbol !== "BNB") {
+        const allowance = await Moralis.Plugins.oneInch.hasAllowance({
+            chain: 'bsc',
+            fromTokenAddress: currentTrade.from.address,
+            fromAddress: address,
+            amount: amount,
+        })
+        console.log(allowance);
+        if (!allowance){
+            await Moralis.Plugins.oneInch.approve({
+                chain: 'bsc',
+                tokenAddress: currentTrade.from.address,
+                fromAddress: address,
+                amount: amount,
+            });
+        }
+    }
+    let receipt = await doSwap(address, amount);
+    console.log(receipt);
+}
+
+async function doSwap(userAddress, amount) {
+    return Moralis.Plugins.oneInch.swap({
+        chain: 'bsc',
+        fromTokenAddress: currentTrade.from.address,
+        toTokenAddress: currentTrade.to.address,
+        amount: amount,
+        fromAddress: userAddress,
+        slippage: 8,
+    })
+
+}
+
 // Hide Elements
 hideElement = (element) => element.style.display = "none";
 showElement = (element) => element.style.display = "block";
@@ -1188,6 +1344,17 @@ buyCryptoButton.onclick = buyCrypto;
 
 //Swap Stats
 const onftsMarketcapInfo = document.getElementById("onftsMarketcapInfo");
+
+const tokenSwapFromModalButton = document.getElementById("from_token_select");
+tokenSwapFromModalButton.onclick = (() => {handleTokenSwapModal("from")});
+const tokenSwapToModalButton = document.getElementById("to_token_select");
+tokenSwapToModalButton.onclick = (() => {handleTokenSwapModal("to")});
+
+document.getElementById("from_amount").onkeydown = getQuote; //Keystroke
+document.getElementById("from_amount").onpaste = getQuote; //IE, FF3
+document.getElementById("from_amount").oninput = getQuote; //FF,Opera,Chrome,Safari
+
+document.getElementById("swap_button").onclick = trySwap;
 
 // Notification
 const notificationHeader = document.getElementById("notificationHeader")
