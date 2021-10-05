@@ -1059,9 +1059,9 @@ if (earlyHoldersBalance !== null) {
 buyCrypto = async () => {
     if (user) {
         const userAddress = user.get('ethAddress');
-        Moralis.Plugins.fiat.buy({ coin: 'bnb', receiver: userAddress, });
+        Moralis.Plugins.fiat.buy({ coin: 'bep20', receiver: userAddress, });
      } else {
-         Moralis.Plugins.fiat.buy({ coin: 'bnb', receiver: '',})
+         Moralis.Plugins.fiat.buy({ coin: 'bep20', receiver: '',})
      }
  }
 

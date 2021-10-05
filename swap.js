@@ -1170,6 +1170,8 @@ console.log(marketCapFinal);
 
 document.getElementById("onftsMarketcapInfo").innerText = "$" + marketCapFinal;
 fetchLiveCoinData();
+checkPricing = await Moralis.Web3API.token.getTokenPrice({chain:'bsc', address:"0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b"});
+console.log(checkPricing);
     } else {
         console.log("login");
     }
