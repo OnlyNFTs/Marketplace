@@ -1059,9 +1059,19 @@ if (earlyHoldersBalance !== null) {
 buyCrypto = async () => {
     if (user) {
         const userAddress = user.get('ethAddress');
-        Moralis.Plugins.fiat.buy({ coin: "BNB_BEP20", receiver: userAddress, });
+        
+        let response = await Moralis.Plugins.fiat.buy({ coin: "BNB_BEP20", receiver: userAddress,}, {disableTriggers: true});
+        console.log(response.data);
+        $('#buyCryptoModal').modal('show');
+        document.getElementById('buyCryptoModalInner').style.display = 'block';
+    document.getElementById('buyCryptoModalInner').src = response.data;
+
      } else {
-         Moralis.Plugins.fiat.buy({ coin: "BNB_BEP20", receiver: '',})
+        let response = await Moralis.Plugins.fiat.buy({ coin: "BNB_BEP20", receiver: '',}, {disableTriggers: true});
+        console.log(respone);
+        $('#buyCryptoModal').modal('show');
+         document.getElementById('buyCryptoModalInner').style.display = 'block';
+    document.getElementById('buyCryptoModalInner').src = response.data;
      }
  }
 
