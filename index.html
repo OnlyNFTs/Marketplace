@@ -39,9 +39,9 @@
   <meta name="author" content="OnlyNFTs">
   <meta name="generator" content="OnlyNFTs">
   <meta name="keywords" content="OnlyNFTs, Cryptocurrency, NFT, NFTs, Marketplace, Buy, Sell, Create, BSC, Binance, NSFW, Adult, Sexy,">
-
+  <link rel="manifest" href="manifest.json">
   <!-- Favicon -->
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
   <link rel="apple-touch-icon" sizes="32x32" href="images/favicon-32x32.png">
   <!-- <link rel="apple-touch-icon-precomposed"  href="images/favicon.png"> -->
   <link rel="icon" type="image/png" sizes="32x32"  href="images/favicon-32x32.png">
@@ -70,30 +70,31 @@
 
 
 <nav class="navbar main-nav navbar-expand-lg px-2 px-sm-0 py-2 py-lg-0">
-  <div class="container">
-    <a class="navbar-brand" id="secretbutton" href="#"><img src="images/logo.png" alt="logo"></a>
-	<button class="btn btn-primary rounded-pill" id="btnConnect">Connect</button>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="ti-menu"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item @@contact">
-          <a class="nav-link" href="index.html">Home</a>
-        </li>
-		<li class="nav-item dropdown @@pages">
+  	<div class="container">
+    	<a class="navbar-brand" id="secretbutton" href="#"><img src="images/logo.png" alt="logo"></a>
+		<button class="btn btn-primary rounded-pill" id="btnConnect">Connect</button>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      	aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      	<span class="ti-menu"></span>
+    	</button>
+    	<div class="collapse navbar-collapse" id="navbarNav">
+      		<ul class="navbar-nav ml-auto">
+        	<li class="nav-item @@contact">
+          	<a class="nav-link" href="index.html">Home</a>
+        	</li>
+			<li class="nav-item dropdown @@pages">
 			<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Exchange
-			  <span><i class="ti-angle-down"></i></span>
+				<span><i class="ti-angle-down"></i></span>
 			</a>
 			<!-- Dropdown list -->
 			<ul class="dropdown-menu">
-			  <li><a class="dropdown-item" href="swap.html">Swap</a></li>
-			  <li><a class="dropdown-item" id="buyCryptoButton" href="#">Buy Crypto
+			<li><a class="dropdown-item" href="swap.html">Swap</a></li>
+			<li><a class="dropdown-item" id="buyCryptoButton" href="#">Buy Crypto
 				<span><i class="ti-new-window p-2"></i></span>
-			</a>
+				</a>
+			</li>
 			</ul>
-		  </li>
+		  	</li>
 
         <li class="nav-item dropdown @@pages">
           <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">NFTs
@@ -102,9 +103,7 @@
           <!-- Dropdown list -->
           <ul class="dropdown-menu">
 			<li><a class="dropdown-item" id="btnOpenCreateItem" href="#">Create</a></li>
-			
             <li><a class="dropdown-item" href="marketplace.html">Marketplace</a></li>
-            
           </ul>
         </li>
         <li class="nav-item dropdown @@pages">
@@ -119,10 +118,8 @@
 			  <li><a class="dropdown-item" id="btnMyItems" href="#">My Collectibles</a></li>
 			  <li><a class="dropdown-item" id="btnUserSubscriptions" href="#">My Subscriptions</a></li>
 			  <li><a class="dropdown-item" id="btnLogout1" href="#">Logout</a></li>
-
-			
 			</ul>
-		  </li>
+		</li>
 		  <li class="nav-item dropdown @@staking">
 			<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Staking
 			  <span><i class="ti-angle-down"></i></span>
@@ -147,16 +144,15 @@
 				<span><i class="ti-new-window p-2"></i></span>
 				</a>
 		  		</li>
-				  <li><a class="dropdown-item p-1 justify-content-center" >
+				  	<li><a class="dropdown-item p-1 justify-content-center" >
 					<span><a class="bi-telegram ml-2" target="_blank" href="https://t.me/theonlynfts" data-toggle="tooltip" data-placement="top" title="Telegram"></a></a></span>
 					<span><a class="bi-journal-code ml-2" target="_blank" href="https://bscscan.com/token/0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b" data-toggle="tooltip" data-placement="top" title="BSCScan"></a></a></span>
 					<span><a class="bi-graph-up " target="_blank" href="https://www.dextools.io/app/bsc/pair-explorer/0xb83df345cc922bb6892fd1462f239ad8b1bc5c4f" data-toggle="tooltip" data-placement="top" title="Dextools"></a></a></span>
 					<span><a class="ti-twitter ml-2" target="_blank" href="https://twitter.com/theonlynfts" data-toggle="tooltip" data-placement="top" title="Twitter"></a></a></span>
 					<span><a class="ti-instagram " target="_blank" href="https://www.instagram.com/theonlynfts/" data-toggle="tooltip" data-placement="top" title="Instagram"></a></span>
 					<span><a class="ti-facebook " target="_blank" href="https://www.facebook.com/OnlyNFTsOfficial" data-toggle="tooltip" data-placement="top" title="Facebook"></a></span>
-
-				</a>
-					  </li>
+					</a>
+					</li>
 			</ul>
 		
 		<li class="nav-item"><a class="nav-link" href="swap.html" role="" class="btn" style="font-size:100%; color: grey; font-weight: bold; ">
@@ -215,15 +211,16 @@
 	<div class="container">
 		<div class="row align-items-center">
 			<div class="col-md-6 order-2 order-md-1 text-center text-md-left">
-                <h1 class="text-white font-weight-bold mb-4">OnlyNFTs<br></h1>
+                <h1 class="text-white font-weight-bold mb-4"><br></h1>
 				<h5 class="text-white font-weight-bold mb-4">Marketplace is Live on BSC Mainnet</h5>
 
 				<p class="text-white mb-5">Buy, Sell & Create NFTs.</p>
+				<p class="text-white mb-5">0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b</p>
 				<a href="marketplace.html" class="btn btn-main-md">Enter Marketplace</a>
 				<a href="https://docs.onlynfts.online/get-started" target="_blank" class="btn btn-main-md">Get started</a>
 			</div>
 			<div class="col-md-6 text-center order-1 order-md-2">
-				<img class="img-fluid" src="images/mobile.png" alt="screenshot">
+				<img class="img-fluid rounded" src="images/logo.jpg" alt="screenshot">
 			</div>
 		</div>
 	</div>
@@ -599,29 +596,27 @@
     <div class="container">
 		<section class="section p-2">
 			<iframe  data-aa="1648460" src="//acceptable.a-ads.com/1648460" style="border:0px; padding:0; width:100%; height:100%; overflow:hidden; background-color: transparent;" ></iframe>
-			</section>
-      <div class="row">
-        <div class="col-lg-4 col-md-12 m-md-auto align-self-center">
-          <div class="block">
-            <!-- Social Site Icons -->
-            <ul class="social-icon list-inline">
-              <li class="list-inline-item">
+		</section>
+      	<div class="row">
+        	<div class="col-lg-4 col-md-12 m-md-auto align-self-center">
+          	<div class="block">
+            	<!-- Social Site Icons -->
+            	<ul class="social-icon list-inline">
+              	<li class="list-inline-item">
                 <a href="https://www.facebook.com/OnlyNFTsOfficial"><i class="ti-facebook"></i></a>
-              </li>
-              <li class="list-inline-item">
+              	</li>
+              	<li class="list-inline-item">
                 <a href="https://twitter.com/theonlynfts"><i class="ti-twitter"></i></a>
-              </li>
-              <li class="list-inline-item">
+              	</li>
+              	<li class="list-inline-item">
                 <a href="https://www.instagram.com/theonlynfts/"><i class="ti-instagram"></i></a>
-              </li>
-            </ul>
-          </div>
-        </div>
-       
-      </div>
+              	</li>
+            	</ul>
+          	</div>
+        	</div>
+      	</div>
     </div>
   </div>
-  
 </footer>
 
 
@@ -1064,7 +1059,7 @@
                             <div class="progress"></div>
                         </div>
                     </div> 
-                    <audio src="music/" id="audio"></audio>  
+                    <audio src="music" id="audio"></audio>  
                     <div class="img-container">
                         <img src="" alt="music-cover" id="cover"/>
                     </div>

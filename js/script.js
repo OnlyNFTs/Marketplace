@@ -5,7 +5,7 @@
   // AOS
   // ----------------------------
   AOS.init({
-    once: true
+    once: false
   });
 
   
