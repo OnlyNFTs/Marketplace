@@ -14,7 +14,7 @@ let tokens;
 
 // Initialise
 init = async () => {
-
+    initWeb3();
     hideElement(connectWalletModal);
     hideElement(userItemsSection);
     hideElement(createItemForm);

@@ -10,7 +10,7 @@ onftsAddress = "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b";
 
 // Initialise
 init = async () => {
-
+    initWeb3();
     hideElement(connectWalletModal);
     hideElement(userItemsSection);
     hideElement(createItemForm);
