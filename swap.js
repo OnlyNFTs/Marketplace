@@ -1150,13 +1150,13 @@ if (earlyHoldersBalance !== null) {
 
 //Buy Crypto
 buyCrypto = async () => {
-   if (user) {
-       const userAddress = user.get('ethAddress');
-       Moralis.Plugins.fiat.buy({ coin: 'bnb', receiver: userAddress, });
-    } else {
-        Moralis.Plugins.fiat.buy({ coin: 'ETH'})
-    }
-}
+    if (user) {
+        const userAddress = user.get('ethAddress');
+        Moralis.Plugins.fiat.buy({ coin: "BNB_BEP20", receiver: userAddress, });
+     } else {
+         Moralis.Plugins.fiat.buy({ coin: "BNB_BEP20", receiver: '',})
+     }
+ }
 
 // Get Token Stats
 getTokenStats = async () => {
