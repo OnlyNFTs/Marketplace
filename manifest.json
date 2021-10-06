@@ -1,17 +1,22 @@
 {
     "short_name": "OnlyNFTs",
-    "name": "OnlyNFTs | Buy Sell Create NFTs",
-    "description": "OnlyNFTs",
-    "icons": [
-        {
-            "src": "images/favicon-32x32.png",
-            "type": "image/png",
-            "sizes": "32x32"
-        }
-    ],
-
+    "name": "OnlyNFTs",
+    "description": "OnlyNFTs | Buy Sell Create NFTs",
+    "homepage_url": "https://onlynfts.online",
     "start_url": ".",
     "display": "standalone",
-    "theme_color": "#000000",
-    "background_color": "#ffffff"
+    "theme_color": "#f71485",
+    "background_color": "#ffffff",
+    "icons": [
+        {
+            "src": "favicon.ico",
+            "type": "image/x-icon",
+            "sizes": "256x256"
+        },
+        {
+            "src": "logo.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ]
   }
