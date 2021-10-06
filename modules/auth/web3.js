@@ -13,9 +13,16 @@ const EARLY_HOLDERS_NFT_ADDRESS = "0x5692AB9e489e9c88d72431ce572c31061BbC7531";
 const PANCAKESWAP_ROUTER_ADDRESS ="0x10ED43C718714eb63d5aA57B78B54704E256024E";
 
 async function initWeb3() {
+    if (window.localStorage.walletconnect) {
+        window.web3 = await Moralis.enable({
+            provider: "walletconnect"
+        });
+    } else {
+        window.web3 = await Moralis.enable();
+    }
     
 
-    window.web3 = await Moralis.Web3.enable({provider: walletProvider});
+    // window.web3 = await Moralis.Web3.enable({provider: walletProvider});
     window.tokenContract = new web3.eth.Contract(tokenContractAbi, TOKEN_CONTRACT_ADDRESS);
     window.marketplaceContract = new web3.eth.Contract(marketplaceContractAbi, MARKETPLACE_CONTRACT_ADDRESS);
     window.paymentTokenContract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
