@@ -1,6 +1,7 @@
 {
     "short_name": "OnlyNFTs",
     "name": "OnlyNFTs | Buy Sell Create NFTs",
+    "description": "OnlyNFTs",
     "icons": [
         {
             "src": "images/favicon-32x32.png",
@@ -8,9 +9,9 @@
             "sizes": "32x32"
         }
     ],
-    "start_url": "/index.html",
-    "background_color": "#fffff",
+
+    "start_url": ".",
     "display": "standalone",
-    
-    "theme_color": "#3367D6"
-}
+    "theme_color": "#000000",
+    "background_color": "#ffffff"
+  }
