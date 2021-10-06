@@ -18,5 +18,21 @@
             "type": "image/png",
             "sizes": "512x512"
         }
-    ]
+    ],
+    "shortcuts": [
+        {
+          "name": "Marketplace",
+          "short_name": "Marketplace",
+          "description": "View NFT Marketplace",
+          "url": "marketplace.html",
+          "icons": [{ "src": "logo.png", "sizes": "512x512" }]
+        },
+        {
+          "name": "Swap",
+          "short_name": "Swap",
+          "description": "Do the swap!",
+          "url": "swap.html",
+          "icons": [{ "src": "logo.png", "sizes": "512x512" }]
+        }
+      ]
   }
