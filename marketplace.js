@@ -959,7 +959,7 @@ ensurePaymentTokenIsApproved = async (tokenAddress, amount) => {
     approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({provider: walletProvider, chain: 56, from: userAddress});
     console.log(approvedAddress);
     
-    } else {
+    } else if (walletProvider != "walletconnect") {
         approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({from: userAddress});
         console.log(approvedAddress);
     };
