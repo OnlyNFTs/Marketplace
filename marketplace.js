@@ -954,16 +954,23 @@ ensurePaymentTokenIsApproved = async (tokenAddress, amount) => {
     const userAddress = user.get('ethAddress');
     console.log(walletProvider);
     const contract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
+    
     if (walletProvider === "walletconnect") {
     const approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({provider: walletProvider, chain: 56, from: userAddress});
     console.log(approvedAddress);
     
     } else {
         const approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({from: userAddress});
+        console.log(approvedAddress);
     };
     if (approvedAddress < amount){
-        await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({provider: walletProvider, from: userAddress});
-    }
+
+        if (walletProvider === "walletconnect") {
+            await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({provider: walletProvider, chain: 56, from: userAddress});
+            } else {
+                await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({from: userAddress});
+            };
+    };
 }
 
 // Mint Token Approval
