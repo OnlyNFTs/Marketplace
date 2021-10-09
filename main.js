@@ -15,7 +15,7 @@ init = async () => {
     hideElement(userItemsSection);
     hideElement(createItemForm);
     hideElement(loadingMintForm);
-    hideElement(musicPlayer);
+    // hideElement(musicPlayer);
     hideElement(itemsForSaleUI);
   
     window.addEventListener('load', function() {
@@ -60,7 +60,11 @@ init = async () => {
 
     await Moralis.initPlugins();
     await getMarketQuote();
-
+    
+    // loadSong(songs[songIndex]);
+    await $('#musicPlayer').modal('show');
+    // await $('#musicPlayer').modal('hide');
+    playSong();
     const soldItemsQuery = new Moralis.Query('SoldItemsNSFW');
     const soldItemsSubscription = await soldItemsQuery.subscribe();
     soldItemsSubscription.on("create", onItemSold);
