@@ -10,13 +10,14 @@ onftsAddress = "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b";
 
 // Initialise
 init = async () => {
-
+    initWeb3();
     hideElement(connectWalletModal);
     hideElement(userItemsSection);
     hideElement(createItemForm);
     hideElement(loadingMintForm);
     hideElement(musicPlayer);
     hideElement(editProfilePageButton);
+  
     window.addEventListener('load', function() {
          
     if (typeof web3 !== 'undefined') {
@@ -25,10 +26,16 @@ init = async () => {
         if (web3.currentProvider.isMetaMask === true) {
             walletProvider = 'metamask';
             console.log('MetaMask is active');
+            notificationHeader.innerText = "MetaMask Detected";
+            notificationBody.innerText = "MetaMask has been Detected! ";
+            $('.toast').toast('show');
             //window.web3 = Moralis.Web3.enable({provider: 'metamask'});
             initWeb3();
         } else {
             console.log('MetaMask is not available');
+            notificationHeader.innerText = "Web3 Browser Detected";
+            notificationBody.innerText = "Web3 Browser has been Detected! ";
+            $('.toast').toast('show');
             //window.web3 = Moralis.Web3.enable({provider: 'walletconnect, trustwallet'});
             initWeb3();
         }
@@ -37,6 +44,7 @@ init = async () => {
         //  alert('No Web3 Browser Has Been Detected. Please visit https://metamask.io/download And install Metamask!');
         // $('.toast').toast(data-delay="10000");
         notificationHeader.innerText = "No Web3 Browser Detected";
+        
         notificationBody.innerText = "Please visit https://metamask.io/download And install Metamask!";
         //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
         $('.toast').toast('show');
@@ -45,10 +53,12 @@ init = async () => {
 });
 
     await checkURL();
-    $("#ageVer").modal('show');
+    // $("#ageVer").modal('show');
     await fetchCoinPrice();
+    
     await loadItems();
     await initUser();
+    await getTokenStats();
     await profilePageOwner();
     await renderProfilePageInfo();
     await Moralis.initPlugins();
@@ -215,17 +225,25 @@ initUser = async () => {
         userReferrerSubmited = await user.attributes.referrerSubmited;
         //alert(mintApprovedStatus);
         hideElement(userConnectButton);
+        hideElement(userConnectButton1);
         showElement(userProfileButton);
         showElement(openCreateItemButton);
         showElement(openUserItemsButton);
+        showElement(userSubscriptionsButton);
+        showElement(userDashboardButton);
+        showElement(userLogoutButton);
         loadBalances();
         loadUserItems();
         loadUserListedItems();
     }else{
         showElement(userConnectButton);
+        showElement(userConnectButton1);
         hideElement(userProfileButton);
         hideElement(openCreateItemButton);
         hideElement(openUserItemsButton);
+        hideElement(userSubscriptionsButton);
+        hideElement(userDashboardButton);
+        hideElement(userLogoutButton);
     }
 }
 
@@ -751,39 +769,47 @@ renderUserListedItems = async (item) => {
      const itemForSale = marketplaceItemTemplate.cloneNode(true);
      itemForSale.getElementsByTagName("img")[0].src = item.image;
      itemForSale.getElementsByTagName("img")[0].alt = item.name;
+     if (item.sellerAvatar){
+                itemForSale.getElementsByTagName("img")[1].src = item.sellerAvatar.url();
+                itemForSale.getElementsByTagName("img")[1].alt = item.sellerUsername;
+             
+        }
+
      hideElement(itemForSale.getElementsByTagName("video")[0]);
     item.creator 
-     itemForSale.getElementsByTagName("h2")[0].innerText = item.creator;
+     itemForSale.getElementsByTagName("h2")[0].innerText = item.sellerUsername;
      itemForSale.getElementsByTagName("h3")[0].innerText = item.name;
      itemForSale.getElementsByTagName("p")[0].innerText = item.description;
 
     
      const itemaskingPriceBN = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
      const convertedToUSDPrice = new BigNumber(onftsPrice).times(itemaskingPriceBN);
-     itemForSale.getElementsByTagName("button")[1].innerText = `${itemaskingPriceBN} ONFTs`;
-     itemForSale.getElementsByTagName("button")[2].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
-
-     itemForSale.isFlipped = '';
-     itemForSale.getElementsByTagName("div")[0].onclick = () => {
-                
-         
-                if (itemForSale.isFlipped != 'triggered')  {
-                    $(itemForSale.getElementsByTagName("div")[0]).toggleClass('is-flipped');
-                    itemForSale.isFlipped = 'triggered';
-                    console.log(itemForSale.isFlipped);
-                }
-            }
-
-    itemForSale.getElementsByTagName("a")[0].onclick = () => {       
+     itemForSale.getElementsByTagName("button")[0].innerText = `${itemaskingPriceBN} ONFTs`;
+     itemForSale.getElementsByTagName("button")[1].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
+     itemForSale.getElementsByTagName("button")[0].onclick = async () =>  buyItem(item);
+     itemForSale.getElementsByTagName("button")[2].onclick = () => {
+             var copyText = "https://marketplace.onlynfts.online/?nft=" + item.tokenAddress + "&id=" + item.tokenId;
+            //  copyText.select();
+            //  copyText.setSelectionRange(0, 99999);
+             navigator.clipboard.writeText(copyText);
         
-            
-            $(itemForSale.getElementsByTagName("div")[2]).toggleClass('is-flipped');
-            itemForSale.isFlipped = '';
-            console.log(itemForSale.isFlipped);
-       
-    }
+             notificationHeader.innerText = "Copied!";
+         notificationBody.innerText = "Copied: " + copyText;
+        //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
+        $('.toast').toast('show');
+            };
 
+            itemForSale.getElementsByTagName("button")[1].onclick = () => {  
+                $('.toast').toast('show');
+            };  
 
+    itemForSale.getElementsByTagName("h2")[0].onclick = () => {  
+        window.open("https://onlynfts.online/profile?p=" + item.creatorUsername).focus();
+    };    
+
+    itemForSale.getElementsByTagName("img")[1].onclick = () => {  
+        window.open("https://onlynfts.online/profile?p=" + item.creatorUsername).focus();
+    };  
 itemsForSale.appendChild(itemForSale);
 }
 
@@ -926,14 +952,26 @@ ensureMarketplaceIsApproved = async (tokenId, tokenAddress) => {
 ensurePaymentTokenIsApproved = async (tokenAddress, amount) => {
     user = await Moralis.User.current();
     console.log(amount);
-    const userAddress = user.get('ethAddress');
+    userAddress = user.get('ethAddress');
     console.log(walletProvider);
     const contract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
-    const approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({provider: walletProvider, from: userAddress});
+    
+    if (walletProvider === "walletconnect") {
+    approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({provider: walletProvider, chain: 56, from: userAddress});
     console.log(approvedAddress);
+    
+    } else if (walletProvider != "walletconnect") {
+        approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({from: userAddress});
+        console.log(approvedAddress);
+    };
     if (approvedAddress < amount){
-        await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({provider: walletProvider, from: userAddress});
-    }
+
+        if (walletProvider === "walletconnect") {
+            await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({provider: walletProvider, chain: 56, from: userAddress});
+            } else {
+                await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({from: userAddress});
+            };
+    };
 }
 
 // Mint Token Approval
@@ -1040,6 +1078,39 @@ if (earlyHoldersBalance !== null) {
 };
 }
 
+//Buy Crypto
+buyCrypto = async () => {
+    if (user) {
+        const userAddress = user.get('ethAddress');
+        
+        let response = await Moralis.Plugins.fiat.buy({ coin: "BNB_BEP20", receiver: userAddress,}, {disableTriggers: true});
+        console.log(response.data);
+        $('#buyCryptoModal').modal('show');
+        document.getElementById('buyCryptoModalInner').style.display = 'block';
+    document.getElementById('buyCryptoModalInner').src = response.data;
+
+     } else {
+        let response = await Moralis.Plugins.fiat.buy({ coin: "BNB_BEP20", receiver: '',}, {disableTriggers: true});
+        console.log(respone);
+        $('#buyCryptoModal').modal('show');
+         document.getElementById('buyCryptoModalInner').style.display = 'block';
+    document.getElementById('buyCryptoModalInner').src = response.data;
+     }
+ }
+
+// Get Token Stats
+getTokenStats = async () => {
+    if (user) {
+var totalSupply = await paymentTokenContract.methods.totalSupply().call({from: user.get('ethAddress')});
+console.log(totalSupply);
+var marketCap = Number(totalSupply * onftsPrice / 1000000000 / 1000000000);
+var marketCapFinal = marketCap.toLocaleString()
+console.log(marketCapFinal);
+    } else {
+        console.log("login");
+    }
+}
+
 //Show edit button profile
 profilePageOwner = async () => {
     alert(urlProfile);
@@ -1054,34 +1125,16 @@ profilePageOwner = async () => {
 // Render Profile Page Info
 renderProfilePageInfo = async () => {
     if (urlProfile) {
-    const profilePage = Moralis.Object.extend("ProfilePages");
-    console.log(urlProfile);
-    const query = new Moralis.Query(profilePage);
-    console.log(query);
-    query.equalTo("creator_address", urlProfile);
-   
-    const results = await query.find();
-    for (let i = 0; i < results.length; i++) {
-        
-        const profilePageInfo = results[i];
-        console.log(profilePageInfo);
-   
+        document.getElementById("profileAvatar").src = profilePageCloudInfo.profileAvatar.url();
     
+        document.getElementById("username").innerText = profilePageCloudInfo.username;
+        document.getElementById("profileDescription").innerText = profilePageCloudInfo.profileBio;
 
-        document.getElementById("profileAvatar").src = '';
-    
-        document.getElementById("username").innerText = profilePageInfo.attributes.username;
-        document.getElementById("profileDescription").innerText = profilePageInfo.attributes.bio;
-
-        document.getElementById("profileLink1").innerText = profilePageInfo.attributes.link;
-        document.getElementById("profileLink1").href = profilePageInfo.attributes.link;
-        document.getElementById("profileLink2").innerText = "test";
-        document.getElementById("profileLink2").href = "https://google.com";
-        document.getElementById("profileLink3").innerText = "test";
-        document.getElementById("profileLink3").href = "https://google.com";
+        document.getElementById("profileLink1").innerText = profilePageCloudInfo.profileLink;
+        document.getElementById("profileLink1").href = profilePageCloudInfo.profileLink;
     };
-    }
 }
+
 
 // Hide Elements
 hideElement = (element) => element.style.display = "none";
@@ -1090,11 +1143,18 @@ showElement = (element) => element.style.display = "block";
 // Navbar
 const userConnectButton = document.getElementById("btnConnect");
 userConnectButton.onclick = () => $('#connectWalletModal').modal('show');
+const userConnectButton1 = document.getElementById("btnConnect1");
+userConnectButton1.onclick = () => $('#connectWalletModal').modal('show')
 const userProfileButton = document.getElementById("btnUserInfo");
 userProfileButton.onclick = openUserInfo;
 const openCreateItemButton = document.getElementById("btnOpenCreateItem");
 openCreateItemButton.onclick = handleOpenCreateItem;
-
+const userSubscriptionsButton = document.getElementById("btnUserSubscriptions");
+const userDashboardButton = document.getElementById("btnUserDashboard");
+const userLogoutButton = document.getElementById("btnLogout1");
+userLogoutButton.onclick = logout;
+const buyCryptoButton = document.getElementById("buyCryptoButton");
+buyCryptoButton.onclick = buyCrypto;
 
 // Notification
 const notificationHeader = document.getElementById("notificationHeader")
@@ -1164,7 +1224,8 @@ const NFToptions = document.getElementById("options");
 const addToMarketplaceSwitch = document.getElementById("customSwitch1");  
 const devSwitch = document.getElementById("customSwitch2");
 const devSwitchButton = document.getElementById("devSwitch");
-const itemsForSaleUI = document.getElementById("itemsForSale");
+const itemsForSaleList = document.getElementById("itemsForSale");
+const itemsForSaleUI = document.getElementById("itemsForSaleUI");
 
 // Mint NFT Options
 optionsBox = async() => {
@@ -1195,12 +1256,6 @@ devsBox = async() => {
 }
 
 
-const card = document.querySelector('.card__inner');
-console.log(card);
-
-    card.addEventListener('click', function() {
-    card.classList.toggle('is-flipped');
-    });
 
 
 init();

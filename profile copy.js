@@ -10,14 +10,13 @@ onftsAddress = "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b";
 
 // Initialise
 init = async () => {
-    initWeb3();
+
     hideElement(connectWalletModal);
     hideElement(userItemsSection);
     hideElement(createItemForm);
     hideElement(loadingMintForm);
-    // hideElement(musicPlayer);
-    hideElement(itemsForSaleUI);
-  
+    hideElement(musicPlayer);
+    hideElement(editProfilePageButton);
     window.addEventListener('load', function() {
          
     if (typeof web3 !== 'undefined') {
@@ -26,16 +25,10 @@ init = async () => {
         if (web3.currentProvider.isMetaMask === true) {
             walletProvider = 'metamask';
             console.log('MetaMask is active');
-            notificationHeader.innerText = "MetaMask Detected";
-            notificationBody.innerText = "MetaMask has been Detected! ";
-            $('.toast').toast('show');
             //window.web3 = Moralis.Web3.enable({provider: 'metamask'});
             initWeb3();
         } else {
             console.log('MetaMask is not available');
-            notificationHeader.innerText = "Web3 Browser Detected";
-            notificationBody.innerText = "Web3 Browser has been Detected! ";
-            $('.toast').toast('show');
             //window.web3 = Moralis.Web3.enable({provider: 'walletconnect, trustwallet'});
             initWeb3();
         }
@@ -52,24 +45,15 @@ init = async () => {
 });
 
     await checkURL();
-    // $("#ageVer").modal('show');
+    $("#ageVer").modal('show');
     await fetchCoinPrice();
     await loadItems();
     await initUser();
-
-
+    await profilePageOwner();
+    await renderProfilePageInfo();
     await Moralis.initPlugins();
     await getMarketQuote();
-    
 
-
-   
-    //  loadSong(songs[songIndex]);
-    // await $('#musicPlayer').modal('show');
-    // // await $('#musicPlayer').modal('hide');
-    // playSong();
-    // nextSong();
-    // playSong();
     const soldItemsQuery = new Moralis.Query('SoldItemsNSFW');
     const soldItemsSubscription = await soldItemsQuery.subscribe();
     soldItemsSubscription.on("create", onItemSold);
@@ -231,25 +215,17 @@ initUser = async () => {
         userReferrerSubmited = await user.attributes.referrerSubmited;
         //alert(mintApprovedStatus);
         hideElement(userConnectButton);
-        hideElement(userConnectButton1);
         showElement(userProfileButton);
         showElement(openCreateItemButton);
         showElement(openUserItemsButton);
-        showElement(userSubscriptionsButton);
-        showElement(userDashboardButton);
-        showElement(userLogoutButton);
         loadBalances();
         loadUserItems();
         loadUserListedItems();
     }else{
         showElement(userConnectButton);
-        showElement(userConnectButton1);
         hideElement(userProfileButton);
         hideElement(openCreateItemButton);
         hideElement(openUserItemsButton);
-        hideElement(userSubscriptionsButton);
-        hideElement(userDashboardButton);
-        hideElement(userLogoutButton);
     }
 }
 
@@ -571,8 +547,8 @@ mintEANft = async (metadataUrl, creator, RoyaltyFee, referrerAddress) => {
 // Open User Items Modal
 openUserItems = async () => {
     user = await Moralis.User.current(); 
-    await initUser();
-
+    loadUserItems();
+    loadUserListedItems();
     if (user){ 
         const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
         const query = new Moralis.Query(BscTokenBalance);
@@ -1064,25 +1040,48 @@ if (earlyHoldersBalance !== null) {
 };
 }
 
-//Buy Crypto
-buyCrypto = async () => {
+//Show edit button profile
+profilePageOwner = async () => {
+    alert(urlProfile);
     if (user) {
-        const userAddress = user.get('ethAddress');
-        
-        let response = await Moralis.Plugins.fiat.buy({ coin: "BNB_BEP20", receiver: userAddress,}, {disableTriggers: true});
-        console.log(response.data);
-        $('#buyCryptoModal').modal('show');
-        document.getElementById('buyCryptoModalInner').style.display = 'block';
-    document.getElementById('buyCryptoModalInner').src = response.data;
+    if (user.get('ethAddress') == urlProfile) {
+        alert("test");
+        showElement(editProfilePageButton);
+        }
+    }
+}
 
-     } else {
-        let response = await Moralis.Plugins.fiat.buy({ coin: "BNB_BEP20", receiver: '',}, {disableTriggers: true});
-        console.log(respone);
-        $('#buyCryptoModal').modal('show');
-         document.getElementById('buyCryptoModalInner').style.display = 'block';
-    document.getElementById('buyCryptoModalInner').src = response.data;
-     }
- }
+// Render Profile Page Info
+renderProfilePageInfo = async () => {
+    if (urlProfile) {
+    const profilePage = Moralis.Object.extend("ProfilePages");
+    console.log(urlProfile);
+    const query = new Moralis.Query(profilePage);
+    console.log(query);
+    query.equalTo("creator_address", urlProfile);
+   
+    const results = await query.find();
+    for (let i = 0; i < results.length; i++) {
+        
+        const profilePageInfo = results[i];
+        console.log(profilePageInfo);
+   
+    
+
+        document.getElementById("profileAvatar").src = '';
+    
+        document.getElementById("username").innerText = profilePageInfo.attributes.username;
+        document.getElementById("profileDescription").innerText = profilePageInfo.attributes.bio;
+
+        document.getElementById("profileLink1").innerText = profilePageInfo.attributes.link;
+        document.getElementById("profileLink1").href = profilePageInfo.attributes.link;
+        document.getElementById("profileLink2").innerText = "test";
+        document.getElementById("profileLink2").href = "https://google.com";
+        document.getElementById("profileLink3").innerText = "test";
+        document.getElementById("profileLink3").href = "https://google.com";
+    };
+    }
+}
 
 // Hide Elements
 hideElement = (element) => element.style.display = "none";
@@ -1091,18 +1090,11 @@ showElement = (element) => element.style.display = "block";
 // Navbar
 const userConnectButton = document.getElementById("btnConnect");
 userConnectButton.onclick = () => $('#connectWalletModal').modal('show');
-const userConnectButton1 = document.getElementById("btnConnect1");
-userConnectButton1.onclick = () => $('#connectWalletModal').modal('show')
 const userProfileButton = document.getElementById("btnUserInfo");
 userProfileButton.onclick = openUserInfo;
 const openCreateItemButton = document.getElementById("btnOpenCreateItem");
 openCreateItemButton.onclick = handleOpenCreateItem;
-const userSubscriptionsButton = document.getElementById("btnUserSubscriptions");
-const userDashboardButton = document.getElementById("btnUserDashboard");
-const userLogoutButton = document.getElementById("btnLogout1");
-userLogoutButton.onclick = logout;
-const buyCryptoButton = document.getElementById("buyCryptoButton");
-buyCryptoButton.onclick = buyCrypto
+
 
 // Notification
 const notificationHeader = document.getElementById("notificationHeader")
@@ -1172,8 +1164,7 @@ const NFToptions = document.getElementById("options");
 const addToMarketplaceSwitch = document.getElementById("customSwitch1");  
 const devSwitch = document.getElementById("customSwitch2");
 const devSwitchButton = document.getElementById("devSwitch");
-const itemsForSaleList = document.getElementById("itemsForSale");
-const itemsForSaleUI = document.getElementById("itemsForSaleUI");
+const itemsForSaleUI = document.getElementById("itemsForSale");
 
 // Mint NFT Options
 optionsBox = async() => {
@@ -1204,6 +1195,12 @@ devsBox = async() => {
 }
 
 
+const card = document.querySelector('.card__inner');
+console.log(card);
+
+    card.addEventListener('click', function() {
+    card.classList.toggle('is-flipped');
+    });
 
 
 init();

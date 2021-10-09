@@ -17,8 +17,10 @@ async function initWeb3() {
         window.web3 = await Moralis.enable({
             provider: "walletconnect"
         });
+        walletProvider = "walletconnect";
     } else {
         window.web3 = await Moralis.enable();
+        walletProvider = "";
     }
     
 
