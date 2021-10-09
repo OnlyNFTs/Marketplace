@@ -1113,10 +1113,10 @@ console.log(marketCapFinal);
 
 //Show edit button profile
 profilePageOwner = async () => {
-    alert(urlProfile);
+    //alert(urlProfile);
     if (user) {
     if (user.get('ethAddress') == urlProfile) {
-        alert("test");
+        alert("owner");
         showElement(editProfilePageButton);
         }
     }
