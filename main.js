@@ -61,10 +61,10 @@ init = async () => {
     await Moralis.initPlugins();
     await getMarketQuote();
     
-    // loadSong(songs[songIndex]);
-    await $('#musicPlayer').modal('show');
-    // await $('#musicPlayer').modal('hide');
-    playSong();
+    //  loadSong(songs[songIndex]);
+    // //await $('#musicPlayer').modal('show');
+    // // await $('#musicPlayer').modal('hide');
+    // playSong();
     const soldItemsQuery = new Moralis.Query('SoldItemsNSFW');
     const soldItemsSubscription = await soldItemsQuery.subscribe();
     soldItemsSubscription.on("create", onItemSold);
