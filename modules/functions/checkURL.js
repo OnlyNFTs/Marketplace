@@ -17,7 +17,11 @@ async function checkURL() {
         console.log(profilePageCloudInfo.profileAvatar.url());
      return(urlProfile, profilePageCloudInfo);
     };
-    if (urlNFT, urlNFTID) return(urlNFT, urlNFTID);
+    if (urlNFT, urlNFTID){
+        urlNFTLC = urlNFT.toLowerCase();;
+        urlNFTIDLC = urlNFTID.toLowerCase();;
+     return(urlNFT, urlNFTID);
+    };
     
 
     
