@@ -795,7 +795,7 @@ renderUserListedItems = async (item) => {
      itemForSale.getElementsByTagName("button")[1].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
      itemForSale.getElementsByTagName("button")[0].onclick = async () =>  buyItem(item);
      itemForSale.getElementsByTagName("button")[2].onclick = () => {
-             var copyText = "https://marketplace.onlynfts.online/?nft=" + item.tokenAddress + "&id=" + item.tokenId;
+             var copyText = "https://onlynfts.online/marketplace/?nft=" + item.tokenAddress + "&id=" + item.tokenId;
             //  copyText.select();
             //  copyText.setSelectionRange(0, 99999);
              navigator.clipboard.writeText(copyText);
