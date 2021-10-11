@@ -227,7 +227,8 @@ initUser = async () => {
             //alert(user.attributes.referrer);
         userReferrerInfo = await user.attributes.referrer.id;
         
-        userReferrerAddress = await user.attributes.referrerAddress;}
+        userReferrerAddress = await user.attributes.referrerAddress;
+    }
         userReferrerSubmited = await user.attributes.referrerSubmited;
         //alert(mintApprovedStatus);
         hideElement(userConnectButton);
@@ -238,9 +239,11 @@ initUser = async () => {
         showElement(userSubscriptionsButton);
         showElement(userDashboardButton);
         showElement(userLogoutButton);
-        loadBalances();
-        loadUserItems();
-        loadUserListedItems();
+        await loadBalances();
+        await loadUserItems();
+        await loadUserListedItems();
+        await checkNotifcationPermission();
+        await showNotification();
     }else{
         showElement(userConnectButton);
         showElement(userConnectButton1);
@@ -251,6 +254,13 @@ initUser = async () => {
         hideElement(userDashboardButton);
         hideElement(userLogoutButton);
     }
+}
+
+
+async function showNotification() {
+    var img = '/to-do-notifications/img/icon-128.png';
+    var text = 'HEY! Your task "' + title + '" is now overdue.';
+    var notification = new Notification('To do list', { body: text});
 }
 
 // Load/Open User Info Modal
