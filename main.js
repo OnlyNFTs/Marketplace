@@ -242,8 +242,7 @@ initUser = async () => {
         await loadBalances();
         await loadUserItems();
         await loadUserListedItems();
-        await checkNotifcationPermission();
-        await showNotification();
+        
     }else{
         showElement(userConnectButton);
         showElement(userConnectButton1);
@@ -257,11 +256,7 @@ initUser = async () => {
 }
 
 
-async function showNotification() {
-    var img = '/to-do-notifications/img/icon-128.png';
-    var text = 'HEY! Your task "' + title + '" is now overdue.';
-    var notification = new Notification('To do list', { body: text});
-}
+
 
 // Load/Open User Info Modal
 openUserInfo = async () => {
