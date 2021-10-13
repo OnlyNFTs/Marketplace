@@ -242,7 +242,8 @@ initUser = async () => {
         await loadBalances();
         await loadUserItems();
         await loadUserListedItems();
-        
+        await checkNotifcationPermission();
+        await showNotification();
     }else{
         showElement(userConnectButton);
         showElement(userConnectButton1);

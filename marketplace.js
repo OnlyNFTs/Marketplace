@@ -793,7 +793,12 @@ renderUserListedItems = async (item) => {
      const convertedToUSDPrice = new BigNumber(onftsPrice).times(itemaskingPriceBN);
      itemForSale.getElementsByTagName("button")[0].innerText = `${itemaskingPriceBN} ONFTs`;
      itemForSale.getElementsByTagName("button")[1].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
-     itemForSale.getElementsByTagName("button")[0].onclick = async () =>  buyItem(item);
+    
+     itemForSale.getElementsByTagName("button")[0].onclick = async () => buyItemUSD(item);
+     
+     
+     
+     itemForSale.getElementsByTagName("button")[1].onclick = async () =>  buyItem(item);
      itemForSale.getElementsByTagName("button")[2].onclick = () => {
              var copyText = "https://onlynfts.online/marketplace/?nft=" + item.tokenAddress + "&id=" + item.tokenId;
             //  copyText.select();
@@ -981,6 +986,33 @@ ensurePaymentTokenIsApproved = async (tokenAddress, amount) => {
     };
 }
 
+// Payment Token Approval
+ensureBNBIsApproved = async (tokenAddress, amount) => {
+    user = await Moralis.User.current();
+    amount = String(100000000000000000);
+    console.log(amount);
+    userAddress = user.get('ethAddress');
+    console.log(walletProvider);
+    const contract = new web3.eth.Contract(paymentTokenContractAbi, WBNB_TOKEN_ADDRESS);
+    
+    if (walletProvider === "walletconnect") {
+    approvedAddress = await contract.methods.allowance(userAddress, PANCAKESWAP_ROUTER_ADDRESS).call({provider: walletProvider, chain: 56, from: userAddress});
+    console.log(approvedAddress);
+    
+    } else if (walletProvider != "walletconnect") {
+        approvedAddress = await contract.methods.allowance(userAddress, PANCAKESWAP_ROUTER_ADDRESS).call({from: userAddress});
+        console.log(approvedAddress);
+    };
+    if (approvedAddress < amount){
+
+        if (walletProvider === "walletconnect") {
+            await contract.methods.approve(PANCAKESWAP_ROUTER_ADDRESS, amount).send({provider: walletProvider, chain: 56, from: userAddress});
+            } else {
+                await contract.methods.approve(PANCAKESWAP_ROUTER_ADDRESS, amount).send({from: userAddress});
+            };
+    };
+}
+
 // Mint Token Approval
 ensureMintTokenIsApproved = async (tokenAddress, amount) => {
     user = await Moralis.User.current();
@@ -1019,6 +1051,29 @@ buyItem = async (item) => {
     console.log(walletProvider);
     await ensurePaymentTokenIsApproved(PAYMENT_TOKEN_ADDRESS, item.askingPrice); 
     await marketplaceContract.methods.buyItem(item.uid).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
+    alert("NFT Purchased");
+}
+
+// Buy Item USD
+buyItemUSD = async (item) => {
+    user = await Moralis.User.current();
+    if (!user){
+        login();
+        return;
+    }
+    console.log(walletProvider);
+    testamount = new Number (1000000000000000);
+    value = String(testamount);
+    console.log(value);
+    amountsOut = await pancakeswapRouterContract.methods.getAmountsOut(value, [WBNB_TOKEN_ADDRESS, PAYMENT_TOKEN_ADDRESS]).call({from: user.get('ethAddress')});
+    console.log(amountsOut);
+    amountsOutSTR = String(amountsOut[1]);
+    console.log(Date.now()+120);
+    testarray = [WBNB_TOKEN_ADDRESS, PAYMENT_TOKEN_ADDRESS];
+    //await pancakeswapRouterContract.methods.approve(PANCAKESWAP_ROUTER_ADDRESS, amountsOut[1]).send({from: user.get('ethAddress')});
+    //await pancakeswapRouterContract.methods.approve(PANCAKESWAP_ROUTER_ADDRESS, amountsOut[1]).send({from: user.get('ethAddress')});
+    //await ensureBNBIsApproved("0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", 100000000000); 
+    await pancakeswapRouterContract.methods.swapExactETHForTokens(amountsOutSTR, testarray, user.get('ethAddress'), Math.floor(Date.now()/1000)+60*20).send({from: user.get('ethAddress'), value, gasPrice: 20000000000});
     alert("NFT Purchased");
 }
 

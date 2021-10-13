@@ -16,7 +16,8 @@ if (Notification.permission === "granted"){
 }
 
 async function showNotification() {
-    var img = '/to-do-notifications/img/icon-128.png';
-    var text = 'HEY! Your task "' + title + '" is now overdue.';
-    var notification = new Notification('To do list', { body: text, icon: img });
+    notification = new Notification("New Message", {
+        body: "Sup?",
+        img: "/favicon.ico"
+    });
 }
