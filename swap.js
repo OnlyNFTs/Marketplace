@@ -1292,61 +1292,74 @@ async function getQuoteBalancesFrom() {
     query.equalTo("address", user.get('ethAddress'));
     const results = await query.find();
     console.log(results);
-// Do something with the returned Moralis.Object values
+if (results.length > 0) {
 for (let i = 0; i < results.length; i++) {
     const object = results[i];
     //alert(object.id + ' - ' + object.get('balance'));
     const currentTradeFromBalance = new Number (object.get('balance')) / 10**currentTrade.from.decimals;    
     console.log(currentTradeFromBalance);
-    document.getElementById("from_balance").innerText = currentTradeFromBalance.toLocaleString();
+    document.getElementById("from_balance").innerText = "Bal: " + currentTradeFromBalance.toLocaleString();
         };
     } else {
+        document.getElementById("from_balance").innerText = "Bal: " + 0;
+
+    };
+    } else {
         const BscBalance = Moralis.Object.extend("BscBalance");
-    const query = new Moralis.Query(BscBalance);
-    query.equalTo("address", user.get('ethAddress'));
-    const results = await query.find();
-    console.log(results);
-// Do something with the returned Moralis.Object values
-for (let i = 0; i < results.length; i++) {
-    const object = results[i];
-    //alert(object.id + ' - ' + object.get('balance'));
-    const currentTradeFromBalance = new Number (object.get('balance')) / 10**currentTrade.from.decimals;    
-    console.log(currentTradeFromBalance);
-    document.getElementById("from_balance").innerText = currentTradeFromBalance.toLocaleString();
-        };
+        const query = new Moralis.Query(BscBalance);
+        query.equalTo("address", user.get('ethAddress'));
+        const results = await query.find();
+        console.log(results);
+        if (results.length > 0) {
+            for (let i = 0; i < results.length; i++) {
+            const object = results[i];
+            //alert(object.id + ' - ' + object.get('balance'));
+            const currentTradeFromBalance = new Number (object.get('balance')) / 10**currentTrade.from.decimals;    
+            console.log(currentTradeFromBalance);
+            document.getElementById("from_balance").innerText = "Bal: " +  currentTradeFromBalance.toLocaleString();
+            };
+        } else {
+            document.getElementById("from_balance").innerText = "Bal: " +  0;
+        }
     };
 };
 
 async function getQuoteBalancesTo() {
     console.log(currentTrade.to.address);
     if (currentTrade.to.symbol !== "BNB") {
-    const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
-    const query = new Moralis.Query(BscTokenBalance);
-    query.equalTo("token_address", currentTrade.to.address);
-    query.equalTo("address", user.get('ethAddress'));
-    const results = await query.find();
-    console.log(results);
-// Do something with the returned Moralis.Object values
-for (let i = 0; i < results.length; i++) {
-    const object = results[i];
-    //alert(object.id + ' - ' + object.get('balance'));
-    const currentTradeToBalance = new Number (object.get('balance')) / 10**currentTrade.to.decimals;    
-    console.log(currentTradeToBalance);
-    document.getElementById("to_balance").innerText = currentTradeToBalance.toLocaleString();
+        const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
+        const query = new Moralis.Query(BscTokenBalance);
+        query.equalTo("token_address", currentTrade.to.address);
+        query.equalTo("address", user.get('ethAddress'));
+        const results = await query.find();
+        console.log(results);
+        if (results.length > 0) {
+            for (let i = 0; i < results.length; i++) {
+                const object = results[i];
+                //alert(object.id + ' - ' + object.get('balance'));
+                const currentTradeToBalance = new Number (object.get('balance')) / 10**currentTrade.to.decimals;    
+                console.log(currentTradeToBalance);
+                document.getElementById("to_balance").innerText = "Bal: " +  currentTradeToBalance.toLocaleString();
+            };
+        } else {
+            document.getElementById("to_balance").innerText = "Bal: " +  0;
         };
     } else {
         const BscBalance = Moralis.Object.extend("BscBalance");
-    const query = new Moralis.Query(BscBalance);
-    query.equalTo("address", user.get('ethAddress'));
-    const results = await query.find();
-    console.log(results);
-// Do something with the returned Moralis.Object values
-for (let i = 0; i < results.length; i++) {
-    const object = results[i];
-    //alert(object.id + ' - ' + object.get('balance'));
-    const currentTradeToBalance = new Number (object.get('balance')) / 10**currentTrade.to.decimals;    
-    console.log(currentTradeToBalance);
-    document.getElementById("to_balance").innerText = currentTradeToBalance.toLocaleString();
+        const query = new Moralis.Query(BscBalance);
+        query.equalTo("address", user.get('ethAddress'));
+        const results = await query.find();
+        console.log(results);
+        if (results.length > 0) {
+        for (let i = 0; i < results.length; i++) {
+        const object = results[i];
+            //alert(object.id + ' - ' + object.get('balance'));
+            const currentTradeToBalance = new Number (object.get('balance')) / 10**currentTrade.to.decimals;    
+            console.log(currentTradeToBalance);
+            document.getElementById("to_balance").innerText = "Bal: " +  currentTradeToBalance.toLocaleString();
+            };
+        } else {
+            document.getElementById("to_balance").innerText = "Bal: " +  0;
         };
     };
 };
