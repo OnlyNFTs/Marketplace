@@ -1273,13 +1273,13 @@ async function renderInterface() {
     if(currentTrade.from){
     document.getElementById("from_token_img").src = currentTrade.from.logoURI;
     document.getElementById("from_token_txt").innerHTML = currentTrade.from.symbol;
-    await getQuoteBalancesFrom();
+    if (user) {await getQuoteBalancesFrom()};
     }
 
     if(currentTrade.to){
     document.getElementById("to_token_img").src = currentTrade.to.logoURI;
     document.getElementById("to_token_txt").innerHTML = currentTrade.to.symbol;
-    await getQuoteBalancesTo();
+    if (user) {await getQuoteBalancesTo()};
     }
 }
 
