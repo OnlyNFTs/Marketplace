@@ -794,11 +794,11 @@ renderUserListedItems = async (item) => {
      itemForSale.getElementsByTagName("button")[0].innerText = `${itemaskingPriceBN} ONFTs`;
      itemForSale.getElementsByTagName("button")[1].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
     
-     itemForSale.getElementsByTagName("button")[0].onclick = async () => buyItemUSD(item);
+     itemForSale.getElementsByTagName("button")[1].onclick = async () => buyItemUSD(item);
      
      
      
-     itemForSale.getElementsByTagName("button")[1].onclick = async () =>  buyItem(item);
+     itemForSale.getElementsByTagName("button")[0].onclick = async () =>  buyItem(item);
      itemForSale.getElementsByTagName("button")[2].onclick = () => {
              var copyText = "https://onlynfts.online/marketplace/?nft=" + item.tokenAddress + "&id=" + item.tokenId;
             //  copyText.select();
@@ -811,9 +811,7 @@ renderUserListedItems = async (item) => {
         $('.toast').toast('show');
             };
 
-            itemForSale.getElementsByTagName("button")[1].onclick = () => {  
-                $('.toast').toast('show');
-            };  
+
 
     itemForSale.getElementsByTagName("h2")[0].onclick = () => {  
         window.open("https://onlynfts.online/profile?p=" + item.creatorUsername).focus();
