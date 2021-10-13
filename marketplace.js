@@ -1071,7 +1071,7 @@ buyItemUSD = async (item) => {
     //await pancakeswapRouterContract.methods.approve(PANCAKESWAP_ROUTER_ADDRESS, amountsOut[1]).send({from: user.get('ethAddress')});
     //await pancakeswapRouterContract.methods.approve(PANCAKESWAP_ROUTER_ADDRESS, amountsOut[1]).send({from: user.get('ethAddress')});
     //await ensureBNBIsApproved("0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", 100000000000); 
-    await pancakeswapRouterContract.methods.swapExactETHForTokens(amountsOutSTR, testarray, user.get('ethAddress'), Math.floor(Date.now()/1000)+60*20).send({from: user.get('ethAddress'), value, gasPrice: 20000000000});
+    await pancakeswapRouterContract.methods.swapExactETHForTokensSupportingFeeOnTransferTokens(amountsOutSTR, testarray, user.get('ethAddress'), Math.floor(Date.now()/1000)+60*20).send({from: user.get('ethAddress'), value});
     alert("NFT Purchased");
 }
 
