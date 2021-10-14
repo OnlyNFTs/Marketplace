@@ -208,7 +208,7 @@
   perspective: 1000px;
 }
 .card__inner:hover {
-  transform: rotateY(180deg);
+  transform: rotateY(-180deg);
 }
 
 .card__inner {
@@ -322,11 +322,11 @@
 }
 
 .rotate-180 {
-  -webkit-transform: rotateY(180deg);
-  -moz-transform: rotateY(180deg);
-  -o-transform: rotateY(180deg);
-  -ms-transform: rotateY(180deg);
-  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180.5deg);
+  -moz-transform: rotateY(180.5deg);
+  -o-transform: rotateY(180.5deg);
+  -ms-transform: rotateY(180.5deg);
+  transform: rotateY(180.5deg);
   transition: transform 1s;
   transform-style: preserve-3d;
 }
