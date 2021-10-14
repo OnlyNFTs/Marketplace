@@ -1131,6 +1131,7 @@ renderProfilePageInfo = async () => {
         document.getElementById("profileDescription").innerText = profilePageCloudInfo.profileBio;
 
         document.getElementById("profileLink1").innerText = profilePageCloudInfo.profileLink;
+
         document.getElementById("profileLink1").href = profilePageCloudInfo.profileLink;
     };
 }

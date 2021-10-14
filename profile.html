@@ -226,15 +226,16 @@
                 <h1 id="username" class="text-white font-weight-bold mb-4"><br>OnlyNFTs</h1>
 				<h5 id="profileDescription" class="text-white font-weight-bold mb-4">Adult Content Creators Dream</h5>
 
-				<p  class="text-white mb-5"><a href="" id="profileLink1">link</a></p>
+				<p  class="text-white mb-5" id="profileLinktxt"><a href="" id="profileLink1"></a></p>
 				
 				
 			</div>
               
 			<div class="p-2 col-md-6 text-center text-md-center order-2 order-md-1 profile-img ">
                 
-				<img id="profileAvatar" class=" img-fluid rounded-circle" src="/logo 200x200.png" alt="screenshot">
+				<img id="profileAvatar" style="width: 150px;" class="img-fluid rounded-circle" src="/logo 200x200.png" alt="screenshot">
                <p class="mt-2"> <a href="" class="btn btn-main-md">Subscribe</a></p>
+               <p class="mt-2"> <a href="" class="btn btn-main-md">Chat</a></p>
             </div>
 		</div>
 	</div>
@@ -244,17 +245,17 @@
     <!-- Profile Section -->
     <div>
         <body>
-            <div class="container emp-profile" id="profileSection">
+            <div class="container emp-profile rounded shadow  bg-white" id="profileSection">
             <form method="post">
                 <div class="row">
-                    <div class="col-md-4">
-                        <p>asdasdas</p>
+                    <div class="container col-md-4 rounded shadow p-5 bg-white">
+                        <p id="profileDescriptionDet">asdasdas</p>
                     </div>
                     <div class="col-md-6">
-                        <div class="profile-head">
+                        <div class="profile-head ">
                                
                         
-                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <ul class="container navbar nav nav-tabs shadow  bg-white" id="myTab" role="tablist">
                              
                                 <li class="nav-item">
                                     <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="true">NFTS</a>
@@ -280,8 +281,8 @@
                                
                             <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                                 <div class="container itemsForSale">
-                                    <h3>NFTs</h3>
-                                    <div class="row row-cols-1 row-cols-md-2 mt-2" id="itemsForSale">
+                                    <h3 class="mt-4 text-capitalize h5 ">NFTs For Sale</h3>
+                                    <div class="row row-cols-1 row-cols-md-2 mt-4" id="itemsForSale">
                                     </div>
                                 </div>
                             </div>
@@ -545,10 +546,20 @@
               </div>
               <div class="modal-body">
                   <p class="font-italic col" id="earlyNFT" style="text-align: left; font-size: 70%;"></p>
-                  <div class="form-group">
-                      <label for="txtUsername">Username</label>
-                      <input type="text" class="form-control" id="txtUsername" required placeholder="Enter username">
-                  </div>
+                  <div class="text-md-center form-group container row">
+                    <div class="col row">
+                        <img class="border rounded-circle" width="50" height="50" src="" id="imgAvatar" alt="">
+                         <label class="" for="fileAvatar" ></label>
+                         <input style="font-size: 50%" type="file" class="form-control-file" id="fileAvatar">
+                        </img>
+                        </div>
+                      <div class="col">
+                        <label class="" for="txtUsername">Username</label>
+                         <input type="text" class="form-control" id="txtUsername" required placeholder="Enter username">
+                        </div>
+                       
+                       
+                    </div>
                   <div class="form-group">
                       <label for="txtEmail">Email address</label>
                       <input type="email" class="form-control" id="txtEmail" aria-describedby="emailHelp" placeholder="Enter email">
