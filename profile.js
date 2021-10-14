@@ -286,13 +286,15 @@ openUserInfo = async () => {
         const profilePageCheck = await Moralis.Cloud.run('getProfilePages', params);
         console.log(profilePageCheck);
         if (!profilePageCheck) {
-            document.getElementById("profileButton").disabled = "true";
+            hideElement( document.getElementById("profileButton"));
+            showElement(document.getElementById("profileCreateButton"));
+            document.getElementById("profileCreateButton").onclick = createProfilePage();
             console.log("Please Create Profile Page");
         } else {
+            showElement( document.getElementById("profileButton"));
+            hideElement(document.getElementById("profileCreateButton"));
             document.getElementById("profileButton").href = "https://onlynfts.online/profile?p=" + user.get('username');
-            // document.getElementById("profileButton").onclick = () => {  
-            //     window.open("https://onlynfts.online/profile?p=" + user.get('username')).focus();
-            // };  
+        
             console.log("Profile Page Exists");
         };
 
@@ -328,7 +330,7 @@ saveUserInfo = async () => {
     }
 
     await user.save();
-    await createProfilePage();
+    
     alert("User info saved successfully!");
     openUserInfo();
 }
@@ -1001,11 +1003,12 @@ ensureMintTokenIsApproved = async (tokenAddress, amount) => {
 }
 
 createProfilePage = async () => {
+    alert("test");
     var Item = Moralis.Object.extend("ProfilePages");
     var profilePages = new Item();
-    profilePages.set('username', createItemNameField.value);
-    profilePages.set('bio', createItemDescriptionField.value);
-    profilePages.set('avatar', createItemFile.files[0]);
+    profilePages.set('username', userUsernameField.value.toLowerCase());
+    profilePages.set('bio', userUsernameField.value);
+    profilePages.set('user', user);
     profilePages.set('link', 'https://onlynfts.online');
     profilePages.set('creator_address', user.get('ethAddress'));
     profilePages.set('referrer_address', userReferrerAddress);

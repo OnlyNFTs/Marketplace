@@ -9,7 +9,7 @@ async function login() {
             
             if (web3.currentProvider.isMetaMask === true) {
                 walletProvider = 'metamask';
-        await Moralis.Web3.authenticate({provider: walletProvider});
+        await Moralis.Web3.authenticate({signingMessage: "Log In"});
         //alert("Logged in Successfully!");
         user = await Moralis.User.current();
         notificationHeader.innerText = "Logged in Successfully!";
@@ -42,7 +42,7 @@ async function login() {
 async function loginTW() {
     
     try {
-        await Moralis.Web3.authenticate({provider: 'trustwallet'});
+        await Moralis.Web3.authenticate({provider: 'trustwallet', signingMessage: "Log In"});
         alert("Logged in Successfully!");
         $('#connectWalletModal').modal('hide'); 
         initUser(); 
@@ -58,7 +58,7 @@ async function loginWC() {
     try {
         walletProvider = "walletconnect";
         console.log(walletProvider);
-        await Moralis.Web3.authenticate({ signingMessage: "message", provider: walletProvider, chainId: 56 });
+        await Moralis.Web3.authenticate({provider: walletProvider, chainId: 56, signingMessage: "Log In"});
         alert("Logged in Successfully!");
         $('#connectWalletModal').modal('hide'); 
         initWeb3();
