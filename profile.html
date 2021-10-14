@@ -181,7 +181,7 @@
 	<!-- Position -->
 	<div  >  
 		<!-- Toasts -->
-		<div class="toast text-dark"  role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+		<div id="toastNot" class="toast text-dark"  role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
 			<div class="toast-header">
 				<img src="images/favicon-32x32.png" height="32px" width="32px" class="rounded-circle mr-2" alt="...">
 				<strong id="notificationHeader" class="mr-auto"></strong>
@@ -540,36 +540,35 @@
           <div class="modal-content bg-dark text-dark">
               <div class="modal-header">
                   <h5 class="modal-title" >User Profile</h5>
+                  <div class="col-xs-12 col">
+                    <a id="profileButton" href="" class="btn btn-primary" style="font-size: 50%;">Profile Page</a>
+                </div>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                   </button>
               </div>
-              <div class="modal-body">
-                  <p class="font-italic col" id="earlyNFT" style="text-align: left; font-size: 70%;"></p>
-                  <div class="text-md-center form-group container row">
-                    <div class="col row">
+              <div class="modal-body card">
+                  <div class="row ">
+                    <div class="col ">
                         <img class="border rounded-circle" width="50" height="50" src="" id="imgAvatar" alt="">
-                         <label class="" for="fileAvatar" ></label>
-                         <input style="font-size: 50%" type="file" class="form-control-file" id="fileAvatar">
-                        </img>
+                         
+                         <input style="font-size: 50%" type="file" class="form-control-file" id="fileAvatar"><label class="" for="fileAvatar" ></label>
+                        
                         </div>
-                      <div class="col">
+                      <div class="col" style="text-align: center;">
                         <label class="" for="txtUsername">Username</label>
-                         <input type="text" class="form-control" id="txtUsername" required placeholder="Enter username">
+                         <input type="text" style="text-align: center;" class="form-control" id="txtUsername" required placeholder="Enter username">
                         </div>
                        
                        
                     </div>
-                  <div class="form-group">
+                  <div class="form-group mt-2">
                       <label for="txtEmail">Email address</label>
-                      <input type="email" class="form-control" id="txtEmail" aria-describedby="emailHelp" placeholder="Enter email">
-                      <small id="emailHelp" class="form-text text-muted">Optional</small>     
+                      <input type="email" class="form-control" id="txtEmail" style="text-align: center;" aria-describedby="emailHelp" placeholder="Enter email">
+                      <small id="emailHelp" class="form-text text-muted" style="text-align: right; font-size: 50%">Optional</small>     
                   </div>
-                  <img class="rounded-circle" width="50" height="50" src="" id="imgAvatar" alt="">
-                  <div class="form-group mb-0">
-                      <label for="fileAvatar" >Select Avatar</label>
-                      <input style="font-size: 50%" type="file" class="form-control-file" id="fileAvatar">
-                  </div>  
+                  <p class="font-italic col" id="earlyNFT" style="text-align: left; font-size: 70%;"></p>
+
               </div>
               <div>
                   <label class="col mt-0 mb-0" for="refferalId" style="align-self: left; font-size: 70%;">Refferal Id:</label>

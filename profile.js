@@ -45,8 +45,10 @@ init = async () => {
         // $('.toast').toast(data-delay="10000");
         notificationHeader.innerText = "No Web3 Browser Detected";
         
-        notificationBody.innerText = "Please visit https://metamask.io/download And install Metamask!";
+        //notificationBody.innerText = "Please visit https://metamask.io/download And install Metamask!";
+        notificationBody.innerHTML =`<p>Don't Understand? <a href="https://metamask.io/download">Click Here</a> to get started!</p>`;
         //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
+        document.getElementById("toastNot").data = delay=1000000;
         $('.toast').toast('show');
         //window.web3 = Moralis.Web3.enable({provider: 'walletconnect'});
     }
@@ -250,7 +252,6 @@ initUser = async () => {
 // Load/Open User Info Modal
 openUserInfo = async () => {
     user = await Moralis.User.current();
-
     if (user){    
         const email = user.get('email');
         if(email){
@@ -260,21 +261,16 @@ openUserInfo = async () => {
         }
         userUsernameField.value = user.get('username');
         userUniqueId = user.id;
-        
         if (mintApprovedStatus == true) {
         document.getElementById("refferalId").innerText = userUniqueId;
         } else {
             document.getElementById("refferalId").innerText = "Please wait for approval"; 
         }
-
         if (earlyHoldersBalance != null) {
             document.getElementById("earlyNFT").innerText = "Level: Early Adopter";
             } else {
                 document.getElementById("earlyNFT").innerText = "Level 1"; 
             }
-
-
-
         const userAvatar = user.get('avatar');
         if(userAvatar){
             userAvatarImg.src = userAvatar.url();
@@ -282,6 +278,24 @@ openUserInfo = async () => {
         }else{
             hideElement(userAvatarImg);
         }
+
+        const username = user.get('username').toLowerCase();
+        console.log(username);
+    
+        const params = {username: username};
+        const profilePageCheck = await Moralis.Cloud.run('getProfilePages', params);
+        console.log(profilePageCheck);
+        if (!profilePageCheck) {
+            document.getElementById("profileButton").disabled = "true";
+            console.log("Please Create Profile Page");
+        } else {
+            document.getElementById("profileButton").href = "https://onlynfts.online/profile?p=" + user.get('username');
+            // document.getElementById("profileButton").onclick = () => {  
+            //     window.open("https://onlynfts.online/profile?p=" + user.get('username')).focus();
+            // };  
+            console.log("Profile Page Exists");
+        };
+
 
         $('#userInfo').modal('show');
     }else{
