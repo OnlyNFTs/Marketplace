@@ -18,7 +18,7 @@ let tokens;
 
 // Initialise
 init = async () => {
-    initWeb3();
+    //initWeb3();
     hideElement(connectWalletModal);
     hideElement(userItemsSection);
     hideElement(createItemForm);
@@ -27,38 +27,8 @@ init = async () => {
     hideElement(itemsForSaleUI);
   
     window.addEventListener('load', function() {
-         
-    if (typeof web3 !== 'undefined') {
-        walletProvider = 'active';
-        console.log('web3 is enabled')
-        if (web3.currentProvider.isMetaMask === true) {
-            walletProvider = 'metamask';
-            console.log('MetaMask is active');
-            notificationHeader.innerText = "MetaMask Detected";
-            notificationBody.innerText = "MetaMask has been Detected! ";
-            $('.toast').toast('show');
-            //window.web3 = Moralis.Web3.enable({provider: 'metamask'});
-            initWeb3();
-        } else {
-            console.log('MetaMask is not available');
-            notificationHeader.innerText = "Web3 Browser Detected";
-            notificationBody.innerText = "Web3 Browser has been Detected! ";
-            $('.toast').toast('show');
-            //window.web3 = Moralis.Web3.enable({provider: 'walletconnect, trustwallet'});
-            initWeb3();
-        }
-    } else {
-        walletProvider = 'undefined';
-        //  alert('No Web3 Browser Has Been Detected. Please visit https://metamask.io/download And install Metamask!');
-        // $('.toast').toast(data-delay="10000");
-        notificationHeader.innerText = "No Web3 Browser Detected";
-        
-        notificationBody.innerText = "Please visit https://metamask.io/download And install Metamask!";
-        //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
-        $('.toast').toast('show');
-        //window.web3 = Moralis.Web3.enable({provider: 'walletconnect'});
-    }
-});
+        checkWalletProvider();
+       });
 
     await checkURL();
     // $("#ageVer").modal('show');

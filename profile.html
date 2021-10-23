@@ -181,7 +181,7 @@
 	<!-- Position -->
 	<div  >  
 		<!-- Toasts -->
-		<div id="toastNot" class="toast text-dark"  role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+		<div class="toast text-dark" id="notificationAlert" role="alert" aria-live="assertive" aria-atomic="true" data-delay="15000">
 			<div class="toast-header">
 				<img src="images/favicon-32x32.png" height="32px" width="32px" class="rounded-circle mr-2" alt="...">
 				<strong id="notificationHeader" class="mr-auto"></strong>
@@ -548,12 +548,9 @@
       <div class="modal-dialog">
           <div class="modal-content bg-dark text-dark">
               <div class="modal-header">
-                  <h5 class="modal-title" >User Profile</h5>
-                  <div class="col-xs-12 col">
-                    <a id="profileButton" href="" class="btn btn-primary" style="font-size: 50%;">Profile Page</a>
-                    <a id="profileCreateButton" href="#" class="btn btn-primary" style="font-size: 50%;">Create Profile Page</a>
-
-                </div>
+                  <h5 class="modal-title" >User Profile<span class="font-italic col" id="earlyNFT" style="text-align: left; font-size: 50%;">
+                  </span> </h5>
+                  
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                   </button>
@@ -578,13 +575,20 @@
                       <input type="email" class="form-control" id="txtEmail" style="text-align: center;" aria-describedby="emailHelp" placeholder="Enter email">
                       <small id="emailHelp" class="form-text text-muted" style="text-align: right; font-size: 50%">Optional</small>     
                   </div>
-                  <p class="font-italic col" id="earlyNFT" style="text-align: left; font-size: 70%;"></p>
 
               </div>
-              <div>
-                  <label class="col mt-0 mb-0" for="refferalId" style="align-self: left; font-size: 70%;">Refferal Id:</label>
-                  <p class="font-italic col" id="refferalId" style="text-align: left; font-size: 70%;"></p> 
-              </div>
+              <div class="col-xs-12 p-2">
+                  <div class="row-cols-md-3 row p-2">
+                      <div class="col">
+                        <label class=" mt-0 mb-0" for="refferalId" style="align-self: left; font-size: 70%;">Refferal Id:</label>
+                        <p class="font-italic " id="refferalId" style="text-align: left; font-size: 70%; font-weight: bold;"></p> 
+                    </div>
+                    <div class="row-cols-md-2 align-items-end p-2">
+                    <a  id="profileButton" href="" class="btn btn-primary " style="font-size: 50%;">Profile Page</a>
+                    <a id="profileCreateButton" href="#" class="btn btn-primary" style="font-size: 50%;">Create Profile Page</a>
+                </div>
+                </div>
+                </div>
               <div class="modal-footer">        
                   <button type="button" id="btnLogout" class="btn btn-secondary" data-dismiss="modal">Log out</button>
                   <button type="button" id="btnCloseUserInfo" class="btn btn-secondary" data-dismiss="modal">Close</button>

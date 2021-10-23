@@ -12,6 +12,8 @@ const EARLY_HOLDERS_NFT_ADDRESS = "0x5692AB9e489e9c88d72431ce572c31061BbC7531";
 //const EARLY_HOLDERS_NFT_ADDRESS = "0x1E2DA509D7bDfA8eEb4a9D8E40B509Fb2d68DBe8";
 const PANCAKESWAP_ROUTER_ADDRESS = "0x10ED43C718714eb63d5aA57B78B54704E256024E";
 
+var web3NotificationCount = localStorage.getItem('web3_notif_counter');
+
 async function initWeb3() {
     if (window.localStorage.walletconnect) {
         window.web3 = await Moralis.enable({
@@ -38,3 +40,45 @@ async function initWeb3() {
     console.log(networkId);
 
 }
+
+async function checkWalletProvider() {
+if (typeof web3 !== 'undefined') {
+    
+    walletProvider = 'active';
+    console.log('web3 is enabled')
+    if (web3.currentProvider.isMetaMask === true) {
+        walletProvider = 'metamask';
+        console.log('MetaMask is active');
+        notificationHeader.innerText = "MetaMask Detected";
+        notificationBody.innerText = "MetaMask has been Detected! ";
+       
+        if (web3NotificationCount != 1) {
+             web3NotificationCount = 1;
+             localStorage.setItem("web3_notif_counter", web3NotificationCount);
+        $('.toast').toast('show');
+        }
+        //window.web3 = Moralis.Web3.enable({provider: 'metamask'});
+        initWeb3();
+    } else {
+        console.log('MetaMask is not available');
+        notificationHeader.innerText = "Web3 Browser Detected";
+        notificationBody.innerText = "Web3 Browser has been Detected! ";
+        $('.toast').toast('show');
+        //window.web3 = Moralis.Web3.enable({provider: 'walletconnect, trustwallet'});
+        initWeb3();
+    }
+} else {
+    walletProvider = 'undefined';
+    notificationHeader.innerText = "No Web3 Browser Detected";
+    notificationBody.innerHTML = `<p>Please Visit our Docs page for more info on how to get started! <a href="https://docs.onlynfts.online/get-started">Click Here</a></p>`;
+    const notSettings = document.getElementById("notificationAlert");
+    notSettings.setAttribute("data-delay", '150000000');
+    //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
+    $('.toast').toast('show');
+    user = await Moralis.User.current();
+   if (user) {
+    Moralis.User.logOut();
+   }
+   
+}
+};
