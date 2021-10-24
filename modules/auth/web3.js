@@ -67,8 +67,15 @@ if (typeof web3 !== 'undefined') {
         //window.web3 = Moralis.Web3.enable({provider: 'walletconnect, trustwallet'});
         initWeb3();
     }
+} else if (window.localStorage.walletconnect)  {
+    
+    console.log('MetaMask is not available');
+    notificationHeader.innerText = "Web3 Browser Detected";
+    notificationBody.innerText = "Web3 Browser has been Detected! ";
+    $('.toast').toast('show');
+    //window.web3 = Moralis.Web3.enable({provider: 'walletconnect, trustwallet'});
+    initWeb3();
 } else {
-    if (!window.localStorage.walletconnect) {
     walletProvider = 'undefined';
     notificationHeader.innerText = "No Web3 Browser Detected";
     notificationBody.innerHTML = `<p>Please Visit our Docs page for more info on how to get started! <a href="https://docs.onlynfts.online/get-started">Click Here</a></p>`;
@@ -77,10 +84,8 @@ if (typeof web3 !== 'undefined') {
     //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
     $('.toast').toast('show');
     user = await Moralis.User.current();
-   if (user) {
-    Moralis.User.logOut();
-   }
-}
-   
+    if (user) {
+        Moralis.User.logOut();
+    }  
 }
 };
