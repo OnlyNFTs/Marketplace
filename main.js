@@ -21,10 +21,10 @@ init = async () => {
     // hideElement(musicPlayer);
     hideElement(itemsForSaleUI);
   
-    window.addEventListener('load', function() {
-        checkWalletProvider();
-       });
-
+    // window.addEventListener('load', function() {
+    //     checkWalletProvider();
+    //    });
+    await checkWalletProvider();
     await checkURL();
     // $("#ageVer").modal('show');
     await fetchCoinPrice();
@@ -55,6 +55,7 @@ init = async () => {
     removedItemsSubscription.on("create", onItemRemoved);
 
 }
+
 
 getSupportedTokens = async () => {
     const tokens = await Moralis.Plugins.oneInch.getSupportedTokens({
