@@ -531,15 +531,26 @@ burnNFT = async (item) => {
 // Minft NFT
 mintNft = async (metadataUrl, RoyaltyFee, referrerAddress) => {
     if (earlyHoldersBalance != null) {
-    const receipt = await tokenContract.methods.createItemNoFee(metadataUrl, RoyaltyFee, referrerAddress).send({from: ethereum.selectedAddress});
+        if (walletProvider == 'walletconnect') {
+    const receipt = await tokenContract.methods.createItemNoFee(metadataUrl, RoyaltyFee, referrerAddress).send({provider: walletProvider, chainId: 56, from: ethereum.selectedAddress});
     console.log(receipt);
     return receipt.events.Transfer.returnValues.tokenId;
+        } else {
+            const receipt = await tokenContract.methods.createItemNoFee(metadataUrl, RoyaltyFee, referrerAddress).send({from: ethereum.selectedAddress});
+            console.log(receipt);
+            return receipt.events.Transfer.returnValues.tokenId;
+        }
 } else {
-    const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({from: ethereum.selectedAddress});
+    if (walletProvider == 'walletconnect') {
+    const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({provider: walletProvider, chainId: 56, from: ethereum.selectedAddress});
     console.log(receipt);
     return receipt.events.Transfer.returnValues.tokenId;
+    } else {
+        const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({from: ethereum.selectedAddress});
+        console.log(receipt);
+        return receipt.events.Transfer.returnValues.tokenId;
+        }
     }
-    
 }
 
 mintEANft = async (metadataUrl, creator, RoyaltyFee, referrerAddress) => {
