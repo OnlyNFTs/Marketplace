@@ -954,6 +954,17 @@ ensurePaymentTokenIsApproved = async (tokenAddress, amount) => {
 
 // Mint Token Approval
 ensureMintTokenIsApproved = async (tokenAddress, amount) => {
+
+    if (walletProvider == 'walletconnect') {
+        user = await Moralis.User.current();
+        const userAddress = user.get('ethAddress');
+        const contract = new web3.eth.Contract(mintTokenContractAbi, tokenAddress);
+        const approvedAddress = await contract.methods.allowance(userAddress, TOKEN_CONTRACT_ADDRESS).call({provider: walletProvider, chainId: 56, from: userAddress}); 
+        console.log(approvedAddress)
+        if (approvedAddress < 1000){
+            await contract.methods.approve(TOKEN_CONTRACT_ADDRESS, web3.utils.toWei('1', 'tether')).send({provider: walletProvider, chainId: 56, from: userAddress});
+        }
+    } else {
     user = await Moralis.User.current();
     const userAddress = user.get('ethAddress');
     const contract = new web3.eth.Contract(mintTokenContractAbi, tokenAddress);
@@ -961,6 +972,7 @@ ensureMintTokenIsApproved = async (tokenAddress, amount) => {
     console.log(approvedAddress)
     if (approvedAddress < 1000){
         await contract.methods.approve(TOKEN_CONTRACT_ADDRESS, web3.utils.toWei('1', 'tether')).send({from: userAddress});
+    }
     }
 }
 
