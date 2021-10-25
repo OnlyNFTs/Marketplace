@@ -506,7 +506,11 @@ createItem = async () => {
             let royaltyFee = createItemRoyaltyFee.value;
             loadingProgress.style.width = 60 + "%";
             loadingStatus.innerText = "Please approve marketplace";
+            if (walletProvider == 'walletconnect'){
+                await marketplaceContract.methods.addItemToMarket(nftId, TOKEN_CONTRACT_ADDRESS, askingPriceBN, creator, royaltyFee, userReferrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
+            } else {
             await marketplaceContract.methods.addItemToMarket(nftId, TOKEN_CONTRACT_ADDRESS, askingPriceBN, creator, royaltyFee, userReferrerAddress).send({from: user.get('ethAddress')});
+            }
             loadingProgress.style.width = 100 + "%";
             loadingStatus.innerText = "NFT Successfully added to the marketplace!";
             document.getElementById("btnCreateItem").disabled = 0;
@@ -945,10 +949,19 @@ ensurePaymentTokenIsApproved = async (tokenAddress, amount) => {
     const userAddress = user.get('ethAddress');
     console.log(walletProvider);
     const contract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
-    const approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({provider: walletProvider, from: userAddress});
+
+    if (walletProvider == 'walletconnect') {
+    const approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({provider: walletProvider, chainId: 56, from: userAddress});
     console.log(approvedAddress);
     if (approvedAddress < amount){
-        await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({provider: walletProvider, from: userAddress});
+        await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({provider: walletProvider, chainId: 56, from: userAddress});
+    }
+    } else {
+        const approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({from: userAddress});
+        console.log(approvedAddress);
+        if (approvedAddress < amount){
+            await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({from: userAddress});
+        }
     }
 }
 
