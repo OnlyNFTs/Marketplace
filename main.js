@@ -348,10 +348,7 @@ openCreateItem = async () => {
     
     
             }
-           } else {
-            document.getElementById("mint-fee").innerText = mintFee;
-            document.getElementById("mint-balance").innerText = onftsBalanceBN;
-            createItemCreator.disabled = 1;
+         
             if (await adminStatus == true) {
 
                 showElement(devSwitchButton);
@@ -359,7 +356,9 @@ openCreateItem = async () => {
     
     
             }
-           }
+           
+           document.getElementById("mint-fee").innerText = mintFee;
+           document.getElementById("mint-balance").innerText = onftsBalanceBN;
            createItemCreator.value = await user.get('ethAddress');
            createNFTValue = "0";
            addToMarketplaceValue = "0";
