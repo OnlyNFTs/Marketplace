@@ -301,7 +301,7 @@ saveUserInfo = async () => {
     }
 
     await user.save();
-    await createProfilePage();
+    //await createProfilePage();
     alert("User info saved successfully!");
     openUserInfo();
 }
@@ -536,9 +536,9 @@ burnNFT = async (item) => {
 mintNft = async (metadataUrl, RoyaltyFee, referrerAddress) => {
     if (earlyHoldersBalance != null) {
         if (walletProvider == 'walletconnect') {
-    const receipt = await tokenContract.methods.createItemNoFee(metadataUrl, RoyaltyFee, referrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
-    console.log(receipt);
-    return receipt.events.Transfer.returnValues.tokenId;
+            const receipt = await tokenContract.methods.createItemNoFee(metadataUrl, RoyaltyFee, referrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
+            console.log(receipt);
+            return receipt.events.Transfer.returnValues.tokenId;
         } else {
             const receipt = await tokenContract.methods.createItemNoFee(metadataUrl, RoyaltyFee, referrerAddress).send({from: user.get('ethAddress')});
             console.log(receipt);
@@ -546,13 +546,13 @@ mintNft = async (metadataUrl, RoyaltyFee, referrerAddress) => {
         }
 } else {
     if (walletProvider == 'walletconnect') {
-    const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
-    console.log(receipt);
-    return receipt.events.Transfer.returnValues.tokenId;
+            const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
+            console.log(receipt);
+            return receipt.events.Transfer.returnValues.tokenId;
     } else {
-        const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({from: user.get('ethAddress')});
-        console.log(receipt);
-        return receipt.events.Transfer.returnValues.tokenId;
+            const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({from: user.get('ethAddress')});
+            console.log(receipt);
+            return receipt.events.Transfer.returnValues.tokenId;
         }
     }
 }
