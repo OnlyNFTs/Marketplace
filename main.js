@@ -349,7 +349,7 @@ openCreateItem = async () => {
     
             }
          
-            if (await adminStatus == true) {
+        } if (await adminStatus == true) {
 
                 showElement(devSwitchButton);
                 devSwitch.disabled = 0;
