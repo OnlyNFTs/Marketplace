@@ -330,7 +330,7 @@ handleOpenCreateItem = async () => {
 openCreateItem = async () => {
     user = await Moralis.User.current(); 
     if (user){ 
-        
+        initUser();
             hideElement(devSwitchButton);
             devSwitch.disabled = 1;
             console.log(adminStatus);
