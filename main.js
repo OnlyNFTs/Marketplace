@@ -966,7 +966,7 @@ ensurePaymentTokenIsApproved = async (tokenAddress, amount) => {
 
 // Mint Token Approval
 ensureMintTokenIsApproved = async (tokenAddress, amount) => {
-
+    alert(walletProvider);
     if (walletProvider == 'walletconnect') {
         user = await Moralis.User.current();
         const userAddress = user.get('ethAddress');
