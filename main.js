@@ -441,8 +441,14 @@ createItem = async () => {
         case "0":
 
         nftId = await mintNft(nftFileMetadataFilePath, royaltyFee, userReferrerAddress);
-        var symbol = await tokenContract.methods.symbol().call({from: user.get('ethAddress')});
-        var name = await tokenContract.methods.name().call({from: user.get('ethAddress')}); 
+        if (walletProvider == 'walletconnect'){
+            var symbol = await tokenContract.methods.symbol().call({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
+            var name = await tokenContract.methods.name().call({provider: walletProvider, chainId: 56, from: user.get('ethAddress')}); 
+        } else {
+            var symbol = await tokenContract.methods.symbol().call({from: user.get('ethAddress')});
+            var name = await tokenContract.methods.name().call({from: user.get('ethAddress')});         
+        }
+       
         var Item = Moralis.Object.extend("OnlyNFTs");
         var OnlyNFTs = new Item();
         OnlyNFTs.set('name', createItemNameField.value);
@@ -462,6 +468,7 @@ createItem = async () => {
         case "1":
 
         nftId1 = await mintEANft(nftFileMetadataFilePath, creator, royaltyFee, userReferrerAddress);
+       
         var symbol = await earlyHoldersContract.methods.symbol().call({from: user.get('ethAddress')});
         var name = await earlyHoldersContract.methods.name().call({from: user.get('ethAddress')}); 
         var Item = Moralis.Object.extend("EANFT");
