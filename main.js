@@ -57,6 +57,7 @@ init = async () => {
 
     if (web3) {
         alert("yes");
+    }
 }
 
 
