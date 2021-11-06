@@ -54,6 +54,8 @@ init = async () => {
     const removedItemsSubscription = await removedItemsQuery.subscribe();
     removedItemsSubscription.on("create", onItemRemoved);
 
+
+    alert(web3.eth.currentProvider());
 }
 
 
