@@ -55,7 +55,8 @@ init = async () => {
     removedItemsSubscription.on("create", onItemRemoved);
 
 
-    alert(web3.eth.currentProvider());
+    if (web3) {
+        alert("yes");
 }
 
 
