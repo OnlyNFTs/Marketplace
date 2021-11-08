@@ -38,7 +38,7 @@ init = async () => {
  await Moralis.start({ serverUrl, appId });
     await Moralis.initPlugins();
     await getMarketQuote();
-    
+    await pinksaleCheck();
 
 
    
@@ -1237,7 +1237,20 @@ devsBox = async() => {
 }
 
 
-
+pinksaleCheck = async () => {
+    const contractWallet = "0x74220d21E6D99528c00C37B28aF84604c398a1E8";
+    const goalBNB = 4 ;
+    const pinksaleProgress = document.getElementById("pinksaleBar");
+    const pinksaleText = document.getElementById("pinksaleText");
+// get BSC native balance for a given address
+const options = { chain: "bsc", address: contractWallet};
+const balance = await Moralis.Web3API.account.getNativeBalance(options);
+console.log(balance);
+const trackerPer = balance.balance / goalBNB / 10 **18 *100;
+// alert(trackerPer);
+pinksaleProgress.style.width = trackerPer + "%";
+pinksaleText.innerText = (balance.balance / 10 **18).toLocaleString();
+}
 
 init();
 

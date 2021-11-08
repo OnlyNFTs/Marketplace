@@ -187,7 +187,8 @@
   transition: width 0.1s linear;
 }
 
-#myProgress {
+#myProgress,
+#pinksaleProgress {
   width: 100%;
   background-color: #ddd;
 }
@@ -196,6 +197,11 @@
   width: 1%;
   height: 30px;
   background-color: #04aa6d;
+}
+#pinksaleBar {
+  width: 1%;
+  height: 30px;
+  background-color: var(--primary);
 }
 
 #toast-container * {
