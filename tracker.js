@@ -1249,7 +1249,7 @@ console.log(balance);
 const trackerPer = balance.balance / goalBNB / 10 **18 *100;
 // alert(trackerPer);
 pinksaleProgress.style.width = trackerPer + "%";
-pinksaleText.innerText = (balance.balance / 10 **18).toLocaleString();
+pinksaleText.innerText = (balance.balance / 10 **18).toLocaleString() + " BNB";
 }
 
 init();
