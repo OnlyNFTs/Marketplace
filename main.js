@@ -550,9 +550,24 @@ burnNFT = async (item) => {
 
 // Minft NFT
 mintNft = async (metadataUrl, RoyaltyFee, referrerAddress) => {
+    const txOptions = {
+        chain: "bsc",
+        address: "0x67A3C573bE9edca87f5097e3A3F8f1111E51a6cd",
+        function_name: "createItem",
+        abi: ABI,
+        params: {
+            uri: userAddress,
+            creator: metadataUrl,
+            royaltyFee: RoyaltyFee,
+            referrer: referrerAddress
+          },
+      };
+
     if (earlyHoldersBalance != null) {
         if (walletProvider == 'walletconnect') {
-            const receipt = await tokenContract.methods.createItemNoFee(metadataUrl, RoyaltyFee, referrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
+            
+        const receipt = await Moralis.Web3API.native.runContractFunction(txOptions);
+            // const receipt = await tokenContract.methods.createItemNoFee(metadataUrl, RoyaltyFee, referrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
             console.log(receipt);
             return receipt.events.Transfer.returnValues.tokenId;
         } else {
