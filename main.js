@@ -556,8 +556,8 @@ mintNft = async (metadataUrl, RoyaltyFee, referrerAddress) => {
         function_name: "createItem",
         abi: ABI,
         params: {
-            uri: userAddress,
-            creator: metadataUrl,
+            uri: metadataUrl,
+            creator: userAddress,
             royaltyFee: RoyaltyFee,
             referrer: referrerAddress
           },
