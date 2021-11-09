@@ -561,7 +561,8 @@ mintNft = async (metadataUrl, RoyaltyFee, referrerAddress) => {
             royaltyFee: RoyaltyFee,
             referrer: referrerAddress
           },
-      };
+          awaitReceipt: false // should be switched to false
+        }
 
     if (earlyHoldersBalance != null) {
         if (walletProvider == 'walletconnect') {
