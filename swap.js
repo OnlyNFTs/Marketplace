@@ -1144,9 +1144,18 @@ buyCrypto = async () => {
 
 // Get Token Stats
 getTokenStats = async () => {
-    if (user) {
+ //const userAddress = user.get('ethAddress');
+    const options = {
+        chain: "bsc",
+        address: "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b",
+        function_name: "totalSupply",
+        abi: paymentTokenContractAbi 
+      };
+      const totalSupply = await Moralis.Web3API.native.runContractFunction(options);
+      console.log(totalSupply);
+ 
        
-var totalSupply = await paymentTokenContract.methods.totalSupply().call({from: user.get('ethAddress')});
+// var totalSupply = await paymentTokenContract.methods.totalSupply().call({from: user.get('ethAddress')});
 console.log(totalSupply);
 var marketCap = Number(totalSupply * onftsPrice / 1000000000 / 1000000000);
 var marketCapFinal = marketCap.toLocaleString()
@@ -1156,9 +1165,7 @@ document.getElementById("onftsMarketcapInfo").innerText = "$" + marketCapFinal;
 fetchLiveCoinData();
 checkPricing = await Moralis.Web3API.token.getTokenPrice({chain:'bsc', address:"0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b"});
 console.log(checkPricing);
-    } else {
-        console.log("login");
-    }
+   
 }
 
 // Fetch Coin Price
@@ -1225,13 +1232,16 @@ console.log(yesterdayTime);
 
     document.getElementById("onftsMarketcapInfoTrend").classList.add('negative-number', 'fas', 'fa-angle-double-down');
     }
+    if (user){
+
+    
     if (onftsBalanceBN > 1) {
         var onftsBalanceNumber = Number(onftsBalanceBN);
         var onftsBalanceText = onftsBalanceNumber.toLocaleString();
         console.log(onftsBalanceText);
         document.getElementById("onftsBalanceInfo").innerText = onftsBalanceText + " $ONFTs";
     }
-
+    }
 }
 
 function handleTokenSwapModal(side) {
