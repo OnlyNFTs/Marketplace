@@ -554,7 +554,7 @@ mintNft = async (metadataUrl, RoyaltyFee, referrerAddress) => {
         chain: "bsc",
         address: "0x67A3C573bE9edca87f5097e3A3F8f1111E51a6cd",
         function_name: "createItem",
-        abi: ABI,
+        abi: tokenContractAbi,
         params: {
             uri: metadataUrl,
             creator: userAddress,
