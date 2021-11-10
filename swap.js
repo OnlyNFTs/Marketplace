@@ -1152,8 +1152,7 @@ getTokenStats = async () => {
         abi: paymentTokenContractAbi 
       };
      // const totalSupply = await Moralis.Web3API.native.runContractFunction(options);
-     const totalSupply = await Moralis.executeFunction(options);
-
+      
      console.log(totalSupply);
  
        
