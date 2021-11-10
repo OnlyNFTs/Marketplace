@@ -1015,7 +1015,7 @@ var marketplaceContractAbi = [
   }
 ];
 
-var paymentTokenContractAbi = [
+paymentTokenContractAbi = [
   {
     "inputs": [
       {
