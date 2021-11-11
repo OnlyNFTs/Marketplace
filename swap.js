@@ -19,6 +19,7 @@ let tokens;
 // Initialise
 init = async () => {
     //initWeb3();
+    hideElement(nsfwButton);
     hideElement(connectWalletModal);
     hideElement(userItemsSection);
     hideElement(createItemForm);
@@ -288,6 +289,7 @@ initUser = async () => {
         showElement(userSubscriptionsButton);
         showElement(userDashboardButton);
         showElement(userLogoutButton);
+        showElement(nsfwButton);
         loadBalances();
         loadUserItems();
         loadUserListedItems();
@@ -1145,20 +1147,29 @@ buyCrypto = async () => {
 // Get Token Stats
 getTokenStats = async () => {
  //const userAddress = user.get('ethAddress');
+const ABI = paymentTokenContractAbi
     const options = {
         chain: "bsc",
         address: "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b",
         function_name: "totalSupply",
-        abi: paymentTokenContractAbi 
+        abi: paymentTokenContractAbi
       };
-     const totalSupply = await Moralis.Web3API.native.runContractFunction(options);
-      
-     console.log(totalSupply);
+      const totalSupply = 930600000 * 10 ** 18;
+        try {
+            const totalSupply = await Moralis.Web3API.native.runContractFunction(options);
+            console.log(totalSupply);
+       } catch (error) {
+           console.log("ERORR")
+           const totalSupply = 930600000 * 10 ** 18;
+
+       } 
+      console.log(totalSupply);
+      console.log(onftsPrice);
  
        
-// var totalSupply = await paymentTokenContract.methods.totalSupply().call({from: user.get('ethAddress')});
-console.log(totalSupply);
-var marketCap = Number(totalSupply * onftsPrice / 1000000000 / 1000000000);
+ // var totalSupply = await paymentTokenContract.methods.totalSupply().call({from: user.get('ethAddress')});
+
+var marketCap = Number(totalSupply * onftsPrice / 10 ** 18);
 var marketCapFinal = marketCap.toLocaleString()
 console.log(marketCapFinal);
 
@@ -1510,6 +1521,9 @@ const devSwitch = document.getElementById("customSwitch2");
 const devSwitchButton = document.getElementById("devSwitch");
 const itemsForSaleList = document.getElementById("itemsForSale");
 const itemsForSaleUI = document.getElementById("itemsForSaleUI");
+
+//NSFW 
+const nsfwButton = document.getElementById("nsfwButton");
 
 // Mint NFT Options
 optionsBox = async() => {

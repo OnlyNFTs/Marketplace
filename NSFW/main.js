@@ -1,6 +1,9 @@
 Moralis.initialize("Yt8nY74340sEhXEWlVCASjPTq5kcBMg4pzqu7iox");
 Moralis.serverURL = 'https://uctux2sj3ina.moralisweb3.com:2053/server';
 
+const serverUrl = "https://uctux2sj3ina.moralisweb3.com:2053/server";
+const appId = "Yt8nY74340sEhXEWlVCASjPTq5kcBMg4pzqu7iox";
+
 // Fees/Requirements
 onftsHoldersMintRequirements = 1000;
 mintFee = 1000;
@@ -8,32 +11,44 @@ onftsEarlyHoldersNFTAddress = "0x5692ab9e489e9c88d72431ce572c31061bbc7531";
 onftsNSFWAddress = "0x67a3c573be9edca87f5097e3a3f8f1111e51a6cd";
 onftsAddress = "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b";
 
+
+
 // Initialise
 init = async () => {
+    
+    
     // initWeb3();
-    hideElement(nsfwButton);
     hideElement(connectWalletModal);
     hideElement(userItemsSection);
     hideElement(createItemForm);
     hideElement(loadingMintForm);
-    hideElement(musicPlayer);
-   
+    hideElement(nsfwButton);
+    // hideElement(musicPlayer);
+    hideElement(itemsForSaleUI);
   
-    window.addEventListener('load', function() {
-     checkWalletProvider();
-    });
-
+    // window.addEventListener('load', function() {
+    //     checkWalletProvider();
+    //    });
+    await checkWalletProvider();
     await checkURL();
-    $("#ageVer").modal('show');
+    // $("#ageVer").modal('show');
     await fetchCoinPrice();
-    
     await loadItems();
     await initUser();
-    await getTokenStats();
 
+ await Moralis.start({ serverUrl, appId });
     await Moralis.initPlugins();
     await getMarketQuote();
+    
 
+
+   
+    //  loadSong(songs[songIndex]);
+    // await $('#musicPlayer').modal('show');
+    // // await $('#musicPlayer').modal('hide');
+    // playSong();
+    // nextSong();
+    // playSong();
     const soldItemsQuery = new Moralis.Query('SoldItemsNSFW');
     const soldItemsSubscription = await soldItemsQuery.subscribe();
     soldItemsSubscription.on("create", onItemSold);
@@ -44,7 +59,12 @@ init = async () => {
     const removedItemsSubscription = await removedItemsQuery.subscribe();
     removedItemsSubscription.on("create", onItemRemoved);
 
+
+    if (web3) {
+        //alert("yes");
+    }
 }
+
 
 getSupportedTokens = async () => {
     const tokens = await Moralis.Plugins.oneInch.getSupportedTokens({
@@ -191,7 +211,8 @@ initUser = async () => {
             //alert(user.attributes.referrer);
         userReferrerInfo = await user.attributes.referrer.id;
         
-        userReferrerAddress = await user.attributes.referrerAddress;}
+        userReferrerAddress = await user.attributes.referrerAddress;
+    }
         userReferrerSubmited = await user.attributes.referrerSubmited;
         //alert(mintApprovedStatus);
         hideElement(userConnectButton);
@@ -203,9 +224,11 @@ initUser = async () => {
         showElement(userDashboardButton);
         showElement(userLogoutButton);
         showElement(nsfwButton);
-        loadBalances();
-        loadUserItems();
-        loadUserListedItems();
+        await loadBalances();
+        await loadUserItems();
+        await loadUserListedItems();
+        //await checkNotifcationPermission();
+        //await showNotification();
     }else{
         showElement(userConnectButton);
         showElement(userConnectButton1);
@@ -217,6 +240,9 @@ initUser = async () => {
         hideElement(userLogoutButton);
     }
 }
+
+
+
 
 // Load/Open User Info Modal
 openUserInfo = async () => {
@@ -285,7 +311,7 @@ saveUserInfo = async () => {
     }
 
     await user.save();
-    await createProfilePage();
+    //await createProfilePage();
     alert("User info saved successfully!");
     openUserInfo();
 }
@@ -314,7 +340,7 @@ handleOpenCreateItem = async () => {
 openCreateItem = async () => {
     user = await Moralis.User.current(); 
     if (user){ 
-        
+        initUser();
             hideElement(devSwitchButton);
             devSwitch.disabled = 1;
             console.log(adminStatus);
@@ -332,18 +358,17 @@ openCreateItem = async () => {
     
     
             }
-           } else {
-            document.getElementById("mint-fee").innerText = mintFee;
-            document.getElementById("mint-balance").innerText = onftsBalanceBN;
-            createItemCreator.disabled = 1;
-            if (await adminStatus == true) {
+         
+        } if (await adminStatus == true) {
 
                 showElement(devSwitchButton);
                 devSwitch.disabled = 0;
     
     
             }
-           }
+           
+           document.getElementById("mint-fee").innerText = mintFee;
+           document.getElementById("mint-balance").innerText = onftsBalanceBN;
            createItemCreator.value = await user.get('ethAddress');
            createNFTValue = "0";
            addToMarketplaceValue = "0";
@@ -426,8 +451,16 @@ createItem = async () => {
         case "0":
 
         nftId = await mintNft(nftFileMetadataFilePath, royaltyFee, userReferrerAddress);
-        var symbol = await tokenContract.methods.symbol().call({from: user.get('ethAddress')});
-        var name = await tokenContract.methods.name().call({from: user.get('ethAddress')}); 
+        loadingProgress.style.width = 80 + "%";
+    loadingStatus.innerText = "Finalizing";
+        if (walletProvider == 'walletconnect'){
+            var symbol = await tokenContract.methods.symbol().call({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
+            var name = await tokenContract.methods.name().call({provider: walletProvider, chainId: 56, from: user.get('ethAddress')}); 
+        } else {
+            var symbol = await tokenContract.methods.symbol().call({from: user.get('ethAddress')});
+            var name = await tokenContract.methods.name().call({from: user.get('ethAddress')});         
+        }
+       
         var Item = Moralis.Object.extend("OnlyNFTs");
         var OnlyNFTs = new Item();
         OnlyNFTs.set('name', createItemNameField.value);
@@ -447,6 +480,7 @@ createItem = async () => {
         case "1":
 
         nftId1 = await mintEANft(nftFileMetadataFilePath, creator, royaltyFee, userReferrerAddress);
+       
         var symbol = await earlyHoldersContract.methods.symbol().call({from: user.get('ethAddress')});
         var name = await earlyHoldersContract.methods.name().call({from: user.get('ethAddress')}); 
         var Item = Moralis.Object.extend("EANFT");
@@ -490,7 +524,11 @@ createItem = async () => {
             let royaltyFee = createItemRoyaltyFee.value;
             loadingProgress.style.width = 60 + "%";
             loadingStatus.innerText = "Please approve marketplace";
+            if (walletProvider == 'walletconnect'){
+                await marketplaceContract.methods.addItemToMarket(nftId, TOKEN_CONTRACT_ADDRESS, askingPriceBN, creator, royaltyFee, userReferrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
+            } else {
             await marketplaceContract.methods.addItemToMarket(nftId, TOKEN_CONTRACT_ADDRESS, askingPriceBN, creator, royaltyFee, userReferrerAddress).send({from: user.get('ethAddress')});
+            }
             loadingProgress.style.width = 100 + "%";
             loadingStatus.innerText = "NFT Successfully added to the marketplace!";
             document.getElementById("btnCreateItem").disabled = 0;
@@ -514,20 +552,48 @@ burnNFT = async (item) => {
 
 // Minft NFT
 mintNft = async (metadataUrl, RoyaltyFee, referrerAddress) => {
+    userAddress = user.get('ethAddress');;
+    const txOptions = {
+        chain: "bsc",
+        address: "0x67A3C573bE9edca87f5097e3A3F8f1111E51a6cd",
+        function_name: "createItem",
+        abi: tokenContractAbi,
+        params: {
+            uri: metadataUrl,
+            creator: userAddress,
+            royaltyFee: RoyaltyFee,
+            referrer: referrerAddress
+          },
+          
+        }
+
     if (earlyHoldersBalance != null) {
-    const receipt = await tokenContract.methods.createItemNoFee(metadataUrl, RoyaltyFee, referrerAddress).send({from: ethereum.selectedAddress});
-    console.log(receipt);
-    return receipt.events.Transfer.returnValues.tokenId;
+        if (walletProvider == 'walletconnect') {
+            
+        const receipt = await Moralis.Web3API.native.runContractFunction(txOptions);
+            // const receipt = await tokenContract.methods.createItemNoFee(metadataUrl, RoyaltyFee, referrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
+            console.log(receipt);
+            return receipt.events.Transfer.returnValues.tokenId;
+        } else {
+            const receipt = await tokenContract.methods.createItemNoFee(metadataUrl, RoyaltyFee, referrerAddress).send({from: user.get('ethAddress')});
+            console.log(receipt);
+            return receipt.events.Transfer.returnValues.tokenId;
+        }
 } else {
-    const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({from: ethereum.selectedAddress});
-    console.log(receipt);
-    return receipt.events.Transfer.returnValues.tokenId;
+    if (walletProvider == 'walletconnect') {
+            const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
+            console.log(receipt);
+            return receipt.events.Transfer.returnValues.tokenId;
+    } else {
+            const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({from: user.get('ethAddress')});
+            console.log(receipt);
+            return receipt.events.Transfer.returnValues.tokenId;
+        }
     }
-    
 }
 
 mintEANft = async (metadataUrl, creator, RoyaltyFee, referrerAddress) => {
-    const receipt = await earlyHoldersContract.methods.createItem(metadataUrl, creator, RoyaltyFee, referrerAddress).send({from: ethereum.selectedAddress});
+    const receipt = await earlyHoldersContract.methods.createItem(metadataUrl, creator, RoyaltyFee, referrerAddress).send({from: user.get('ethAddress')});
     console.log(receipt);
     return receipt.events.Transfer.returnValues.tokenId;
 }
@@ -536,8 +602,8 @@ mintEANft = async (metadataUrl, creator, RoyaltyFee, referrerAddress) => {
 // Open User Items Modal
 openUserItems = async () => {
     user = await Moralis.User.current(); 
-    loadUserItems();
-    loadUserListedItems();
+    await initUser();
+
     if (user){ 
         const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
         const query = new Moralis.Query(BscTokenBalance);
@@ -586,14 +652,6 @@ loadItems = async () => {
     const items = await Moralis.Cloud.run("getItems");
     user = await Moralis.User.current();
     items.forEach(item => {
-        if(urlNFT) {
-            if (urlNFTLC != item.tokenAddress, urlNFTIDLC != item.tokenId) {
-                const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
-                if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
-                return;
-            }
-        }
-
         if (user)   { 
             if (urlProfile) { 
                 urlProfileLC = urlProfile.toLowerCase();
@@ -748,50 +806,39 @@ renderUserListedItems = async (item) => {
      const itemForSale = marketplaceItemTemplate.cloneNode(true);
      itemForSale.getElementsByTagName("img")[0].src = item.image;
      itemForSale.getElementsByTagName("img")[0].alt = item.name;
-     if (item.sellerAvatar){
-                itemForSale.getElementsByTagName("img")[1].src = item.sellerAvatar.url();
-                itemForSale.getElementsByTagName("img")[1].alt = item.sellerUsername;
-             
-        }
-
      hideElement(itemForSale.getElementsByTagName("video")[0]);
     item.creator 
-     itemForSale.getElementsByTagName("h2")[0].innerText = item.sellerUsername;
+     itemForSale.getElementsByTagName("h2")[0].innerText = item.creator;
      itemForSale.getElementsByTagName("h3")[0].innerText = item.name;
      itemForSale.getElementsByTagName("p")[0].innerText = item.description;
 
     
      const itemaskingPriceBN = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
      const convertedToUSDPrice = new BigNumber(onftsPrice).times(itemaskingPriceBN);
-     itemForSale.getElementsByTagName("button")[0].innerText = `${itemaskingPriceBN} ONFTs`;
-     itemForSale.getElementsByTagName("button")[1].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
-    
-     itemForSale.getElementsByTagName("button")[1].onclick = async () => buyItemUSD(item);
-     
-     
-     
-     itemForSale.getElementsByTagName("button")[0].onclick = async () =>  buyItem(item);
-     itemForSale.getElementsByTagName("button")[2].onclick = () => {
-             var copyText = "https://onlynfts.online/marketplace/?nft=" + item.tokenAddress + "&id=" + item.tokenId;
-            //  copyText.select();
-            //  copyText.setSelectionRange(0, 99999);
-             navigator.clipboard.writeText(copyText);
+     itemForSale.getElementsByTagName("button")[1].innerText = `${itemaskingPriceBN} ONFTs`;
+     itemForSale.getElementsByTagName("button")[2].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
+
+     itemForSale.isFlipped = '';
+     itemForSale.getElementsByTagName("div")[0].onclick = () => {
+                
+         
+                if (itemForSale.isFlipped != 'triggered')  {
+                    $(itemForSale.getElementsByTagName("div")[0]).toggleClass('is-flipped');
+                    itemForSale.isFlipped = 'triggered';
+                    console.log(itemForSale.isFlipped);
+                }
+            }
+
+    itemForSale.getElementsByTagName("a")[0].onclick = () => {       
         
-             notificationHeader.innerText = "Copied!";
-         notificationBody.innerText = "Copied: " + copyText;
-        //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
-        $('.toast').toast('show');
-            };
+            
+            $(itemForSale.getElementsByTagName("div")[2]).toggleClass('is-flipped');
+            itemForSale.isFlipped = '';
+            console.log(itemForSale.isFlipped);
+       
+    }
 
 
-
-    itemForSale.getElementsByTagName("h2")[0].onclick = () => {  
-        window.open("https://onlynfts.online/profile?p=" + item.creatorUsername).focus();
-    };    
-
-    itemForSale.getElementsByTagName("img")[1].onclick = () => {  
-        window.open("https://onlynfts.online/profile?p=" + item.creatorUsername).focus();
-    };  
 itemsForSale.appendChild(itemForSale);
 }
 
@@ -934,57 +981,38 @@ ensureMarketplaceIsApproved = async (tokenId, tokenAddress) => {
 ensurePaymentTokenIsApproved = async (tokenAddress, amount) => {
     user = await Moralis.User.current();
     console.log(amount);
-    userAddress = user.get('ethAddress');
+    const userAddress = user.get('ethAddress');
     console.log(walletProvider);
     const contract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
-    
-    if (walletProvider === "walletconnect") {
-    approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({provider: walletProvider, chain: 56, from: userAddress});
+
+    if (walletProvider == 'walletconnect') {
+    const approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({provider: walletProvider, chainId: 56, from: userAddress});
     console.log(approvedAddress);
-    
-    } else if (walletProvider != "walletconnect") {
-        approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({from: userAddress});
-        console.log(approvedAddress);
-    };
     if (approvedAddress < amount){
-
-        if (walletProvider === "walletconnect") {
-            await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({provider: walletProvider, chain: 56, from: userAddress});
-            } else {
-                await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({from: userAddress});
-            };
-    };
-}
-
-// Payment Token Approval
-ensureBNBIsApproved = async (tokenAddress, amount) => {
-    user = await Moralis.User.current();
-    amount = String(100000000000000000);
-    console.log(amount);
-    userAddress = user.get('ethAddress');
-    console.log(walletProvider);
-    const contract = new web3.eth.Contract(paymentTokenContractAbi, WBNB_TOKEN_ADDRESS);
-    
-    if (walletProvider === "walletconnect") {
-    approvedAddress = await contract.methods.allowance(userAddress, PANCAKESWAP_ROUTER_ADDRESS).call({provider: walletProvider, chain: 56, from: userAddress});
-    console.log(approvedAddress);
-    
-    } else if (walletProvider != "walletconnect") {
-        approvedAddress = await contract.methods.allowance(userAddress, PANCAKESWAP_ROUTER_ADDRESS).call({from: userAddress});
+        await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({provider: walletProvider, chainId: 56, from: userAddress});
+    }
+    } else {
+        const approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({from: userAddress});
         console.log(approvedAddress);
-    };
-    if (approvedAddress < amount){
-
-        if (walletProvider === "walletconnect") {
-            await contract.methods.approve(PANCAKESWAP_ROUTER_ADDRESS, amount).send({provider: walletProvider, chain: 56, from: userAddress});
-            } else {
-                await contract.methods.approve(PANCAKESWAP_ROUTER_ADDRESS, amount).send({from: userAddress});
-            };
-    };
+        if (approvedAddress < amount){
+            await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({from: userAddress});
+        }
+    }
 }
 
 // Mint Token Approval
 ensureMintTokenIsApproved = async (tokenAddress, amount) => {
+    alert(walletProvider);
+    if (walletProvider == 'walletconnect') {
+        user = await Moralis.User.current();
+        const userAddress = user.get('ethAddress');
+        const contract = new web3.eth.Contract(mintTokenContractAbi, tokenAddress);
+        const approvedAddress = await contract.methods.allowance(userAddress, TOKEN_CONTRACT_ADDRESS).call({provider: walletProvider, chainId: 56, from: userAddress}); 
+        console.log(approvedAddress)
+        if (approvedAddress < 1000){
+            await contract.methods.approve(TOKEN_CONTRACT_ADDRESS, web3.utils.toWei('1', 'tether')).send({provider: walletProvider, chainId: 56, from: userAddress});
+        }
+    } else {
     user = await Moralis.User.current();
     const userAddress = user.get('ethAddress');
     const contract = new web3.eth.Contract(mintTokenContractAbi, tokenAddress);
@@ -992,6 +1020,7 @@ ensureMintTokenIsApproved = async (tokenAddress, amount) => {
     console.log(approvedAddress)
     if (approvedAddress < 1000){
         await contract.methods.approve(TOKEN_CONTRACT_ADDRESS, web3.utils.toWei('1', 'tether')).send({from: userAddress});
+    }
     }
 }
 
@@ -1021,29 +1050,6 @@ buyItem = async (item) => {
     console.log(walletProvider);
     await ensurePaymentTokenIsApproved(PAYMENT_TOKEN_ADDRESS, item.askingPrice); 
     await marketplaceContract.methods.buyItem(item.uid).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
-    alert("NFT Purchased");
-}
-
-// Buy Item USD
-buyItemUSD = async (item) => {
-    user = await Moralis.User.current();
-    if (!user){
-        login();
-        return;
-    }
-    console.log(walletProvider);
-    testamount = new Number (1000000000000000);
-    value = String(testamount);
-    console.log(value);
-    amountsOut = await pancakeswapRouterContract.methods.getAmountsOut(value, [WBNB_TOKEN_ADDRESS, PAYMENT_TOKEN_ADDRESS]).call({from: user.get('ethAddress')});
-    console.log(amountsOut);
-    amountsOutSTR = String(amountsOut[1]);
-    console.log(Date.now()+120);
-    testarray = [WBNB_TOKEN_ADDRESS, PAYMENT_TOKEN_ADDRESS];
-    //await pancakeswapRouterContract.methods.approve(PANCAKESWAP_ROUTER_ADDRESS, amountsOut[1]).send({from: user.get('ethAddress')});
-    //await pancakeswapRouterContract.methods.approve(PANCAKESWAP_ROUTER_ADDRESS, amountsOut[1]).send({from: user.get('ethAddress')});
-    //await ensureBNBIsApproved("0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", 100000000000); 
-    await pancakeswapRouterContract.methods.swapExactETHForTokensSupportingFeeOnTransferTokens(amountsOutSTR, testarray, user.get('ethAddress'), Math.floor(Date.now()/1000)+60*20).send({from: user.get('ethAddress'), value});
     alert("NFT Purchased");
 }
 
@@ -1130,20 +1136,6 @@ buyCrypto = async () => {
      }
  }
 
-// Get Token Stats
-getTokenStats = async () => {
-    if (user) {
-var totalSupply = await paymentTokenContract.methods.totalSupply().call({from: user.get('ethAddress')});
-console.log(totalSupply);
-var marketCap = Number(totalSupply * onftsPrice / 1000000000 / 1000000000);
-var marketCapFinal = marketCap.toLocaleString()
-console.log(marketCapFinal);
-    } else {
-        console.log("login");
-    }
-}
-
-
 // Hide Elements
 hideElement = (element) => element.style.display = "none";
 showElement = (element) => element.style.display = "block";
@@ -1162,7 +1154,7 @@ const userDashboardButton = document.getElementById("btnUserDashboard");
 const userLogoutButton = document.getElementById("btnLogout1");
 userLogoutButton.onclick = logout;
 const buyCryptoButton = document.getElementById("buyCryptoButton");
-buyCryptoButton.onclick = buyCrypto;
+buyCryptoButton.onclick = buyCrypto
 
 // Notification
 const notificationHeader = document.getElementById("notificationHeader")

@@ -11,7 +11,6 @@ onftsAddress = "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b";
 // Initialise
 init = async () => {
     // initWeb3();
-    hideElement(nsfwButton);
     hideElement(connectWalletModal);
     hideElement(userItemsSection);
     hideElement(createItemForm);
@@ -202,7 +201,6 @@ initUser = async () => {
         showElement(userSubscriptionsButton);
         showElement(userDashboardButton);
         showElement(userLogoutButton);
-        showElement(nsfwButton);
         loadBalances();
         loadUserItems();
         loadUserListedItems();
@@ -1234,9 +1232,6 @@ const devSwitch = document.getElementById("customSwitch2");
 const devSwitchButton = document.getElementById("devSwitch");
 const itemsForSaleList = document.getElementById("itemsForSale");
 const itemsForSaleUI = document.getElementById("itemsForSaleUI");
-
-//NSFW 
-const nsfwButton = document.getElementById("nsfwButton");
 
 // Mint NFT Options
 optionsBox = async() => {
