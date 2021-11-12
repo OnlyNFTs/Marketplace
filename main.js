@@ -602,7 +602,7 @@ mintNft = async (metadataUrl, RoyaltyFee, referrerAddress) => {
 //   .on("error", (error) => { alert(error); });
 const hash = await tx.hash;
 const receipt = await tx.receipt
-return receipt.events.Transfer.returnValues.tokenId;  
+return await receipt.events.Transfer.returnValues.tokenId;  
     } else {
             const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({from: user.get('ethAddress')});
             console.log(receipt);
