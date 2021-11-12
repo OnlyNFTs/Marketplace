@@ -564,15 +564,15 @@ mintNft = async (metadataUrl, RoyaltyFee, referrerAddress) => {
             royaltyFee: RoyaltyFee,
             referrer: referrerAddress
           },
-          
-        }
+          awaitReceipt: false
+        };
 
     if (earlyHoldersBalance != null) {
         if (walletProvider == 'walletconnect') {
             
-        const receipt = await Moralis.Web3API.native.runContractFunction(txOptions);
+        const tx = await Moralis.Web3API.native.runContractFunction(txOptions);
             // const receipt = await tokenContract.methods.createItemNoFee(metadataUrl, RoyaltyFee, referrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
-            console.log(receipt);
+            console.log(tx);
             return receipt.events.Transfer.returnValues.tokenId;
         } else {
             const receipt = await tokenContract.methods.createItemNoFee(metadataUrl, RoyaltyFee, referrerAddress).send({from: user.get('ethAddress')});
@@ -581,8 +581,14 @@ mintNft = async (metadataUrl, RoyaltyFee, referrerAddress) => {
         }
 } else {
     if (walletProvider == 'walletconnect') {
-            const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
-            console.log(receipt);
+        const tx = await Moralis.Web3API.native.runContractFunction(txOptions);
+
+            //const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
+            console.log(tx);
+            tx.on("transactionHash", (hash) => { alert(hash); })
+  .on("receipt", (receipt) => { alert(receipt); })
+  .on("confirmation", (confirmationNumber, receipt) => { alert(confirmationNumber, receipt); })
+  .on("error", (error) => { alert(error); });
             return receipt.events.Transfer.returnValues.tokenId;
     } else {
             const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({from: user.get('ethAddress')});
