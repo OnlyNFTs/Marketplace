@@ -1122,17 +1122,17 @@ buyCrypto = async () => {
         const userAddress = user.get('ethAddress');
         
         let response = await Moralis.Plugins.fiat.buy({ coin: "BNB_BEP20", receiver: userAddress,}, {disableTriggers: true});
-        console.log(response.data);
+        console.log(response.result);
         $('#buyCryptoModal').modal('show');
         document.getElementById('buyCryptoModalInner').style.display = 'block';
-    document.getElementById('buyCryptoModalInner').src = response.data;
+    document.getElementById('buyCryptoModalInner').src = response.result.data;
 
      } else {
         let response = await Moralis.Plugins.fiat.buy({ coin: "BNB_BEP20"}, {disableTriggers: true});
-        console.log(respone);
+        console.log(respone.result);
         $('#buyCryptoModal').modal('show');
          document.getElementById('buyCryptoModalInner').style.display = 'block';
-    document.getElementById('buyCryptoModalInner').src = response.data;
+    document.getElementById('buyCryptoModalInner').src = response.result.data;
      }
  }
 
