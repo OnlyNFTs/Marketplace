@@ -473,10 +473,10 @@ createItem = async () => {
              tx.on("transactionHash", (hash) => { 
                  console.log("hash" + hash); 
                 })
-                 tx.on("receipt", (receipt) => { 
+                 .on("receipt", (receipt) => { 
                      console.log("receipt" + receipt); 
                     })
-                  tx.on("confirmation", (confirmationNumber, receipt) => {
+                .on("confirmation", (confirmationNumber, receipt) => {
                           console.log(receipt);
                           nftID = receipt.events.Transfer.returnValues.tokenId;
                           loadingProgress.style.width = 80 + "%";
@@ -504,8 +504,8 @@ createItem = async () => {
                           OnlyNFTs.set('referrer_address', userReferrerAddress);
                            OnlyNFTs.save();
                           return;
-                      });
-                      tx.on("error", (error) => { 
+                      })
+                      .on("error", (error) => { 
                           alert(error);
                         document.getElementById("btnCreateItem").disabled = 0;
                        
