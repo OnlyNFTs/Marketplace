@@ -449,8 +449,14 @@ createItem = async () => {
     switch(createNFTValue){
 
         case "0":
+            //nftId = await mintNft(nftFileMetadataFilePath, royaltyFee, userReferrerAddress);
+            await mintNft(nftFileMetadataFilePath, royaltyFee, userReferrerAddress);
 
-        nftId = await mintNft(nftFileMetadataFilePath, royaltyFee, userReferrerAddress);
+             tx.on("transactionHash", (hash) = () => { alert(hash); })
+                 tx.on("receipt", (receipt) = () => { alert(receipt); })
+                  tx.on("confirmation", (confirmationNumber, receipt) => { 
+                     console.log(receipt);
+                nftID = await receipt.events.Transfer.returnValues.tokenId;
         loadingProgress.style.width = 80 + "%";
     loadingStatus.innerText = "Finalizing";
         if (walletProvider == 'walletconnect'){
@@ -476,6 +482,7 @@ createItem = async () => {
         OnlyNFTs.set('referrer_address', userReferrerAddress);
         await OnlyNFTs.save();
         break;
+    })
 
         case "1":
 
@@ -580,7 +587,7 @@ mintNft = async (metadataUrl, RoyaltyFee, referrerAddress) => {
         //    })
         const hash = await tx.hash;
         const receipt = await tx.receipt
-        return receipt.events.Transfer.returnValues.tokenId;
+        return tx;
            
         } else {
             const receipt = await tokenContract.methods.createItemNoFee(metadataUrl, RoyaltyFee, referrerAddress).send({from: user.get('ethAddress')});
@@ -592,7 +599,7 @@ mintNft = async (metadataUrl, RoyaltyFee, referrerAddress) => {
         const tx = await Moralis.executeFunction(txOptions);
 
             //const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
-            console.log(tx);
+            await tx;
     //     await tx.on("transactionHash", (hash) = () => { alert(hash); })
     //     await tx.on("receipt", (receipt) = () => { alert(receipt); })
     //     await tx.on("confirmation", (confirmationNumber, receipt) => { 
