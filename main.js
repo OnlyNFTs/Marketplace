@@ -573,7 +573,13 @@ mintNft = async (metadataUrl, RoyaltyFee, referrerAddress) => {
         const tx = await Moralis.executeFunction(txOptions);
             // const receipt = await tokenContract.methods.createItemNoFee(metadataUrl, RoyaltyFee, referrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
             console.log(tx);
-            return receipt.events.Transfer.returnValues.tokenId;
+            tx.on("transactionHash", (hash) => { alert(hash); })
+            .on("receipt", (receipt) => { alert(receipt); })
+            .on("confirmation", (confirmationNumber, receipt) => { 
+                alert(confirmationNumber, receipt);
+              return receipt.events.Transfer.returnValues.tokenId;
+           })
+           
         } else {
             const receipt = await tokenContract.methods.createItemNoFee(metadataUrl, RoyaltyFee, referrerAddress).send({from: user.get('ethAddress')});
             console.log(receipt);
@@ -587,9 +593,12 @@ mintNft = async (metadataUrl, RoyaltyFee, referrerAddress) => {
             console.log(tx);
             tx.on("transactionHash", (hash) => { alert(hash); })
   .on("receipt", (receipt) => { alert(receipt); })
-  .on("confirmation", (confirmationNumber, receipt) => { alert(confirmationNumber, receipt); })
+  .on("confirmation", (confirmationNumber, receipt) => { 
+      alert(confirmationNumber, receipt);
+    return receipt.events.Transfer.returnValues.tokenId;
+ })
   .on("error", (error) => { alert(error); });
-            return receipt.events.Transfer.returnValues.tokenId;
+           
     } else {
             const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({from: user.get('ethAddress')});
             console.log(receipt);
