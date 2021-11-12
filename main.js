@@ -554,9 +554,8 @@ burnNFT = async (item) => {
 mintNft = async (metadataUrl, RoyaltyFee, referrerAddress) => {
     userAddress = user.get('ethAddress');;
     const txOptions = {
-        chain: "bsc",
-        address: "0x67A3C573bE9edca87f5097e3A3F8f1111E51a6cd",
-        function_name: "createItem",
+        contractAddress: "0x67A3C573bE9edca87f5097e3A3F8f1111E51a6cd",
+        functionName: "createItem",
         abi: tokenContractAbi,
         params: {
             uri: metadataUrl,
