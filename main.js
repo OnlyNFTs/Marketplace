@@ -450,8 +450,22 @@ createItem = async () => {
 
         case "0":
             //nftId = await mintNft(nftFileMetadataFilePath, royaltyFee, userReferrerAddress);
-             await mintNft(nftFileMetadataFilePath, royaltyFee, userReferrerAddress);
-
+            // await mintNft(nftFileMetadataFilePath, royaltyFee, userReferrerAddress);
+            userAddress = user.get('ethAddress');;
+            const txOptions = {
+                contractAddress: "0x67A3C573bE9edca87f5097e3A3F8f1111E51a6cd",
+                functionName: "createItem",
+                abi: tokenContractAbi,
+                params: {
+                    uri: metadataUrl,
+                    creator: userAddress,
+                    royaltyFee: RoyaltyFee,
+                    referrer: referrerAddress
+                  },
+                  awaitReceipt: false
+                };
+        
+             tx = await Moralis.executeFunction(txOptions);
              tx.on("transactionHash", (hash) => { 
                  console.log("hash" + hash); 
                 })
