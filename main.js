@@ -454,35 +454,35 @@ createItem = async () => {
 
              tx.on("transactionHash", (hash) = () => { alert(hash); })
                  tx.on("receipt", (receipt) = () => { alert(receipt); })
-                  tx.on("confirmation", (confirmationNumber, receipt) => { 
-                     console.log(receipt);
-                nftID = receipt.events.Transfer.returnValues.tokenId;
-        loadingProgress.style.width = 80 + "%";
-    loadingStatus.innerText = "Finalizing";
-        if (walletProvider == 'walletconnect'){
-            var symbol = await tokenContract.methods.symbol().call({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
-            var name = await tokenContract.methods.name().call({provider: walletProvider, chainId: 56, from: user.get('ethAddress')}); 
-        } else {
-            var symbol = await tokenContract.methods.symbol().call({from: user.get('ethAddress')});
-            var name = await tokenContract.methods.name().call({from: user.get('ethAddress')});         
-        }
-       
-        var Item = Moralis.Object.extend("OnlyNFTs");
-        var OnlyNFTs = new Item();
-        OnlyNFTs.set('name', createItemNameField.value);
-        OnlyNFTs.set('description', createItemDescriptionField.value);
-        OnlyNFTs.set('owner_of', creator);
-        OnlyNFTs.set('creator_address', creator);
-        OnlyNFTs.set('royaltyFee', royaltyFee);
-        OnlyNFTs.set('token_address', onftsNSFWAddress);
-        OnlyNFTs.set('token_id', nftId);
-        OnlyNFTs.set('token_uri', nftFileMetadataFilePath);
-        OnlyNFTs.set('token_symbol', symbol);
-        OnlyNFTs.set('token_name', name);
-        OnlyNFTs.set('referrer_address', userReferrerAddress);
-        await OnlyNFTs.save();
-        break;
-    });
+                  tx.on("confirmation", (confirmationNumber, receipt) =function () {
+                          console.log(receipt);
+                          nftID = receipt.events.Transfer.returnValues.tokenId;
+                          loadingProgress.style.width = 80 + "%";
+                          loadingStatus.innerText = "Finalizing";
+                          if (walletProvider == 'walletconnect') {
+                              var symbol = await tokenContract.methods.symbol().call({ provider: walletProvider, chainId: 56, from: user.get('ethAddress') });
+                              var name = await tokenContract.methods.name().call({ provider: walletProvider, chainId: 56, from: user.get('ethAddress') });
+                          } else {
+                              var symbol = await tokenContract.methods.symbol().call({ from: user.get('ethAddress') });
+                              var name = await tokenContract.methods.name().call({ from: user.get('ethAddress') });
+                          }
+
+                          var Item = Moralis.Object.extend("OnlyNFTs");
+                          var OnlyNFTs = new Item();
+                          OnlyNFTs.set('name', createItemNameField.value);
+                          OnlyNFTs.set('description', createItemDescriptionField.value);
+                          OnlyNFTs.set('owner_of', creator);
+                          OnlyNFTs.set('creator_address', creator);
+                          OnlyNFTs.set('royaltyFee', royaltyFee);
+                          OnlyNFTs.set('token_address', onftsNSFWAddress);
+                          OnlyNFTs.set('token_id', nftId);
+                          OnlyNFTs.set('token_uri', nftFileMetadataFilePath);
+                          OnlyNFTs.set('token_symbol', symbol);
+                          OnlyNFTs.set('token_name', name);
+                          OnlyNFTs.set('referrer_address', userReferrerAddress);
+                          await OnlyNFTs.save();
+                          break;
+                      });
 
         case "1":
 
