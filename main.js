@@ -570,7 +570,7 @@ mintNft = async (metadataUrl, RoyaltyFee, referrerAddress) => {
     if (earlyHoldersBalance != null) {
         if (walletProvider == 'walletconnect') {
             
-        const tx = await Moralis.executeFunction(options);
+        const tx = await Moralis.executeFunction(txOptions);
             // const receipt = await tokenContract.methods.createItemNoFee(metadataUrl, RoyaltyFee, referrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
             console.log(tx);
             return receipt.events.Transfer.returnValues.tokenId;
@@ -581,7 +581,7 @@ mintNft = async (metadataUrl, RoyaltyFee, referrerAddress) => {
         }
 } else {
     if (walletProvider == 'walletconnect') {
-        const tx = await Moralis.executeFunction(options);
+        const tx = await Moralis.executeFunction(txOptions);
 
             //const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
             console.log(tx);
