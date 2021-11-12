@@ -470,6 +470,7 @@ createItem = async () => {
         };
 
              tx = await Moralis.executeFunction(txOptions);
+             await tx;
              tx.on("transactionHash", (hash) => { 
                  console.log("hash" + hash); 
                 })
