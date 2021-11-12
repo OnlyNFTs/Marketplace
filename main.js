@@ -454,7 +454,7 @@ createItem = async () => {
 
              tx.on("transactionHash", (hash) = () => { alert(hash); })
                  tx.on("receipt", (receipt) = () => { alert(receipt); })
-                  tx.on("confirmation", (confirmationNumber, receipt) =function () {
+                  tx.on("confirmation", (confirmationNumber, receipt) = async () => {
                           console.log(receipt);
                           nftID = receipt.events.Transfer.returnValues.tokenId;
                           loadingProgress.style.width = 80 + "%";
