@@ -1128,7 +1128,7 @@ buyCrypto = async () => {
     document.getElementById('buyCryptoModalInner').src = response.data;
 
      } else {
-        let response = await Moralis.Plugins.fiat.buy({ coin: "BNB_BEP20", receiver: '',}, {disableTriggers: true});
+        let response = await Moralis.Plugins.fiat.buy({ coin: "BNB_BEP20"}, {disableTriggers: true});
         console.log(respone);
         $('#buyCryptoModal').modal('show');
          document.getElementById('buyCryptoModalInner').style.display = 'block';
