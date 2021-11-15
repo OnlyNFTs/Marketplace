@@ -15,8 +15,9 @@ const EARLY_HOLDERS_NFT_ADDRESS = "0x5692AB9e489e9c88d72431ce572c31061BbC7531";
 const PANCAKESWAP_ROUTER_ADDRESS = "0x10ED43C718714eb63d5aA57B78B54704E256024E";
 
 var web3NotificationCount = localStorage.getItem('web3_notif_counter');
-await Moralis.start({ serverUrl, appId });
+
 async function initWeb3() {
+    await Moralis.start({ serverUrl, appId });
     if (window.localStorage.walletconnect) {
         window.web3 = await Moralis.enableWeb3({
             provider: "walletconnect"
