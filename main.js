@@ -36,7 +36,7 @@ init = async () => {
     await loadItems();
     await initUser();
 
- await Moralis.start({ serverUrl, appId });
+ 
     await Moralis.initPlugins();
     await getMarketQuote();
     
@@ -206,8 +206,10 @@ initUser = async () => {
         adminStatus = await user.attributes.adminStatus;
         console.log(mintApprovedStatus);
         console.log(adminStatus);
-
-        if (await user.attributes.referrer !== undefined ) {
+        console.log(user);
+        console.log (user.attributes);
+        console.log (user.attributes.referrerAddress);
+        if (await user.attributes.referrer != undefined ) {
             //alert(user.attributes.referrer);
         userReferrerInfo = await user.attributes.referrer.id;
         
@@ -372,7 +374,9 @@ openCreateItem = async () => {
            createItemCreator.value = await user.get('ethAddress');
            createNFTValue = "0";
            addToMarketplaceValue = "0";
+           addSecretFileSwitchValue = false;
            createItemPriceField.disabled = 1;
+           secretNftFile.disabled = 1;
            $('#createItem').modal('show');
         }else{
     login();
@@ -407,22 +411,22 @@ createItem = async () => {
         alert("Maximum royalty fee is 50!");
         return;
     }
+    document.getElementById("btnCreateItem").disabled = 1;
     const loadingStatus = document.getElementById("loadingStatus");
     $('#createItem').modal('hide');
     $('#loadingMint').modal('show');
     loadingProgress.style.width = 1 + "%";
     loadingStatus.innerText = "Gathering Information and saving it on IPFS"
-    
+
+    const mimeType = createItemFile.files[0].type;
+    console.log(mimeType);
     user = await Moralis.User.current();
     loadingProgress.style.width = 5 + "%";
     const userAddress = user.get('ethAddress');
-    const creator = createItemCreator.value;
-    await createItemRoyaltyFee.value;
+    const creator = await createItemCreator.value;
     loadingProgress.style.width = 10 + "%";
-    const royaltyFee = createItemRoyaltyFee.value;
-    //alert(userReferrerAddress);
-    //alert(royaltyFee);
-    document.getElementById("btnCreateItem").disabled = 1;
+    const royaltyFee = await createItemRoyaltyFee.value;
+    
     const nftFile = new Moralis.File("nftFile",createItemFile.files[0]);
     await nftFile.saveIPFS();
     loadingProgress.style.width = 20 + "%";
@@ -434,6 +438,8 @@ createItem = async () => {
         creator: creator,
         royaltyFee: royaltyFee,
         referrer: userReferrerAddress,
+        mime: mimeType,
+        secretFile: addSecretFileSwitchValue
     };
 
     const nftFileMetadataFile = new Moralis.File("metadata.json", {base64 : btoa(JSON.stringify(metadata))});
@@ -452,8 +458,7 @@ createItem = async () => {
             //nftId = await mintNft(nftFileMetadataFilePath, royaltyFee, userReferrerAddress);
             // await mintNft(nftFileMetadataFilePath, royaltyFee, userReferrerAddress);
              const metadataUrl = nftFileMetadataFilePath;
-             const RoyaltyFee = royaltyFee;
-             const referrerAddress = userReferrerAddress;
+             const RoyaltyFee = royaltyFee
              const user = await Moralis.User.current();
             const userAddress = user.get('ethAddress');
     const txOptions = {
@@ -464,41 +469,60 @@ createItem = async () => {
             uri: metadataUrl,
             creator: userAddress,
             royaltyFee: RoyaltyFee,
-            referrer: referrerAddress
+            referrer: userReferrerAddress
           },
-          awaitReceipt: true
+          awaitReceipt: false
         };
 
-        receipt = await Moralis.executeFunction(txOptions);
-           
-             console.log(receipt);
-             nftID = receipt.events.Transfer.returnValues.tokenId;
-             loadingProgress.style.width = 80 + "%";
-             loadingStatus.innerText = "Finalizing";
-             if (walletProvider == 'walletconnect') {
-                 var symbol =  tokenContract.methods.symbol().call({ provider: walletProvider, chainId: 56, from: user.get('ethAddress') });
-                 var name =  tokenContract.methods.name().call({ provider: walletProvider, chainId: 56, from: user.get('ethAddress') });
-             } else {
-                 var symbol =  tokenContract.methods.symbol().call({ from: user.get('ethAddress') });
-                 var name =  tokenContract.methods.name().call({ from: user.get('ethAddress') });
-             }
+             tx = await Moralis.executeFunction(txOptions);
+             tx.on("transactionHash", (hash) => { 
+                 console.log("hash" + hash); 
+                })
+                 tx.on("receipt", (receipt) => { 
+                     console.log("receipt" + receipt); 
+                    })
+                  tx.on("confirmation", (confirmationNumber, receipt) => {
+                          console.log(receipt);
+                          nftID = receipt.events.Transfer.returnValues.tokenId;
+                          loadingProgress.style.width = 80 + "%";
+                          loadingStatus.innerText = "Finalizing";
+                          if (walletProvider == 'walletconnect') {
+                              var symbol =  tokenContract.methods.symbol().call({ provider: walletProvider, chainId: 56, from: user.get('ethAddress') });
+                              var name =  tokenContract.methods.name().call({ provider: walletProvider, chainId: 56, from: user.get('ethAddress') });
+                          } else {
+                              var symbol =  tokenContract.methods.symbol().call({ from: user.get('ethAddress') });
+                              var name =  tokenContract.methods.name().call({ from: user.get('ethAddress') });
+                          }
 
-             var Item = Moralis.Object.extend("OnlyNFTs");
-             var OnlyNFTs = new Item();
-             OnlyNFTs.set('name', createItemNameField.value);
-             OnlyNFTs.set('description', createItemDescriptionField.value);
-             OnlyNFTs.set('owner_of', creator);
-             OnlyNFTs.set('creator_address', creator);
-             OnlyNFTs.set('royaltyFee', royaltyFee);
-             OnlyNFTs.set('token_address', onftsNSFWAddress);
-             OnlyNFTs.set('token_id', nftId);
-             OnlyNFTs.set('token_uri', nftFileMetadataFilePath);
-             OnlyNFTs.set('token_symbol', symbol);
-             OnlyNFTs.set('token_name', name);
-             OnlyNFTs.set('referrer_address', userReferrerAddress);
-              OnlyNFTs.save();
-             break;
+                          var Item = Moralis.Object.extend("OnlyNFTs");
+                          var OnlyNFTs = new Item();
+                          OnlyNFTs.set('name', createItemNameField.value);
+                          OnlyNFTs.set('description', createItemDescriptionField.value);
+                          OnlyNFTs.set('owner_of', creator);
+                          OnlyNFTs.set('creator_address', creator);
+                          OnlyNFTs.set('royaltyFee', royaltyFee);
+                          OnlyNFTs.set('token_address', onftsNSFWAddress);
+                          OnlyNFTs.set('token_id', nftId);
+                          OnlyNFTs.set('token_uri', nftFileMetadataFilePath);
+                          OnlyNFTs.set('token_symbol', symbol);
+                          OnlyNFTs.set('token_name', name);
+                          OnlyNFTs.set('referrer_address', userReferrerAddress);
+                           OnlyNFTs.save();
 
+                           loadingProgress.style.width = 100 + "%";
+                           loadingStatus.innerText = "NFT Successfully minted!";
+                          
+                          return;
+                      });
+                      tx.on("error", (error) => { 
+                          alert(error);
+                        document.getElementById("btnCreateItem").disabled = 0;
+                       
+                        $('#loadingMint').modal('hide');
+                        $('#createItem').modal('show');
+                        
+                     });
+                   break;
         case "1":
 
         nftId1 = await mintEANft(nftFileMetadataFilePath, creator, royaltyFee, userReferrerAddress);
@@ -522,8 +546,7 @@ createItem = async () => {
         break;
     }
 
-    loadingProgress.style.width = 100 + "%";
-    loadingStatus.innerText = "NFT Successfully minted!";
+    
     
     switch(addToMarketplaceValue){
 
@@ -1219,6 +1242,7 @@ const createItemForm = document.getElementById("createItem");
 const createItemNameField = document.getElementById("txtCreateItemName");
 const createItemDescriptionField = document.getElementById("txtCreateItemDescription");
 const createItemPriceField = document.getElementById("numCreateItemPrice");
+const secretNftFile = document.getElementById("secretNftFile");
 const createItemRoyaltyFee = document.getElementById("numCreateRoyaltyFee");
 const createItemCreator = document.getElementById("textCreateItemCreator");
 const createItemStatusField = document.getElementById("selectCreateItemStatus");
@@ -1260,6 +1284,7 @@ const loadingMintForm = document.getElementById("loadingMint");
 const loadingProgress = document.getElementById("myBar");
 const NFToptions = document.getElementById("options");
 const addToMarketplaceSwitch = document.getElementById("customSwitch1");  
+const addSecretFileSwitch = document.getElementById("customSwitch2"); 
 const devSwitch = document.getElementById("customSwitch2");
 const devSwitchButton = document.getElementById("devSwitch");
 const itemsForSaleList = document.getElementById("itemsForSale");
@@ -1279,6 +1304,20 @@ optionsBox = async() => {
         addToMarketplaceValue = "1";
         console.log(addToMarketplaceValue);
         createItemPriceField.disabled = 0;
+        return;
+    }
+}
+
+secretFileEnableSwitch = async() => {
+    if (addSecretFileSwitchValue == true) {
+        addSecretFileSwitchValue = false;
+        console.log(addSecretFileSwitchValue);
+        secretNftFile.disabled = 1;
+    }
+    else if (addSecretFileSwitch.checked) {
+        addSecretFileSwitchValue = true;
+        console.log(addSecretFileSwitchValue);
+        secretNftFile.disabled = 0;
         return;
     }
 }
