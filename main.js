@@ -1330,12 +1330,18 @@ optionsBox = async() => {
 }
 
 secretFileEnableSwitch = async() => {
+    if(onftsBalanceBN < 100000000000000){
+        alert("no access");
+        addSecretFileSwitch.disabled = 1;
+        return;
+    }
     if (addSecretFileSwitchValue == true) {
         addSecretFileSwitchValue = false;
         console.log(addSecretFileSwitchValue);
         secretNftFile.disabled = 1;
     }
     else if (addSecretFileSwitch.checked) {
+        
         addSecretFileSwitchValue = true;
         console.log(addSecretFileSwitchValue);
         secretNftFile.disabled = 0;
