@@ -227,6 +227,12 @@
 }
 
 .card__inner.is-flipped {
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+  -o-transform: rotateY(180deg);
+  -ms-transform: rotateY(180deg);
+  transition: transform 1s;
+  transform-style: preserve-3d;
   transform: rotateY(180deg);
   cursor: auto;
 }
@@ -260,9 +266,8 @@
   -o-transform: rotateY(180deg);
   -ms-transform: rotateY(180deg);
   transition: transform 1s;
-  transform-style: preserve-3d, translateZ();
+  transform-style: preserve-3d;
   transform: rotateY(180deg);
-  transform: translateZ(1px);
   box-shadow: 1px 1px 7px #f71485, -1px -1px 7px #ff012f;
 }
 
