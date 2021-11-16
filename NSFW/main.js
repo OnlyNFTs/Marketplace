@@ -524,13 +524,14 @@ createItem = async () => {
                      loadingProgress.style.width = 80 + "%";
                           loadingStatus.innerText = "Finalizing - Waiting for blockchain";
                     })
-                  .on("confirmation", (confirmationNumber, receipt) => {
+                 await tx.on("confirmation", (confirmationNumber, receipt) => {
                           console.log(receipt);
                           
                            loadingProgress.style.width = 100 + "%";
                            loadingStatus.innerText = "NFT Successfully minted!";
-                          
-                          return;
+                           document.getElementById("btnCreateItem").disabled = 0;
+                           initUser();
+                        
                       })
                       .on("error", (error) => { 
                           alert(error);
@@ -571,8 +572,7 @@ createItem = async () => {
 
         case "0":
 
-            document.getElementById("btnCreateItem").disabled = 0;
-            initUser();
+            
             break;
 
         case "1":
