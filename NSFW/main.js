@@ -370,7 +370,9 @@ openCreateItem = async () => {
            createItemCreator.value = await user.get('ethAddress');
            createNFTValue = "0";
            addToMarketplaceValue = "0";
+           addSecretFileSwitchValue = false;
            createItemPriceField.disabled = 1;
+           secretNftFile.disabled = 1;
            $('#createItem').modal('show');
         }else{
     login();
