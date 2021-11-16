@@ -410,7 +410,14 @@ createItem = async () => {
     } else if (createItemRoyaltyFee.value > 50){
         alert("Maximum royalty fee is 50!");
         return;
+    } else if (addSecretFileSwitchValue = true) {
+        if (secretNftFile.files.length == 0){
+        alert("Please select a file!");
+        return;
+        }
+        return;
     }
+
     document.getElementById("btnCreateItem").disabled = 1;
     const loadingStatus = document.getElementById("loadingStatus");
     $('#createItem').modal('hide');
