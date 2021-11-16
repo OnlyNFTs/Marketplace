@@ -56,11 +56,9 @@ if (typeof web3 !== 'undefined') {
         notificationHeader.innerText = "MetaMask Detected";
         notificationBody.innerText = "MetaMask has been Detected! ";
        
-        if (web3NotificationCount != 1) {
-             web3NotificationCount = 1;
-             localStorage.setItem("web3_notif_counter", web3NotificationCount);
+       
         $('.toast').toast('show');
-        }
+        
         //window.web3 = Moralis.Web3.enable({provider: 'metamask'});
         initWeb3();
     } else {
