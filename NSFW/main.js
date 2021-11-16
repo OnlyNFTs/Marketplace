@@ -25,10 +25,10 @@ init = async () => {
     // hideElement(musicPlayer);
     hideElement(itemsForSaleUI);
   
-    // window.addEventListener('load', function() {
-    //     checkWalletProvider();
-    //    });
-    await checkWalletProvider();
+     window.addEventListener('load', function() {
+        await checkWalletProvider();
+        });
+   // await checkWalletProvider();
     await checkURL();
     // $("#ageVer").modal('show');
     await fetchCoinPrice();
