@@ -383,6 +383,8 @@ openCreateItem = async () => {
     }
 }
 
+const supportedNFTContracts = ['test', 'test'];
+
 // Create Item
 createItem = async () => {
 
@@ -882,6 +884,16 @@ renderUserListedItems = async (item) => {
     
     userItemsListed.appendChild(userItem);
 }
+
+// Add Item To Marketplace
+ addItemToMarketplace = async (nftId, nftAddress, askingPriceBN, creator, royaltyFee, referrer) => {
+
+ if (supportedNFTContracts.includes(nftAddress)) {
+   const tx = await marketplaceContract.methods.addItemToMarket(item.tokenId, item.tokenAddress, askingPriceBN).send({from: user.get('ethAddress')});
+
+ };
+ }
+
 
  // Render Marketplace Item
  renderItem = (item) => {
