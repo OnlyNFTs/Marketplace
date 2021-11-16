@@ -404,38 +404,75 @@ createItem = async () => {
     } else if (createItemRoyaltyFee.value > 50){
         alert("Maximum royalty fee is 50!");
         return;
-    } else if (createItemFile.files.length == 0){
-        alert("Please select a file!");
+    } else if (addSecretFileSwitchValue == true) {
+        if (secretNftFile.files.length == 0){
+        alert("Please select a secret file or disable the option");
         return;
-    } 
+        }
+    
+    }
+
+    document.getElementById("btnCreateItem").disabled = 1;
     const loadingStatus = document.getElementById("loadingStatus");
     $('#createItem').modal('hide');
     $('#loadingMint').modal('show');
     loadingProgress.style.width = 1 + "%";
     loadingStatus.innerText = "Gathering Information and saving it on IPFS"
-    
+
+    const mimeType = createItemFile.files[0].type;
+    console.log(mimeType);
     user = await Moralis.User.current();
     loadingProgress.style.width = 5 + "%";
     const userAddress = user.get('ethAddress');
-    const creator = createItemCreator.value;
-    await createItemRoyaltyFee.value;
+    const creator = await createItemCreator.value;
     loadingProgress.style.width = 10 + "%";
-    const royaltyFee = createItemRoyaltyFee.value;
-    //alert(userReferrerAddress);
-    //alert(royaltyFee);
-    document.getElementById("btnCreateItem").disabled = 1;
+    const royaltyFee = await createItemRoyaltyFee.value;
+    
     const nftFile = new Moralis.File("nftFile",createItemFile.files[0]);
     await nftFile.saveIPFS();
     loadingProgress.style.width = 20 + "%";
     const nftFilePath = nftFile.ipfs();
-    const metadata = {
+
+    if (addSecretFileSwitchValue == true) {
+        
+        file = secretNftFile.files[0];
+        const secretFile = new Moralis.File("secretFile", file);
+        await secretFile.save().then(function() {
+        const secretfileURL = secretFile.url();
+        console.log(secretfileURL);
+      }, function(error) {
+        // The file either could not be read, or could not be saved to Moralis.
+      });
+    
+    }
+   
+     const metadata = {
         name: createItemNameField.value,
         description: createItemDescriptionField.value,
         image: nftFilePath,
         creator: creator,
         royaltyFee: royaltyFee,
         referrer: userReferrerAddress,
+        mime: mimeType,
+        secretFile: addSecretFileSwitchValue
     };
+
+
+//var Item = Moralis.Object.extend("OnlyNFTs");
+    // var OnlyNFTs = new Item();
+    // OnlyNFTs.set('name', createItemNameField.value);
+    // OnlyNFTs.set('description', createItemDescriptionField.value);
+    // OnlyNFTs.set('owner_of', creator);
+    // OnlyNFTs.set('creator_address', creator);
+    // OnlyNFTs.set('royaltyFee', royaltyFee);
+    // OnlyNFTs.set('token_address', onftsNSFWAddress);
+    // OnlyNFTs.set('token_id', nftId);
+    // OnlyNFTs.set('token_uri', nftFileMetadataFilePath);
+    // OnlyNFTs.set('token_symbol', symbol);
+    // OnlyNFTs.set('token_name', name);
+    // OnlyNFTs.set('referrer_address', userReferrerAddress);
+    //  OnlyNFTs.save();
+
 
     const nftFileMetadataFile = new Moralis.File("metadata.json", {base64 : btoa(JSON.stringify(metadata))});
     await nftFileMetadataFile.saveIPFS();
@@ -443,41 +480,64 @@ createItem = async () => {
     loadingStatus.innerText = "Please confirm transaction for mintfee approval";
     const nftFileMetadataFilePath = nftFileMetadataFile.ipfs();
     await ensureMintTokenIsApproved(MINT_TOKEN_ADDRESS);
-    loadingProgress.style.width = 70 + "%";
+    loadingProgress.style.width = 50 + "%";
     loadingStatus.innerText = "Please confirm transaction to mint your NFT";
    
     //alert(creator);
     switch(createNFTValue){
 
         case "0":
+            //nftId = await mintNft(nftFileMetadataFilePath, royaltyFee, userReferrerAddress);
+            // await mintNft(nftFileMetadataFilePath, royaltyFee, userReferrerAddress);
+             const metadataUrl = nftFileMetadataFilePath;
+             const RoyaltyFee = royaltyFee
+             const user = await Moralis.User.current();
+            const userAddress = user.get('ethAddress');
+    const createItemNoFee = {
+        contractAddress: "0x67A3C573bE9edca87f5097e3A3F8f1111E51a6cd",
+        functionName: "createItem",
+        abi: tokenContractAbi,
+        params: {
+            uri: metadataUrl,
+            creator: userAddress,
+            royaltyFee: RoyaltyFee,
+            referrer: userReferrerAddress
+          },
+          awaitReceipt: false
+        };
 
-        nftId = await mintNft(nftFileMetadataFilePath, royaltyFee, userReferrerAddress);
-        loadingProgress.style.width = 80 + "%";
-    loadingStatus.innerText = "Finalizing";
-        if (walletProvider == 'walletconnect'){
-            var symbol = await tokenContract.methods.symbol().call({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
-            var name = await tokenContract.methods.name().call({provider: walletProvider, chainId: 56, from: user.get('ethAddress')}); 
-        } else {
-            var symbol = await tokenContract.methods.symbol().call({from: user.get('ethAddress')});
-            var name = await tokenContract.methods.name().call({from: user.get('ethAddress')});         
-        }
-       
-        var Item = Moralis.Object.extend("OnlyNFTs");
-        var OnlyNFTs = new Item();
-        OnlyNFTs.set('name', createItemNameField.value);
-        OnlyNFTs.set('description', createItemDescriptionField.value);
-        OnlyNFTs.set('owner_of', creator);
-        OnlyNFTs.set('creator_address', creator);
-        OnlyNFTs.set('royaltyFee', royaltyFee);
-        OnlyNFTs.set('token_address', onftsNSFWAddress);
-        OnlyNFTs.set('token_id', nftId);
-        OnlyNFTs.set('token_uri', nftFileMetadataFilePath);
-        OnlyNFTs.set('token_symbol', symbol);
-        OnlyNFTs.set('token_name', name);
-        OnlyNFTs.set('referrer_address', userReferrerAddress);
-        await OnlyNFTs.save();
-        break;
+             tx = await Moralis.executeFunction(createItemNoFee);
+             loadingProgress.style.width = 60 + "%";
+                loadingStatus.innerText = "Request Sent - Waiting for blockchain";
 
+             await tx.on("transactionHash", (hash) => { 
+                 console.log("hash" + hash); 
+                 loadingProgress.style.width = 70 + "%";
+                loadingStatus.innerText = "Hash Confirmed - Waiting for blockchain";
+                })
+                await tx.on("receipt", (receipt) => { 
+                     console.log("receipt" + receipt); 
+                     loadingProgress.style.width = 80 + "%";
+                          loadingStatus.innerText = "Finalizing - Waiting for blockchain";
+                    })
+                  .on("confirmation", (confirmationNumber, receipt) => {
+                          console.log(receipt);
+                          
+                           loadingProgress.style.width = 100 + "%";
+                           loadingStatus.innerText = "NFT Successfully minted!";
+                          
+                          return;
+                      })
+                      .on("error", (error) => { 
+                          alert(error);
+                        document.getElementById("btnCreateItem").disabled = 0;
+                       
+                        $('#loadingMint').modal('hide');
+                        $('#createItem').modal('show');
+                        
+                     });
+                     
+                break;
         case "1":
 
         nftId1 = await mintEANft(nftFileMetadataFilePath, creator, royaltyFee, userReferrerAddress);
@@ -501,8 +561,7 @@ createItem = async () => {
         break;
     }
 
-    loadingProgress.style.width = 100 + "%";
-    loadingStatus.innerText = "NFT Successfully minted!";
+    
     
     switch(addToMarketplaceValue){
 
@@ -538,6 +597,7 @@ createItem = async () => {
     }  
     hideElement(createItemForm);
 }
+
 
 // Burn NFT
 burnNFT = async (item) => {
