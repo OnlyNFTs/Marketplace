@@ -373,6 +373,7 @@ openCreateItem = async () => {
            addSecretFileSwitchValue = false;
            createItemPriceField.disabled = 1;
            secretNftFile.disabled = 1;
+           addSecretFileSwitch.disabled = 1;
            $('#createItem').modal('show');
         }else{
     login();
