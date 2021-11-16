@@ -86,8 +86,8 @@ if (typeof web3 !== 'undefined') {
     //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
     $('.toast').toast('show');
     user = await Moralis.User.current();
-    // if (user) {
-    //     Moralis.User.logOut();
-    // }  
+     if (user) {
+         Moralis.User.logOut();
+     }  
 }
 };

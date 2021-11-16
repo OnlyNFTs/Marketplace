@@ -26,10 +26,10 @@ init = async () => {
     // hideElement(musicPlayer);
     hideElement(itemsForSaleUI);
   
-    // window.addEventListener('load', function() {
-    //     checkWalletProvider();
-    //    });
-    await checkWalletProvider();
+     window.addEventListener('load', function() {
+         checkWalletProvider();
+        });
+    //await checkWalletProvider();
     await checkURL();
     // $("#ageVer").modal('show');
     await fetchCoinPrice();
@@ -1330,11 +1330,7 @@ optionsBox = async() => {
 }
 
 secretFileEnableSwitch = async() => {
-    if(onftsBalanceBN < 100000000000000){
-        alert("no access");
-        addSecretFileSwitch.disabled = 1;
-        return;
-    }
+    
     if (addSecretFileSwitchValue == true) {
         addSecretFileSwitchValue = false;
         console.log(addSecretFileSwitchValue);
