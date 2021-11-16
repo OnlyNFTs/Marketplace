@@ -22,7 +22,6 @@ init = async () => {
     hideElement(userItemsSection);
     hideElement(createItemForm);
     hideElement(loadingMintForm);
-    hideElement(nsfwButton);
     // hideElement(musicPlayer);
     hideElement(itemsForSaleUI);
   
@@ -223,7 +222,6 @@ initUser = async () => {
         showElement(userSubscriptionsButton);
         showElement(userDashboardButton);
         showElement(userLogoutButton);
-        showElement(nsfwButton);
         await loadBalances();
         await loadUserItems();
         await loadUserListedItems();
@@ -406,7 +404,10 @@ createItem = async () => {
     } else if (createItemRoyaltyFee.value > 50){
         alert("Maximum royalty fee is 50!");
         return;
-    }
+    } else if (createItemFile.files.length == 0){
+        alert("Please select a file!");
+        return;
+    } 
     const loadingStatus = document.getElementById("loadingStatus");
     $('#createItem').modal('hide');
     $('#loadingMint').modal('show');
@@ -1185,6 +1186,7 @@ const createItemRoyaltyFee = document.getElementById("numCreateRoyaltyFee");
 const createItemCreator = document.getElementById("textCreateItemCreator");
 const createItemStatusField = document.getElementById("selectCreateItemStatus");
 const createItemFile = document.getElementById("fileCreateItemFile");
+const createItemSecretFile = document.getElementById("fileCreateItemFile");
 document.getElementById("btnCloseCreateItem").onclick = () => hideElement(createItemForm);
 document.getElementById("btnCreateItem").onclick = async () => createItem();
 
@@ -1227,8 +1229,7 @@ const devSwitchButton = document.getElementById("devSwitch");
 const itemsForSaleList = document.getElementById("itemsForSale");
 const itemsForSaleUI = document.getElementById("itemsForSaleUI");
 
-//NSFW 
-const nsfwButton = document.getElementById("nsfwButton");
+
 
 // Mint NFT Options
 optionsBox = async() => {
