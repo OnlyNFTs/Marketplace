@@ -77,7 +77,7 @@ if (typeof web3 !== 'undefined') {
     $('.toast').toast('show');
     //window.web3 = Moralis.Web3.enable({provider: 'walletconnect, trustwallet'});
     initWeb3();
-} else {
+} else if (walletProvider == 'undefined'){
     walletProvider = 'undefined';
     notificationHeader.innerText = "No Web3 Browser Detected";
     notificationBody.innerHTML = `<p>Please Visit our Docs page for more info on how to get started! <a href="https://docs.onlynfts.online/get-started">Click Here</a></p>`;
