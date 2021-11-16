@@ -1242,11 +1242,11 @@ const createItemForm = document.getElementById("createItem");
 const createItemNameField = document.getElementById("txtCreateItemName");
 const createItemDescriptionField = document.getElementById("txtCreateItemDescription");
 const createItemPriceField = document.getElementById("numCreateItemPrice");
+const secretNftFile = document.getElementById("secretNftFile");
 const createItemRoyaltyFee = document.getElementById("numCreateRoyaltyFee");
 const createItemCreator = document.getElementById("textCreateItemCreator");
 const createItemStatusField = document.getElementById("selectCreateItemStatus");
 const createItemFile = document.getElementById("fileCreateItemFile");
-const createItemSecretFile = document.getElementById("fileCreateItemFile");
 document.getElementById("btnCloseCreateItem").onclick = () => hideElement(createItemForm);
 document.getElementById("btnCreateItem").onclick = async () => createItem();
 
@@ -1302,6 +1302,22 @@ optionsBox = async() => {
         addToMarketplaceValue = "1";
         console.log(addToMarketplaceValue);
         createItemPriceField.disabled = 0;
+        return;
+    }
+}
+
+secretFileEnableSwitch = async() => {
+    
+    if (addSecretFileSwitchValue == true) {
+        addSecretFileSwitchValue = false;
+        console.log(addSecretFileSwitchValue);
+        secretNftFile.disabled = 1;
+    }
+    else if (addSecretFileSwitch.checked) {
+        
+        addSecretFileSwitchValue = true;
+        console.log(addSecretFileSwitchValue);
+        secretNftFile.disabled = 0;
         return;
     }
 }
