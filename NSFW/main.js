@@ -26,7 +26,7 @@ init = async () => {
     hideElement(itemsForSaleUI);
   
      window.addEventListener('load', function() {
-        await checkWalletProvider();
+         checkWalletProvider();
         });
    // await checkWalletProvider();
     await checkURL();
