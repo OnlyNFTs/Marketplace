@@ -244,7 +244,7 @@
   height: 100%;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  overflow: hidden;
+  overflow: visible !important;
   box-shadow: 1px 1px 7px #f71485, -1px -1px 7px #ff012f;
 }
 
