@@ -46,7 +46,7 @@ async function initWeb3() {
 }
 
 async function checkWalletProvider() {
-if (typeof await web3 !== 'undefined') {
+if (typeof web3 !== 'undefined') {
     
     walletProvider = 'active';
     console.log('web3 is enabled')
