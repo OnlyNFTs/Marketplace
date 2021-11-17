@@ -283,7 +283,7 @@ saveUserInfo = async () => {
     }
 
     await user.save();
-    await createProfilePage();
+    //await createProfilePage();
     alert("User info saved successfully!");
     openUserInfo();
 }
