@@ -253,7 +253,7 @@ openUserInfo = async () => {
     if (user){    
         const email = user.get('email');
         alert(email);
-        if(email){
+        if(!email == "undefined"){
             userEmailField.value = email;
         }else{
             userEmailField.value = " ";
