@@ -255,7 +255,7 @@ openUserInfo = async () => {
         if(email){
             userEmailField.value = email;
         }else{
-            userEmailField.value = "";
+            userEmailField.value = " ";
         }
         userUsernameField.value = user.get('username');
         userUniqueId = user.id;
@@ -890,7 +890,21 @@ renderUserListedItems = async (item) => {
 
  if (supportedNFTContracts.includes(nftAddress)) {
    const tx = await marketplaceContract.methods.addItemToMarket(item.tokenId, item.tokenAddress, askingPriceBN).send({from: user.get('ethAddress')});
+   const addToMarketplace = {
+    contractAddress: "0x67A3C573bE9edca87f5097e3A3F8f1111E51a6cd",
+    functionName: "addItemToMarket",
+    abi: marketplaceContractAbi,
+    params: {
+        tokenId: metadataUrl,
+        tokenAddress: creator,
+        askingPrice: askingPriceBN,
+        royaltyFee: royaltyFee,
+        referrer: referrer
+      },
+      awaitReceipt: false
+    };
 
+         tx = await Moralis.executeFunction(addToMarketplace);
  };
  }
 
