@@ -24,7 +24,7 @@ init = async () => {
     });
 
     await checkURL();
-    $("#ageVer").modal('show');
+    //$("#ageVer").modal('show');
     await fetchCoinPrice();
     
     await loadItems();

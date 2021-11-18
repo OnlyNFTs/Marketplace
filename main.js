@@ -35,7 +35,7 @@ init = async () => {
     await fetchCoinPrice();
     await loadItems();
     await initUser();
-
+    await getTokenStats();
  
     await Moralis.initPlugins();
     await getMarketQuote();
@@ -206,15 +206,12 @@ initUser = async () => {
         adminStatus = await user.attributes.adminStatus;
         console.log(mintApprovedStatus);
         console.log(adminStatus);
-        console.log(user);
-        console.log (user.attributes);
-        console.log (user.attributes.referrerAddress);
-        if (await user.attributes.referrer != undefined ) {
+
+        if (await user.attributes.referrer !== undefined ) {
             //alert(user.attributes.referrer);
         userReferrerInfo = await user.attributes.referrer.id;
         
-        userReferrerAddress = await user.attributes.referrerAddress;
-    }
+        userReferrerAddress = await user.attributes.referrerAddress;}
         userReferrerSubmited = await user.attributes.referrerSubmited;
         //alert(mintApprovedStatus);
         hideElement(userConnectButton);
@@ -226,11 +223,9 @@ initUser = async () => {
         showElement(userDashboardButton);
         showElement(userLogoutButton);
         showElement(nsfwButton);
-        await loadBalances();
-        await loadUserItems();
-        await loadUserListedItems();
-        //await checkNotifcationPermission();
-        //await showNotification();
+        loadBalances();
+        loadUserItems();
+        loadUserListedItems();
     }else{
         showElement(userConnectButton);
         showElement(userConnectButton1);
@@ -689,8 +684,8 @@ mintEANft = async (metadataUrl, creator, RoyaltyFee, referrerAddress) => {
 // Open User Items Modal
 openUserItems = async () => {
     user = await Moralis.User.current(); 
-    loadUserItems();
-    loadUserListedItems();
+    await loadUserItems();
+    await loadUserListedItems();
     if (user){ 
         const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
         const query = new Moralis.Query(BscTokenBalance);
@@ -739,14 +734,6 @@ loadItems = async () => {
     const items = await Moralis.Cloud.run("getItems");
     user = await Moralis.User.current();
     items.forEach(item => {
-        if(urlNFT) {
-            if (urlNFTLC != item.tokenAddress, urlNFTIDLC != item.tokenId) {
-                const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
-                if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
-                return;
-            }
-        }
-
         if (user)   { 
             if (urlProfile) { 
                 urlProfileLC = urlProfile.toLowerCase();
@@ -896,68 +883,55 @@ renderUserListedItems = async (item) => {
     userItemsListed.appendChild(userItem);
 }
 
-// Add Item To Marketplace
- addItemToMarketplace = async (nftId, nftAddress, askingPriceBN, creator, royaltyFee, referrer) => {
-
- if (supportedNFTContracts.includes(nftAddress)) {
-   const tx = await marketplaceContract.methods.addItemToMarket(item.tokenId, item.tokenAddress, askingPriceBN).send({from: user.get('ethAddress')});
-   const addToMarketplace = {
-    contractAddress: "0x67A3C573bE9edca87f5097e3A3F8f1111E51a6cd",
-    functionName: "addItemToMarket",
-    abi: marketplaceContractAbi,
-    params: {
-        tokenId: metadataUrl,
-        tokenAddress: creator,
-        askingPrice: askingPriceBN,
-        royaltyFee: royaltyFee,
-        referrer: referrer
-      },
-      awaitReceipt: false
-    };
-
-         tx = await Moralis.executeFunction(addToMarketplace);
- };
- }
-
-
  // Render Marketplace Item
  renderItem = (item) => {
      const itemForSale = marketplaceItemTemplate.cloneNode(true);
      itemForSale.getElementsByTagName("img")[0].src = item.image;
      itemForSale.getElementsByTagName("img")[0].alt = item.name;
+     if (item.sellerAvatar){
+                itemForSale.getElementsByTagName("img")[1].src = item.sellerAvatar.url();
+                itemForSale.getElementsByTagName("img")[1].alt = item.sellerUsername;
+             
+        }
+
      hideElement(itemForSale.getElementsByTagName("video")[0]);
     item.creator 
-     itemForSale.getElementsByTagName("h2")[0].innerText = item.creator;
+     itemForSale.getElementsByTagName("h2")[0].innerText = item.sellerUsername;
      itemForSale.getElementsByTagName("h3")[0].innerText = item.name;
      itemForSale.getElementsByTagName("p")[0].innerText = item.description;
 
     
      const itemaskingPriceBN = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
      const convertedToUSDPrice = new BigNumber(onftsPrice).times(itemaskingPriceBN);
-     itemForSale.getElementsByTagName("button")[1].innerText = `${itemaskingPriceBN} ONFTs`;
-     itemForSale.getElementsByTagName("button")[2].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
-
-     itemForSale.isFlipped = '';
-     itemForSale.getElementsByTagName("div")[0].onclick = () => {
-                
-         
-                if (itemForSale.isFlipped != 'triggered')  {
-                    $(itemForSale.getElementsByTagName("div")[0]).toggleClass('is-flipped');
-                    itemForSale.isFlipped = 'triggered';
-                    console.log(itemForSale.isFlipped);
-                }
-            }
-
-    itemForSale.getElementsByTagName("a")[0].onclick = () => {       
+     itemForSale.getElementsByTagName("button")[0].innerText = `${itemaskingPriceBN} ONFTs`;
+     itemForSale.getElementsByTagName("button")[1].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
+    
+     itemForSale.getElementsByTagName("button")[1].onclick = async () => buyItemUSD(item);
+     
+     
+     
+     itemForSale.getElementsByTagName("button")[0].onclick = async () =>  buyItem(item);
+     itemForSale.getElementsByTagName("button")[2].onclick = () => {
+             var copyText = "https://onlynfts.online/marketplace/?nft=" + item.tokenAddress + "&id=" + item.tokenId;
+            //  copyText.select();
+            //  copyText.setSelectionRange(0, 99999);
+             navigator.clipboard.writeText(copyText);
         
-            
-            $(itemForSale.getElementsByTagName("div")[2]).toggleClass('is-flipped');
-            itemForSale.isFlipped = '';
-            console.log(itemForSale.isFlipped);
-       
-    }
+             notificationHeader.innerText = "Copied!";
+         notificationBody.innerText = "Copied: " + copyText;
+        //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
+        $('.toast').toast('show');
+            };
 
 
+
+    itemForSale.getElementsByTagName("h2")[0].onclick = () => {  
+        window.open("https://onlynfts.online/profile?p=" + item.creatorUsername).focus();
+    };    
+
+    itemForSale.getElementsByTagName("img")[1].onclick = () => {  
+        window.open("https://onlynfts.online/profile?p=" + item.creatorUsername).focus();
+    };  
 itemsForSale.appendChild(itemForSale);
 }
 
@@ -1254,6 +1228,20 @@ buyCrypto = async () => {
     document.getElementById('buyCryptoModalInner').src = response.data;
      }
  }
+
+
+// Get Token Stats
+getTokenStats = async () => {
+    if (user) {
+var totalSupply = await paymentTokenContract.methods.totalSupply().call({from: user.get('ethAddress')});
+console.log(totalSupply);
+var marketCap = Number(totalSupply * onftsPrice / 1000000000 / 1000000000);
+var marketCapFinal = marketCap.toLocaleString()
+console.log(marketCapFinal);
+    } else {
+        console.log("login");
+    }
+}   
 
 // Hide Elements
 hideElement = (element) => element.style.display = "none";
