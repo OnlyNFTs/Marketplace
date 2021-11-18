@@ -460,7 +460,7 @@ createItem = async () => {
         royaltyFee: royaltyFee,
         referrer: userReferrerAddress,
         mime: mimeType,
-        secretFile: addSecretFileSwitchValue
+        secretFile: addSecretFileSwitchValue,
     };
 
 
