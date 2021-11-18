@@ -307,7 +307,7 @@ submitRefferal = async () => {
 saveUserInfo = async () => {
     
     user.set('username', userUsernameField.value);
-    if(email != "undefined"){
+    if(userEmailField.value.length > 0){
     user.set('email', userEmailField.value);
     }
     if (userAvatarFile.files.length > 0) {
