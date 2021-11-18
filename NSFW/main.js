@@ -495,7 +495,7 @@ createItem = async () => {
         case "0":
             //nftId = await mintNft(nftFileMetadataFilePath, royaltyFee, userReferrerAddress);
             // await mintNft(nftFileMetadataFilePath, royaltyFee, userReferrerAddress);
-             const metadataUrl = nftFileMetadataFilePath;
+             
              const RoyaltyFee = royaltyFee
              const user = await Moralis.User.current();
             const userAddress = user.get('ethAddress');
@@ -504,7 +504,7 @@ createItem = async () => {
         functionName: "createItem",
         abi: tokenContractAbi,
         params: {
-            uri: metadataUrl,
+            uri: nftFileMetadataFilePath,
             creator: userAddress,
             royaltyFee: RoyaltyFee,
             referrer: userReferrerAddress
