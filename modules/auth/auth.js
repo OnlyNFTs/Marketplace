@@ -20,7 +20,7 @@ async function login() {
         $('#connectWalletModal').modal('hide'); 
         initUser();
             }else {
-                await Moralis.Web3.authenticate({provider: 'trustwallet, metamask, walletconnect'});
+                await Moralis.Web3.authenticate({provider: 'trustwallet', signingMessage: "Log In"});
         alert("Logged in Successfully!");
         $('#connectWalletModal').modal('hide'); 
         initUser(); 

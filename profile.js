@@ -1130,6 +1130,8 @@ renderProfilePageInfo = async () => {
         document.getElementById("profileLink1").innerText = profilePageCloudInfo.profileLink;
 
         document.getElementById("profileLink1").href = profilePageCloudInfo.profileLink;
+        
+        document.getElementById("profileDescriptionDet").innerText = "add more information to profile";
     };
 }
 
@@ -1170,6 +1172,7 @@ const userAvatarImg = document.getElementById("imgAvatar");
 const userAvatarFile = document.getElementById("fileAvatar");
 const onftsBalanceButton = document.getElementById("onftsBalanceButton");
 const editProfilePageButton = document.getElementById("editProfilePageButton");
+const profileDescriptionDetails = document.getElementById("profileDescriptionDet");
 document.getElementById("btnCloseUserInfo").onclick = () => hideElement(userInfo);
 document.getElementById("btnLogout").onclick = logout;
 document.getElementById("btnSaveUserInfo").onclick = saveUserInfo;
