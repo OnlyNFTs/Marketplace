@@ -485,6 +485,7 @@ createItem = async () => {
     loadingProgress.style.width = 40 + "%";
     loadingStatus.innerText = "Please confirm transaction for mintfee approval";
     const nftFileMetadataFilePath = nftFileMetadataFile.ipfs();
+    alert(nftFileMetadataFilePath);
     await ensureMintTokenIsApproved(MINT_TOKEN_ADDRESS);
     loadingProgress.style.width = 50 + "%";
     loadingStatus.innerText = "Please confirm transaction to mint your NFT";
