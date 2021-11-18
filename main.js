@@ -253,7 +253,7 @@ openUserInfo = async () => {
     if (user){    
         const email = user.get('email');
         alert(email);
-        if(email != "undefined"){
+        if(email){
             userEmailField.value = email;
         }else{
             userEmailField.value = " ";
@@ -305,9 +305,11 @@ submitRefferal = async () => {
 
 // Save User Info
 saveUserInfo = async () => {
-    user.set('email', userEmailField.value);
+    
     user.set('username', userUsernameField.value);
-
+    if(email != "undefined"){
+    user.set('email', userEmailField.value);
+    }
     if (userAvatarFile.files.length > 0) {
         const avatar = new Moralis.File("avatar1.jpg", userAvatarFile.files[0]);
         user.set('avatar', avatar);
