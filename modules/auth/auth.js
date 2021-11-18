@@ -26,7 +26,7 @@ async function login() {
         initUser(); 
             }
         } else {
-            await Moralis.Web3.authenticate();
+            await Moralis.authenticate();
             alert("Logged in Successfully!");
             $('#connectWalletModal').modal('hide'); 
             initUser(); 
