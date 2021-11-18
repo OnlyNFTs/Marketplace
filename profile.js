@@ -301,16 +301,18 @@ submitRefferal = async () => {
 
 // Save User Info
 saveUserInfo = async () => {
-    user.set('email', userEmailField.value);
+    
     user.set('username', userUsernameField.value);
-
+    if(userEmailField.value.length > 0){
+    user.set('email', userEmailField.value);
+    }
     if (userAvatarFile.files.length > 0) {
         const avatar = new Moralis.File("avatar1.jpg", userAvatarFile.files[0]);
         user.set('avatar', avatar);
     }
 
     await user.save();
-    
+    //await createProfilePage();
     alert("User info saved successfully!");
     openUserInfo();
 }
