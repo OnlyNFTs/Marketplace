@@ -689,8 +689,8 @@ mintEANft = async (metadataUrl, creator, RoyaltyFee, referrerAddress) => {
 // Open User Items Modal
 openUserItems = async () => {
     user = await Moralis.User.current(); 
-    await initUser();
-
+    loadUserItems();
+    loadUserListedItems();
     if (user){ 
         const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
         const query = new Moralis.Query(BscTokenBalance);
@@ -739,6 +739,14 @@ loadItems = async () => {
     const items = await Moralis.Cloud.run("getItems");
     user = await Moralis.User.current();
     items.forEach(item => {
+        if(urlNFT) {
+            if (urlNFTLC != item.tokenAddress, urlNFTIDLC != item.tokenId) {
+                const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
+                if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
+                return;
+            }
+        }
+
         if (user)   { 
             if (urlProfile) { 
                 urlProfileLC = urlProfile.toLowerCase();
