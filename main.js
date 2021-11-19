@@ -35,7 +35,7 @@ init = async () => {
     await fetchCoinPrice();
     await loadItems();
     await initUser();
-    await getTokenStats();
+   // await getTokenStats();
  
     await Moralis.initPlugins();
     await getMarketQuote();

@@ -37,6 +37,8 @@ async function initWeb3() {
     window.mintTokenContract = await new web3.eth.Contract(mintTokenContractAbi, MINT_TOKEN_ADDRESS);
     window.earlyHoldersContract = await new web3.eth.Contract(earlyHoldersContractAbi, EARLY_HOLDERS_NFT_ADDRESS);
     window.pancakeswapRouterContract = await new web3.eth.Contract(pancakeswapRouterAbi, PANCAKESWAP_ROUTER_ADDRESS);
+    window.NFTContract = await new web3.eth.Contract(NFTContractABI, NFT_CONTRACT_ADDRESS);
+
     console.log(walletProvider);
     chainId = await Moralis.getChainId();
 
