@@ -31,12 +31,12 @@ async function initWeb3() {
     
 
     // window.web3 = await Moralis.Web3.enable({provider: walletProvider});
-    window.tokenContract = new web3.eth.Contract(tokenContractAbi, TOKEN_CONTRACT_ADDRESS);
-    window.marketplaceContract = new web3.eth.Contract(marketplaceContractAbi, NFT_MARKETPLACE_CONTRACT_ADDRESS);
-    window.paymentTokenContract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
-    window.mintTokenContract = new web3.eth.Contract(mintTokenContractAbi, MINT_TOKEN_ADDRESS);
-    window.earlyHoldersContract = new web3.eth.Contract(earlyHoldersContractAbi, EARLY_HOLDERS_NFT_ADDRESS);
-    window.pancakeswapRouterContract = new web3.eth.Contract(pancakeswapRouterAbi, PANCAKESWAP_ROUTER_ADDRESS);
+    window.tokenContract = await new web3.eth.Contract(tokenContractAbi, TOKEN_CONTRACT_ADDRESS);
+    window.marketplaceContract = await  new web3.eth.Contract(marketplaceContractAbi, NFT_MARKETPLACE_CONTRACT_ADDRESS);
+    window.paymentTokenContract = await new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
+    window.mintTokenContract = await new web3.eth.Contract(mintTokenContractAbi, MINT_TOKEN_ADDRESS);
+    window.earlyHoldersContract = await new web3.eth.Contract(earlyHoldersContractAbi, EARLY_HOLDERS_NFT_ADDRESS);
+    window.pancakeswapRouterContract = await new web3.eth.Contract(pancakeswapRouterAbi, PANCAKESWAP_ROUTER_ADDRESS);
     console.log(walletProvider);
     chainId = await Moralis.getChainId();
 
