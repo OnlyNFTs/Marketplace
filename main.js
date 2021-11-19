@@ -495,24 +495,23 @@ createItem = async () => {
         case "0":
             //nftId = await mintNft(nftFileMetadataFilePath, royaltyFee, userReferrerAddress);
             // await mintNft(nftFileMetadataFilePath, royaltyFee, userReferrerAddress);
-             const metadataUrl = nftFileMetadataFilePath;
-             const RoyaltyFee = royaltyFee
+            
+             const RoyaltyFee = royaltyFee;
              const user = await Moralis.User.current();
             const userAddress = user.get('ethAddress');
-    const createItemNoFee = {
-        contractAddress: "0x67A3C573bE9edca87f5097e3A3F8f1111E51a6cd",
+    const createItem = {
+        contractAddress: NFT_CONTRACT_ADDRESS,
         functionName: "createItem",
-        abi: tokenContractAbi,
+        abi: NFTContractABI,
         params: {
-            uri: metadataUrl,
-            creator: userAddress,
+            uri: nftFileMetadataFilePath,
             royaltyFee: RoyaltyFee,
             referrer: userReferrerAddress
           },
           awaitReceipt: false
         };
 
-             tx = await Moralis.executeFunction(createItemNoFee);
+             tx = await Moralis.executeFunction(createItem);
              loadingProgress.style.width = 60 + "%";
                 loadingStatus.innerText = "Request Sent - Waiting for blockchain";
 
