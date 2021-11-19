@@ -501,7 +501,7 @@ createItem = async () => {
             const userAddress = user.get('ethAddress');
     const createItem = {
         contractAddress: NFT_CONTRACT_ADDRESS,
-        functionName: "createItem",
+        functionName: "createItemNoFee",
         abi: NFTContractABI,
         params: {
             uri: nftFileMetadataFilePath,
