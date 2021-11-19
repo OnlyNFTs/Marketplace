@@ -1095,6 +1095,7 @@ ensurePaymentTokenIsApproved = async (tokenAddress, amount) => {
 // Mint Token Approval
 ensureMintTokenIsApproved = async (tokenAddress, amount) => {
     alert(walletProvider);
+    const onftsconverted = Moralis.Units.Token("10000", "18");
     if (walletProvider == 'walletconnect') {
         user = await Moralis.User.current();
         const userAddress = user.get('ethAddress');
@@ -1102,7 +1103,7 @@ ensureMintTokenIsApproved = async (tokenAddress, amount) => {
         const approvedAddress = await contract.methods.allowance(userAddress, NFT_CONTRACT_ADDRESS).call({provider: walletProvider, chainId: 56, from: userAddress}); 
         console.log(approvedAddress)
         if (approvedAddress < 1000){
-            await contract.methods.approve(NFT_CONTRACT_ADDRESS, 10000 ** 18 *10).send({provider: walletProvider, chainId: 56, from: userAddress});
+            await contract.methods.approve(NFT_CONTRACT_ADDRESS, onftsconverted).send({provider: walletProvider, chainId: 56, from: userAddress});
         }
     } else {
     user = await Moralis.User.current();
@@ -1111,7 +1112,7 @@ ensureMintTokenIsApproved = async (tokenAddress, amount) => {
     const approvedAddress = await contract.methods.allowance(userAddress, NFT_CONTRACT_ADDRESS).call({from: userAddress});
     console.log(approvedAddress)
     if (approvedAddress < 1000){
-        await contract.methods.approve(NFT_CONTRACT_ADDRESS, 10000 ** 18 *10).send({from: userAddress});
+        await contract.methods.approve(NFT_CONTRACT_ADDRESS, onftsconverted).send({from: userAddress});
     }
     }
 }
