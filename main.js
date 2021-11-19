@@ -592,7 +592,7 @@ createItem = async () => {
             if (walletProvider == 'walletconnect'){
                 await marketplaceContract.methods.addItemToMarket(nftId, TOKEN_CONTRACT_ADDRESS, askingPriceBN, creator, royaltyFee, userReferrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
             } else {
-            await marketplaceContract.methods.addItemToMarket(nftId, TOKEN_CONTRACT_ADDRESS, askingPriceBN, creator, royaltyFee, userReferrerAddress).send({from: user.get('ethAddress')});
+            await marketplaceContract.methods.addItemToMarket(nftId, TOKEN_CONTRACT_ADDRESS, askingPriceBN, creator, royaltyFee, userReferrerAddress).send({from: userAddress)});
             }
             loadingProgress.style.width = 100 + "%";
             loadingStatus.innerText = "NFT Successfully added to the marketplace!";
