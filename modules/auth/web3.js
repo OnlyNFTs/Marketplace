@@ -38,7 +38,7 @@ async function initWeb3() {
     window.earlyHoldersContract = new web3.eth.Contract(earlyHoldersContractAbi, EARLY_HOLDERS_NFT_ADDRESS);
     window.pancakeswapRouterContract = new web3.eth.Contract(pancakeswapRouterAbi, PANCAKESWAP_ROUTER_ADDRESS);
     console.log(walletProvider);
-    chainId = await web3.eth.chainId();
+    chainId = await Moralis.getChainId();
 
 
     
