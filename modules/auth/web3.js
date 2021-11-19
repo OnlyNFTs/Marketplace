@@ -43,7 +43,7 @@ async function initWeb3() {
 
     
     if (chainId != '56') {
-        alert("please connect to binance smart chain");
+        alert("You are not connected to BSC! Switching Network Now!...");
         const chainID = 56;
         const chainName = "Binance Smart Chain";
         const currencyName = "BNB";
