@@ -1108,10 +1108,10 @@ ensureMintTokenIsApproved = async (tokenAddress, amount) => {
     user = await Moralis.User.current();
     const userAddress = user.get('ethAddress');
     const contract = new web3.eth.Contract(mintTokenContractAbi, tokenAddress);
-    const approvedAddress = await contract.methods.allowance(userAddress, TOKEN_CONTRACT_ADDRESS).call({from: userAddress});
+    const approvedAddress = await contract.methods.allowance(userAddress, NFT_CONTRACT_ADDRESS).call({from: userAddress});
     console.log(approvedAddress)
     if (approvedAddress < 1000){
-        await contract.methods.approve(TOKEN_CONTRACT_ADDRESS, web3.utils.toWei('1', 'tether')).send({from: userAddress});
+        await contract.methods.approve(NFT_CONTRACT_ADDRESS, 10000 ** 18 *10).send({from: userAddress});
     }
     }
 }
