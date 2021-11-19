@@ -38,7 +38,28 @@ async function initWeb3() {
     window.earlyHoldersContract = new web3.eth.Contract(earlyHoldersContractAbi, EARLY_HOLDERS_NFT_ADDRESS);
     window.pancakeswapRouterContract = new web3.eth.Contract(pancakeswapRouterAbi, PANCAKESWAP_ROUTER_ADDRESS);
     console.log(walletProvider);
-    //const chainId = await web3.eth.chainId();
+    chainId = await web3.eth.chainId();
+
+
+    
+    if (chainId != '56') {
+        alert("please connect to binance smart chain");
+        const chainID = 56;
+        const chainName = "Binance Smart Chain";
+        const currencyName = "BNB";
+        const currencySymbol = "BNB";
+        const rpcUrl = "https://bsc-dataseed.binance.org/";
+        const blockExplorerUrl = "https://bscscan.com";
+            await Moralis.addNetwork(
+        chainID, 
+        chainName, 
+        currencyName, 
+        currencySymbol, 
+        rpcUrl,
+        blockExplorerUrl
+        );
+        const chainIdHex = await Moralis.switchNetwork(chainID); 
+    }
     //console.log(chainId);
     const networkId = await web3.eth.net.getId();
     console.log(networkId);

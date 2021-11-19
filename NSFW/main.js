@@ -441,7 +441,7 @@ createItem = async () => {
 
     if (addSecretFileSwitchValue == true) {
         
-        file = secretNftFile.files[0];
+        const file = secretNftFile.files[0];
         const secretFile = new Moralis.File("secretFile", file);
         await secretFile.save().then(function() {
         const secretfileURL = secretFile.url();
