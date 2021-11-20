@@ -258,6 +258,8 @@ openUserInfo = async () => {
         
         if (mintApprovedStatus == true) {
         document.getElementById("refferalId").innerText = userUniqueId;
+        } else if (userReferrerSubmited == null) {
+            document.getElementById("refferalId").innerText = "Enter Referral ID"; 
         } else {
             document.getElementById("refferalId").innerText = "Please wait for approval"; 
         }
@@ -287,6 +289,7 @@ openUserInfo = async () => {
 
 //Submit Referral
 submitRefferal = async () => {
+    user = await Moralis.User.current();
     if (userReferrerField.value.length == 24) {
         user.set('referrerSubmited', userReferrerField.value);
         await user.save();
