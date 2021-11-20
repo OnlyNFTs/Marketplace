@@ -1184,7 +1184,7 @@ console.log(checkPricing);
 fetchLiveCoinData = async () => {
     var currentTime = Date.now();
     console.log(currentTime);
-    var yesterdayTime = currentTime - 86400000 * 7;
+    var yesterdayTime = currentTime - 86400000;
 console.log(currentTime);
 console.log(yesterdayTime);
     const response = await fetch(new Request('https://api.livecoinwatch.com/coins/single/history'), {
