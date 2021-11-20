@@ -1208,10 +1208,10 @@ console.log(yesterdayTime);
     })
 
     mcapHistoryFirst = response.history[0].rate;
-    mcapHistoryLast = response.history[12].rate;
+    mcapHistoryLast = response.history[4].rate;
 
     volumeHistoryFirst = response.history[0].volume;
-    volumeHistoryLast = response.history[12].volume;
+    volumeHistoryLast = response.history[4].volume;
     volumeHistoryLastText = volumeHistoryLast.toLocaleString();
 
 
