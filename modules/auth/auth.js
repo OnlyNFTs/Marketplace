@@ -58,7 +58,7 @@ async function loginWC() {
     try {
         walletProvider = "walletconnect";
         console.log(walletProvider);
-        await Moralis.authenticate({provider: walletProvider, chainId: 56, signingMessage: "Log In"});
+        await Moralis.authenticate({ signingMessage: "Log In", provider: walletProvider, chainId: 56});
         alert("Logged in Successfully!");
         $('#connectWalletModal').modal('hide'); 
         initWeb3();
