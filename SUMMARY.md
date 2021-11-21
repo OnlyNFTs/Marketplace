@@ -7,8 +7,10 @@
   * [Get BNB](get-started/get-bnb.md)
   * [Get ONFTs](get-started/get-onfts.md)
   * [Connect Your Wallet to OnlyNFTs](get-started/connect-your-wallet-to-onlynfts.md)
+* [My Profile](my-profile/README.md)
+  * [Create Account](my-profile/create-account.md)
 
-## Products <a id="products-1"></a>
+## Products <a href="products-1" id="products-1"></a>
 
 * [Content Creator](products-1/content-creator/README.md)
   * [Creating NFT](products-1/content-creator/creating-nft.md)
@@ -23,4 +25,3 @@
 ## Updates
 
 * [Marketplace Updates](updates/marketplace-updates.md)
-
