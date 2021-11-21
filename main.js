@@ -1,5 +1,4 @@
-Moralis.initialize("Yt8nY74340sEhXEWlVCASjPTq5kcBMg4pzqu7iox");
-Moralis.serverURL = 'https://uctux2sj3ina.moralisweb3.com:2053/server';
+
 
 const serverUrl = "https://uctux2sj3ina.moralisweb3.com:2053/server";
 const appId = "Yt8nY74340sEhXEWlVCASjPTq5kcBMg4pzqu7iox";
@@ -15,7 +14,7 @@ onftsAddress = "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b";
 
 // Initialise
 init = async () => {
-    
+    await Moralis.start({ serverUrl, appId });
     
     // initWeb3();
     hideElement(nsfwButton);
@@ -1166,35 +1165,35 @@ loadBalances = async () => {
 user = await Moralis.User.current(); 
 if (user){ 
     earlyHoldersBalance = null;
-    const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
-    const query = new Moralis.Query(BscTokenBalance);
-    query.equalTo("token_address", onftsAddress);
-    query.equalTo("address", user.get('ethAddress'));
-    const results = await query.find();
-    onftsBalanceBN = 0;
-// Do something with the returned Moralis.Object values
-for (let i = 0; i < results.length; i++) {
-    const object = results[i];
-    //alert(object.id + ' - ' + object.get('balance'));
-    const onftsBalance1 = object.get('balance');
-    onftsBalanceBN = new BigNumber(onftsBalance1).div(1000000000).div(1000000000);
-    onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(onftsPrice);
-    console.log(onftsBalance1);
+//     const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
+//     const query = new Moralis.Query(BscTokenBalance);
+//     query.equalTo("token_address", onftsAddress);
+//     query.equalTo("address", user.get('ethAddress'));
+//     const results = await query.find();
+//     onftsBalanceBN = 0;
+// // Do something with the returned Moralis.Object values
+// for (let i = 0; i < results.length; i++) {
+//     const object = results[i];
+//     //alert(object.id + ' - ' + object.get('balance'));
+//     const onftsBalance1 = object.get('balance');
+//     onftsBalanceBN = new BigNumber(onftsBalance1).div(1000000000).div(1000000000);
+//     onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(onftsPrice);
+//     console.log(onftsBalance1);
  
-};
+// };
 
-query.equalTo("token_address", onftsAddress);
-query.equalTo("address", user.get('ethAddress'));
-const results1 = await query.find();
-//alert("Successfully retrieved " + results1.length + " balance.");
-// Do something with the returned Moralis.Object values
-for (let i = 0; i < results1.length; i++) {
-const object1 = results1[i];
-//alert(object.id + ' - ' + object.get('balance'));
-const mintTokenBalance = object1.get('balance');
-mintTokenBalanceBN = new BigNumber(mintTokenBalance).div(1000000000).div(1000000000);
-console.log(mintTokenBalance);
-}; 
+// query.equalTo("token_address", onftsAddress);
+// query.equalTo("address", user.get('ethAddress'));
+// const results1 = await query.find();
+// //alert("Successfully retrieved " + results1.length + " balance.");
+// // Do something with the returned Moralis.Object values
+// for (let i = 0; i < results1.length; i++) {
+// const object1 = results1[i];
+// //alert(object.id + ' - ' + object.get('balance'));
+// const mintTokenBalance = object1.get('balance');
+// mintTokenBalanceBN = new BigNumber(mintTokenBalance).div(1000000000).div(1000000000);
+// console.log(mintTokenBalance);
+// }; 
 
 const BscNFTOwners = Moralis.Object.extend("BscNFTOwners");
 const query2 = new Moralis.Query(BscNFTOwners);
@@ -1209,7 +1208,25 @@ console.log(object2.get('token_id'));
 if (earlyHoldersBalance !== null) {
     console.log(object2.get('token_id'));}
 };
-};
+
+
+
+const options = { chain: "bsc" };
+const balance = await Moralis.Web3API.account.getTokenBalances(options);
+console.log(balance);
+if (balance.length != 0) {
+    const tokenAddress =  "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b"; // You can specify for example: tokenAddress, name or symbol
+    const tokenBalance = balance.find((token) => token.token_address === tokenAddress);
+    console.log(tokenBalance.balance);
+    onftsBalance = tokenBalance.balance
+    onftsBalanceBN = new BigNumber(onftsBalance).div(1000000000).div(1000000000);
+    onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(onftsPrice);
+} else {
+    onftsBalance = 0
+    onftsBalanceBN = new BigNumber(onftsBalance).div(1000000000).div(1000000000);
+    onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(onftsPrice);
+    console.log(onftsBalance);
+}}
 }
 
 //Buy Crypto
