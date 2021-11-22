@@ -242,7 +242,7 @@
   min-height: max-content;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   overflow: visible !important;
@@ -253,7 +253,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  object-fit: cover;
+  /* object-fit: contain; */
 }
 
 .card__face--back {
