@@ -605,6 +605,65 @@ createItem = async () => {
     hideElement(createItemForm);
 }
 
+// Add to Marketplace
+addToMarketplace = async (tokenId, tokenAddress, askingPrice) => {
+   
+    const loadingStatus = document.getElementById("loadingStatus");
+    $('#createItem').modal('hide');
+    $('#loadingMint').modal('show');
+    loadingProgress.style.width = 1 + "%";
+    loadingStatus.innerText = "Adding NFT to marketplace"
+
+    const txOptions = {
+        contractAddress: "0x67A3C573bE9edca87f5097e3A3F8f1111E51a6cd",
+        functionName: "addItemToMarket",
+        abi: tokenContractAbi,
+        params: {
+            tokenId: tokenId,
+            tokenAddress: tokenAddress,
+            askingPrice: askingPrice,
+          },
+          awaitReceipt: false
+        };
+        tx = await Moralis.executeFunction(txOptions);
+             loadingProgress.style.width = 60 + "%";
+                loadingStatus.innerText = "Request Sent - Waiting for blockchain";
+
+             await tx.on("transactionHash", (hash) => { 
+                 console.log("hash" + hash); 
+                 loadingProgress.style.width = 70 + "%";
+                loadingStatus.innerText = "Hash Confirmed - Waiting for blockchain";
+                })
+                await tx.on("receipt", (receipt) => { 
+                     console.log("receipt" + receipt); 
+                     loadingProgress.style.width = 80 + "%";
+                          loadingStatus.innerText = "Finalizing - Waiting for blockchain";
+                    })
+                  .on("confirmation", (confirmationNumber, receipt) => {
+                          console.log(receipt);
+                          
+                           loadingProgress.style.width = 100 + "%";
+                           loadingStatus.innerText = "NFT Successfully added to marketplace!";
+                          
+                          return;
+                      })
+                      .on("error", (error) => { 
+                          alert(error);
+                        document.getElementById("btnCreateItem").disabled = 0;
+                       
+                        $('#loadingMint').modal('hide');
+                        
+                        
+                     });
+
+    }
+
+// Handle Auction/Buy Marketpalce
+handleAuction = async (id, bid) => {
+
+}
+
+
 // Burn NFT
 burnNFT = async (item) => {
     user = await Moralis.User.current();
@@ -821,11 +880,12 @@ renderUserItem = async (item) => {
             alert("Max 5Mil");
             return;
         }
-        await ensureMarketplaceIsApproved(item.tokenId, item.tokenAddress);
+        await ensureMarketplaceIsApproved2(item.tokenId, item.tokenAddress);
         await userItem.getElementsByTagName("input")[0].value;
         let test1 = userItem.getElementsByTagName("input")[0].value;
         let askingPriceBN = new BigNumber(test1).times(1000000000).times(1000000000);
-        await marketplaceContract.methods.addItemToMarket(item.tokenId, item.tokenAddress, askingPriceBN, item.creator, item.royaltyFee, item.referrer).send({from: user.get('ethAddress')});
+        //await marketplaceContract.methods.addItemToMarket(item.tokenId, item.tokenAddress, askingPriceBN, item.creator, item.royaltyFee, item.referrer).send({from: user.get('ethAddress')});
+        await addToMarketplace(item.tokenId, item.tokenAddress, askingPriceBN);
         alert("NFT Added To Marketplace!");
     };
 
@@ -871,7 +931,7 @@ renderUserListedItems = async (item) => {
             alert("Max 5Mil");
             return;
         }
-        await ensureMarketplaceIsApproved(item.tokenId, item.tokenAddress);
+        await ensureMarketplaceIsApproved2(item.tokenId, item.tokenAddress);
         await userItem.getElementsByTagName("input")[0].value;
         let test1 = userItem.getElementsByTagName("input")[0].value;
         let askingPriceBN = new BigNumber(test1).times(1000000000).times(1000000000);
@@ -1071,6 +1131,32 @@ ensureMarketplaceIsApproved = async (tokenId, tokenAddress) => {
     }
 }
 
+
+// Marketplace Approval 2.0
+ensureMarketplaceIsApproved2 = async (tokenId, tokenAddress) => {
+    user = await Moralis.User.current();
+    const userAddress = user.get('ethAddress');
+const options = {
+    contractAddress: tokenAddress,
+    functionName: "getApproved",
+    abi: NFTContractABI,
+    params: {
+      tokenId: tokenId
+    },
+};
+  const allowance = await Moralis.executeFunction(options);
+  if (allowance != MARKETPLACE_CONTRACT_ADDRESS){
+    const options = {
+        contractAddress: tokenAddress,
+        functionName: "approve",
+        abi: NFTContractABI,
+        params: {
+            to: MARKETPLACE_CONTRACT_ADDRESS,
+          tokenId: tokenId
+        },
+    };
+    const approve = await Moralis.executeFunction(options);}
+}
 // Payment Token Approval
 ensurePaymentTokenIsApproved = async (tokenAddress, amount) => {
     user = await Moralis.User.current();

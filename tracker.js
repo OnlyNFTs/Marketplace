@@ -1245,11 +1245,13 @@ pinksaleCheck = async () => {
 // get BSC native balance for a given address
 const options = { chain: "bsc", address: contractWallet};
 const balance = await Moralis.Web3API.account.getNativeBalance(options);
-console.log(balance);
-const trackerPer = balance.balance / goalBNB / 10 **18 *100;
+//const trackerbalance = balance.balance;
+const trackerbalance = 4;
+console.log(trackerbalance);
+const trackerPer = trackerbalance / goalBNB / 10 **18 *100;
 // alert(trackerPer);
 pinksaleProgress.style.width = trackerPer + "%";
-pinksaleText.innerText = (balance.balance / 10 **18).toLocaleString() + " BNB";
+pinksaleText.innerText = (trackerbalance / 10 **18).toLocaleString() + " BNB";
 }
 
 init();
