@@ -27,12 +27,12 @@
   <!-- Basic Page Needs
   ================================================== -->
   <meta charset="utf-8">
-  <title>onlyNFTs | Swap | Cryptocurrency NFT Marketplace. Buy Sell Create Trade with Royalties & Referrals</title>
+  <title>onlyNFTs | Create | Cryptocurrency NFT Marketplace. Buy Sell Create Trade with Royalties & Referrals</title>
 
   <!-- Mobile Specific Metas
   ================================================== -->
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="description" content="onlyNFTs | Swap | Cryptocurrency NFT Marketplace. Buy, Sell, Create & Trade with Royalties & Referrals">
+  <meta name="description" content="onlyNFTs | Create | Cryptocurrency NFT Marketplace. Buy, Sell, Create & Trade with Royalties & Referrals">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <meta name="author" content="OnlyNFTs">
   <meta name="generator" content="OnlyNFTs">
@@ -95,7 +95,7 @@
           </a>
           <!-- Dropdown list -->
           <ul class="dropdown-menu">
-			<li><a class="dropdown-item" id="btnOpenCreateItem" href="#">Create</a></li>
+			<li><a class="dropdown-item" id="btnOpenCreateItem" href="create.html">Create</a></li>
 			
             <li><a class="dropdown-item" href="marketplace.html">Marketplace</a></li>
             
@@ -220,7 +220,7 @@
 	<div class="container">
 		<div class="row align-items-center">
 			<div class="col-md-6 order-2 order-md-1 text-center text-md-left">
-                <h1 class="text-white font-weight-bold mb-4">Exchange<br></h1>
+                <h1 class="text-white font-weight-bold mb-4">Create<br></h1>
 				
 			</div>
 			
@@ -232,70 +232,123 @@
 <section class="section pt-0 position-relative pull-top">
 	<div class="container">
 		<div class="rounded shadow p-5 bg-white">
-			<h2 class="p-2" style="text-align: center;">Create</h2>
+
 			<div class="row">
 				<div class="col col-md-6 offset-md-3" id="window">
-					<h2>Create NFT</h2>
-					<p></p>
+				
 					<!-- <img style="max-width: 100%; max-height: 100%; position:static" src="images/dotheswap.jpg"> -->
 	
 					<div id="form">
-						<div class="swapbox">
-							
-							<h6 style="text-align: center; font-weight: bold;">NFT Name</h5>
 
-							<div >
-								<input class="form-control" placeholder="Enter Name" style="text-align: center;">
+						<div class="swapbox mb-0">
 							
+							<h6 style="text-align: center; font-weight: bold;">NFT File</h5>
 							
-								<p style="font-weight: bold; text-align: center;">Step 1:
-								<span style="font-weight: lighter;"> Enter the NFT a Name!</span></p>
-							</div>
+								<input type="file" style="color: olive;" class=" form-control-file" id="fileCreateItemFile">
+								<p style="font-weight: bold; text-align: center; font-size: smaller;">IMG/GIF/MP4					
 							
 						</div>
-						<div class="swapbox" id="step2">
+						
+						<p class="mt-0" style="font-weight: bold; text-align: center;">Step 1:
+							<span style="font-weight: lighter; font-size: smaller;"> Select NFT File!</span></p>
+						
+						
+						<div class="swapbox mb-0">
+							<h6 style="text-align: center; font-weight: bold;">NFT Name</h5>
+							<div >
+								<input class="form-control" id="txtCreateItemName" required placeholder="Enter Name" type="text" style="text-align: center;">		
+							</div>
+						</div>
+						
+						<p class="mt-0" style="font-weight: bold; text-align: center;">Step 2:
+							<span style="font-weight: lighter; font-size: smaller;"> Enter the NFT Name!</span></p>
+						
+						<div class="swapbox mb-0" id="step2">
 							
 							<div >
 								<h6 style="text-align: center; font-weight: bold;">NFT Description</h5>
 
-								<input class="form-control" placeholder="Enter Description" style="text-align: center;">
-							
-							
-								<p style="font-weight: bold; text-align: center;">Step 2:
-								<span style="font-weight: lighter;"> Enter the NFT a Description!</span></p>
+								<textarea class="form-control" id="txtCreateItemDescription" type="text" cols="30" rows="3" placeholder="Enter Description" style="text-align: center;"></textarea>					
 							</div>
 							
 						</div>
-
-						<div class="swapbox" id="step3">
+						<p class="mt-0" style="font-weight: bold; text-align: center;">Step 3:
+							<span style="font-weight: lighter; font-size: smaller;"> Enter the NFT Description!</span></p>
+						<div class="swapbox mb-0" id="step3">
 							
 							<div >
 								<h6 style="text-align: center; font-weight: bold;">NFT Royalties</h5>
-
-								<input class="number form-control" placeholder="Enter Royalty Amount %" style="text-align: center;">
-							
-							
-								<p style="font-weight: bold; text-align: center;">Step 3:
-								<span style="font-weight: lighter;font-style: italic;"> Enter the % amount of royalties you want to recieve on trades!</span></p>
+								<input class="form-control" type="number" min="2" max="30" step="1" id="numCreateRoyaltyFee" required placeholder="Enter Royalty Amount" style="text-align: center;">
 							</div>
 							
 						</div>
-
-						<div class="swapbox" id="step2">
-							
-							<div >
-								<h6 style="text-align: center; font-weight: bold;">NFT Description</h5>
-								<input class="form-control" placeholder="NFT Description" style="text-align: center;">
-							
-							
-								<p style="font-weight: bold; text-align: center;">Step 2:
-								<span style="font-weight: lighter;"> Give the NFT a Description!</span></p>
-							</div>
-							
-						</div>
+						<p style="font-weight: bold; text-align: center;">Step 4:
+							<span style="font-weight: lighter; font-size: smaller;"> Enter the % amount of royalties you want to recieve on trades!</span></p>
 				</div>
+				<div class="row mt-2 p-3" id="unlocksList">
+					<div class="col col-md-6 offset-md-3" id="window">
+								<div id="form">
+									<p style="font-weight: bold; text-align: center;">UNLOCKS</p>
+										<p style="font-weight: bold;"><i id="lvl1" class="ti-close"></i> Level 1: 
+											<span style="font-weight: lighter; font-size: smaller;">Minting Access</span></p>
+										<p style="font-weight: bold;"><i id="lvl2" class="ti-close"></i> Level 2: 
+											<span style="font-weight: lighter; font-size: smaller;">Free NFT Minting</span></p>
+										<p style="font-weight: bold;"><i id="lvl3" class="ti-close"></i> Level 3: 
+											<span style="font-weight: lighter; font-size: smaller;">Secret Files & More</span></p>
+										<p style="font-weight: bold;"><i id="lvlOG" class="ti-close"></i> Level OG: 
+											<span style="font-weight: lighter; font-size: smaller;">ALL OF ABOVE</span></p>
+											
+								</div>
+								<button class="col col-md-6 offset-md-3 btn btn-primary rounded-pill" id="unlocksButton">Open</button>
+								
+								<p class="text-center">Click <a style="color:orchid;" href="https://docs.onlynfts.online" target="_blank">Here</a> or more info</p>
+							</div>
+							
+			</div>
+
+			<div class="hidden row mt-2 p-3" id="unlocksSection">
+				<div class="col " >
+							<div >
+								<p style="font-weight: bold; text-align: center;">UNLOCKS</p>
+								<button class="col col-md-6 offset-md-3 btn btn-primary rounded-pill" id="unlocksCloseButton">Close</button>
+							</div>
+							<div class="swapbox">
+							<div class="form custom-control custom-switch">
+								<input onclick="secretFileEnableSwitch();" type="checkbox" class="custom-control-input" id="customSwitch3" >
+								<label class="custom-control-label" for="customSwitch3" style="font-weight: bold; font-size: smaller";>Enable Secret File</label>
+								<input type="file" style="color: olive;" class=" form-control-file" id="secretNftFile">
+							</div>
+						</div>
+							<div class="swapbox">
+							<div class="form custom-control custom-switch">
+							<input onclick="changeCreatorAddressEnableSwitch();" type="checkbox" class="custom-control-input" id="customSwitch4" >
+							<label class="custom-control-label" for="customSwitch4" style="font-weight: bold; font-size: smaller">Change Creator Address</label>
+							<input class="form-control" type="text" id="textCreateItemCreator" required placeholder="" style="text-align: center;">
+						</div>
+							<div class="form custom-control custom-switch">
+							<input onclick="sendToCustomAddressEnableSwitch();" type="checkbox" class="custom-control-input" id="customSwitch5" >
+							<label class="custom-control-label" for="customSwitch5" style="font-weight: bold; font-size: smaller">Send To Custom Address</label>
+						</div>
+					</div>
+					
+						</div>
+						
+		</div>
+
+			<button class="col col-md-6 offset-md-3 btn btn-primary rounded-pill" id="btnCreateItem">Create</button>
+			<div class="row">
+				<div class="col">
+			
+			<p class="p-1" style="font-weight: bold; font-size: smaller;">Mint Fee: 
+				<span style="font-weight: lighter; font-size: small;">1000</span></p>
+			</div>
+			<div class="col">
+				<p class="p-1" style="font-weight: bold; font-size: smaller;">Balance: 
+					<span id="createBalance" style="font-weight: lighter; font-size: small;"></span></p>
 			</div>
 		</div>
+		</div>
+		
 	</div>
 </section>
 
@@ -924,7 +977,7 @@
   <script src="modules/auth/web3.js"></script>
   <script src="modules/functions/checkURL.js"></script>
   <script src="modules/auth/auth.js"></script>
-  <script src="swap.js"></script>
+  <script src="create.js"></script>
 
 
 </html>

@@ -1,7 +1,9 @@
+Moralis.start({serverUrl: 'https://uctux2sj3ina.moralisweb3.com:2053/server',
+    appId: "Yt8nY74340sEhXEWlVCASjPTq5kcBMg4pzqu7iox" 
+    });
 
-
-const serverUrl = "https://uctux2sj3ina.moralisweb3.com:2053/server";
-const appId = "Yt8nY74340sEhXEWlVCASjPTq5kcBMg4pzqu7iox";
+//Moralis.initialize("Yt8nY74340sEhXEWlVCASjPTq5kcBMg4pzqu7iox");
+//Moralis.serverURL = 'https://uctux2sj3ina.moralisweb3.com:2053/server';
 
 // Fees/Requirements
 onftsHoldersMintRequirements = 1000;
@@ -10,66 +12,114 @@ onftsEarlyHoldersNFTAddress = "0x5692ab9e489e9c88d72431ce572c31061bbc7531";
 onftsNSFWAddress = "0x67a3c573be9edca87f5097e3a3f8f1111e51a6cd";
 onftsAddress = "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b";
 
-
+let currentTrade = {};
+let currentSelectSide;
+let tokens;
 
 // Initialise
 init = async () => {
-    await Moralis.start({ serverUrl, appId });
-    
-    // initWeb3();
+    //initWeb3();
     hideElement(nsfwButton);
     hideElement(connectWalletModal);
     hideElement(userItemsSection);
     hideElement(createItemForm);
     hideElement(loadingMintForm);
-    // hideElement(musicPlayer);
+    hideElement(musicPlayer);
     hideElement(itemsForSaleUI);
   
-     window.addEventListener('load', function() {
-         checkWalletProvider();
-        });
-    //await checkWalletProvider();
+    window.addEventListener('load', function() {
+        checkWalletProvider();
+       });
+
     await checkURL();
     // $("#ageVer").modal('show');
     await fetchCoinPrice();
+    
     await loadItems();
     await initUser();
-   // await getTokenStats();
- 
-    await Moralis.initPlugins();
-    await getMarketQuote();
-    
-
-
    
-    //  loadSong(songs[songIndex]);
-    // await $('#musicPlayer').modal('show');
-    // // await $('#musicPlayer').modal('hide');
-    // playSong();
-    // nextSong();
-    // playSong();
-    const soldItemsQuery = new Moralis.Query('SoldItems');
-    const soldItemsSubscription = await soldItemsQuery.subscribe();
-    soldItemsSubscription.on("create", onItemSold);
-    const itemsAddedQuery = new Moralis.Query('ItemsForSale');
-    const itemsAddedSubscription = await itemsAddedQuery.subscribe();
-    itemsAddedSubscription.on("create", onItemAdded);
-    const removedItemsQuery = new Moralis.Query('removedItems');
-    const removedItemsSubscription = await removedItemsQuery.subscribe();
-    removedItemsSubscription.on("create", onItemRemoved);
-
-
-    if (web3) {
-        //alert("yes");
-    }
 }
 
-
 getSupportedTokens = async () => {
-    const tokens = await Moralis.Plugins.oneInch.getSupportedTokens({
-      chain: 'bsc', // The blockchain you want to use (eth/bsc/polygon)
-    });
-    console.log(tokens);
+     const result = await Moralis.Plugins.oneInch.getSupportedTokens({
+       chain: 'bsc', // The blockchain you want to use (eth/bsc/polygon)
+     });
+     console.log(result);
+
+    tokens = {
+        "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b":
+        {
+        symbol: "ONFTs",
+        name: "OnlyNFTs",
+        decimals: 18,
+        address: "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b",
+        logoURI: 'favicon.ico'
+        },
+        "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee":
+        {
+            symbol: "BNB",
+            name: "BNB",
+            decimals: 18,
+            address: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            logoURI: "https://tokens.1inch.io/0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c.png"
+            },
+        "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c":
+        {
+        symbol: "WBNB",
+        name: "Wrapped BNB",
+        decimals: 18,
+        address: "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        logoURI: "https://tokens.1inch.io/0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c.png"
+        },
+        "0xe9e7cea3dedca5984780bafc599bd69add087d56":
+        {
+        symbol: "BUSD Token",
+        name: "BUSD",
+        decimals: 18,
+        address: "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+        logoURI: "https://tokens.1inch.io/0x4fabb145d64652a948d72533023f6e7a623c7c53.png"
+        },
+        "0x55d398326f99059ff775485246999027b3197955":
+        {
+        symbol: "USDT",
+        name: "Tether USD",
+        decimals: 18,
+        address: "0x55d398326f99059ff775485246999027b3197955",
+        logoURI: "https://tokens.1inch.io/0xdac17f958d2ee523a2206206994597c13d831ec7.png"
+        }
+    }
+    // tokens = result.tokens;
+    let parent = document.getElementById("token_list");
+    for (const address in tokens){
+        let token = tokens[address];
+        let div = document.createElement("div");
+        div.setAttribute("data-address", address)
+        div.className = "token_row";
+        let html = `
+        <img class="token_list_img" src="${token.logoURI}">
+        <span class="token_list_text">${token.symbol}</span>
+        `
+        div.innerHTML = html;
+        div.onclick = (() => {selectToken(address, parent, div)});
+        parent.appendChild(div);        
+        //  if(address != "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c" && address != "0x55d398326f99059ff775485246999027b3197955" && address != "0xe9e7cea3dedca5984780bafc599bd69add087d56" && address != "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b") {
+        //       parent.removeChild(div);
+        //  }  
+      
+    }
+  }
+
+  function selectToken(address, parent, div) {
+    $('#tokenSwapModal').modal('hide');
+    // let address = event.target.getAttribute("data-address");
+    currentTrade[currentSelectSide] = tokens[address];
+    console.log(currentTrade);
+    if(address === address) {
+        parent.appendChild(div);
+    }
+
+    renderInterface()
+    getQuote();
   }
 
   getMarketQuote = async () => {
@@ -101,23 +151,23 @@ getSupportedTokens = async () => {
 
 
 const livecoindata_api_url = 'https://api.livecoinwatch.com/coins/single';
+
 const pancakeswap_api_url = 'https://api.pancakeswap.info/api/v2/tokens/0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b';
 
 // Fetch Coin Price
 fetchCoinPrice = async () => {
-const response = await fetch(pancakeswap_api_url)
-.then((response) => {
-    return response.json();
-})
-.then((data) => {
-    var onftsApiData = data.data;
-    console.log(onftsApiData);
-    onftsPrice = onftsApiData.price;
-    onftsPriceBNB = onftsApiData.price_BNB;
+    const checkPricing = await Moralis.Web3API.token.getTokenPrice({chain:'bsc', address:"0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b"});
+    console.log(checkPricing);
+     onftsPrice = checkPricing.usdPrice;
+    console.log(onftsPrice);
+     onftsPriceBNB = checkPricing.nativePrice.value;
+
+    console.log(onftsPriceBNB);
     onftsPriceBN = new BigNumber(onftsPrice);
     onftsPriceBNBBN = new BigNumber(onftsPriceBNB);
     document.getElementById("onftspricebutton").innerText = `$${onftsPriceBN.dp(6)}`;
-})
+    return(onftsPrice, onftsPriceBNB);
+
 }
 
 // Big Number Config
@@ -127,75 +177,6 @@ BigNumber.config({
     CRYPTO: true,
     MODULO_MODE: 1
 });
-
-// On Item Sold Cloud Function
-onItemSold = async (item) => {
-    const listing = document.getElementById(`item-${item.attributes.uid}`);
-    if (listing){
-        listing.parentNode.removeChild(listing);
-    }
-    
-    user = await Moralis.User.current();
-    if (user){
-        const params = {uid: `${item.attributes.uid}`};
-        const soldItem = await Moralis.Cloud.run('getItem', params);
-        if (soldItem){
-            if (user.get('accounts').includes(item.attributes.buyer)){
-                getAndRenderItemData(soldItem, renderUserItem);
-            }
-
-            const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
-            if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
-          
-        }
-   
-    }
-}
-
-// Item Removed Cloud Function
-onItemRemoved = async (item) => {
-    const listing = document.getElementById(`item-${item.attributes.uid}`);
-    if (listing){
-        listing.parentNode.removeChild(listing);
-    }
-    
-    user = await Moralis.User.current();
-    if (user){
-        const params = {uid: `${item.attributes.uid}`};
-        const soldItem = await Moralis.Cloud.run('getItem', params);
-        if (soldItem){
-            if (user.get('accounts').includes(item.attributes.buyer)){
-                getAndRenderItemData(soldItem, renderUserItem);
-            }
-
-            const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
-            if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
-          
-        }
-   
-    }
-}
-
-
-// On Item added cloud function
-onItemAdded = async (item) => {
-    const params = {uid: `${item.attributes.uid}`};
-    const addedItem = await Moralis.Cloud.run('getItem', params);
-    if (addedItem){
-        user = await Moralis.User.current();
-        if (user){
-            if (user.get('accounts').includes(addedItem.ownerOf)){
-                const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
-                if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
-
-                getAndRenderItemData(addedItem, renderUserItem);
-                return;
-            }
-        }
-        getAndRenderItemData(addedItem, renderItem);
-    }
-
-}
 
 // Init User
 initUser = async () => {
@@ -222,9 +203,10 @@ initUser = async () => {
         showElement(userDashboardButton);
         showElement(userLogoutButton);
         showElement(nsfwButton);
-        loadBalances();
-        loadUserItems();
-        loadUserListedItems();
+        await loadBalances();
+        await loadUserItems();
+        await loadUserListedItems();
+        await openCreateItem();
     }else{
         showElement(userConnectButton);
         showElement(userConnectButton1);
@@ -237,28 +219,22 @@ initUser = async () => {
     }
 }
 
-
-
-
 // Load/Open User Info Modal
 openUserInfo = async () => {
     user = await Moralis.User.current();
 
     if (user){    
         const email = user.get('email');
-        
         if(email){
             userEmailField.value = email;
         }else{
-            userEmailField.value = " ";
+            userEmailField.value = "";
         }
         userUsernameField.value = user.get('username');
         userUniqueId = user.id;
         
         if (mintApprovedStatus == true) {
         document.getElementById("refferalId").innerText = userUniqueId;
-        } else if (userReferrerSubmited == null) {
-            document.getElementById("refferalId").innerText = "Enter Referral ID"; 
         } else {
             document.getElementById("refferalId").innerText = "Please wait for approval"; 
         }
@@ -288,7 +264,6 @@ openUserInfo = async () => {
 
 //Submit Referral
 submitRefferal = async () => {
-    user = await Moralis.User.current();
     if (userReferrerField.value.length == 24) {
         user.set('referrerSubmited', userReferrerField.value);
         await user.save();
@@ -302,18 +277,16 @@ submitRefferal = async () => {
 
 // Save User Info
 saveUserInfo = async () => {
-    
-    user.set('username', userUsernameField.value);
-    if(userEmailField.value.length > 0){
     user.set('email', userEmailField.value);
-    }
+    user.set('username', userUsernameField.value);
+
     if (userAvatarFile.files.length > 0) {
         const avatar = new Moralis.File("avatar1.jpg", userAvatarFile.files[0]);
         user.set('avatar', avatar);
     }
 
     await user.save();
-    //await createProfilePage();
+    // await createProfilePage();
     alert("User info saved successfully!");
     openUserInfo();
 }
@@ -340,9 +313,51 @@ handleOpenCreateItem = async () => {
 
 // Open Create Item Modal
 openCreateItem = async () => {
-    user = await Moralis.User.current(); 
+    user = await Moralis.User.current();
+    const unlocksSection = document.getElementById("unlocksSection");
+    const unlocksList = document.getElementById("unlocksList");
+    document.getElementById("unlocksButton").onclick = () => showElement(unlocksSection) && hideElement(unlocksList);
+    document.getElementById("unlocksCloseButton").onclick = () => showElement(unlocksList) && hideElement(unlocksSection);
+
+    addSecretFileSwitch.disabed = 0;
+
+
     if (user){ 
-        initUser();
+        await checkUserLevel(); 
+        console.log(userLevel);
+    createItemPriceField.disabled = 1;
+    addSecretFileSwitch.disabled = 1;
+    changeCreatorAddressSwitch.disabled = 1;
+           sendToCustomAddressSwitch.disabled = 1;
+        
+
+        if (mintApprovedStatus != true) {
+            $('#enterReferrer').modal('show');
+        }
+        if (userLevel >= 1 && mintApprovedStatus == true){
+            document.getElementById("lvl1").classList.add('ti-check');
+           
+        } if (userLevel == 2){
+            document.getElementById("lvl2").classList.add('ti-check');
+           
+        } else if(userLevel == 3){
+            document.getElementById("lvl2").classList.add('ti-check');
+            document.getElementById("lvl3").classList.add('ti-check');
+            addSecretFileSwitch.disabled = 0;
+            changeCreatorAddressSwitch.disabled = 0;
+           
+        } else if(userLevel == 4){
+        document.getElementById("lvl2").classList.add('ti-check');
+        document.getElementById("lvl3").classList.add('ti-check');
+        document.getElementById("lvlOG").classList.add('ti-check');
+            addSecretFileSwitch.disabled = 0;
+            changeCreatorAddressSwitch.disabled = 0;
+          
+        }
+
+        onftsBalanceString = onftsBalanceBN.toLocaleString();
+        document.getElementById("createBalance").innerText = onftsBalanceString;
+        
             hideElement(devSwitchButton);
             devSwitch.disabled = 1;
             console.log(adminStatus);
@@ -360,30 +375,32 @@ openCreateItem = async () => {
     
     
             }
-         
-        } if (await adminStatus == true) {
+           } else {
+            document.getElementById("mint-fee").innerText = mintFee;
+            
+            createItemCreator.disabled = 1;
+            if (await adminStatus == true) {
 
                 showElement(devSwitchButton);
                 devSwitch.disabled = 0;
     
     
             }
-           
-           document.getElementById("mint-fee").innerText = mintFee;
-           document.getElementById("mint-balance").innerText = onftsBalanceBN;
+           }
            createItemCreator.value = await user.get('ethAddress');
            createNFTValue = "0";
            addToMarketplaceValue = "0";
            addSecretFileSwitchValue = false;
+           changeCreatorAddressSwitchValue = false;
+           sendToCustomAddressSwitchValue = false;
            createItemPriceField.disabled = 1;
            secretNftFile.disabled = 1;
-           $('#createItem').modal('show');
+           createItemCreator.disabled = 1;
+           sendToCustomAddressSwitch.disabled = 1;
         }else{
     login();
     }
 }
-
-const supportedNFTContracts = ['test', 'test'];
 
 // Create Item
 createItem = async () => {
@@ -446,7 +463,7 @@ createItem = async () => {
         file = secretNftFile.files[0];
         const secretFile = new Moralis.File("secretFile", file);
         await secretFile.save().then(function() {
-        const secretfileURL = secretFile.url();
+         secretfileURL = secretFile.url();
         console.log(secretfileURL);
       }, function(error) {
         // The file either could not be read, or could not be saved to Moralis.
@@ -501,19 +518,21 @@ createItem = async () => {
              const RoyaltyFee = royaltyFee;
              const user = await Moralis.User.current();
             const userAddress = user.get('ethAddress');
-    const createItem = {
-        contractAddress: NFT_CONTRACT_ADDRESS,
-        functionName: "createItemNoFee",
-        abi: NFTContractABI,
-        params: {
-            uri: nftFileMetadataFilePath,
-            royaltyFee: RoyaltyFee,
-            referrer: userReferrerAddress
-          },
-          awaitReceipt: false
-        };
-
-             tx = await Moralis.executeFunction(createItem);
+        if (userLevel <= 0 ) {
+            tx = await mintNft(nftFileMetadataFilePath, royaltyFee, userReferrerAddress);
+        } else if (userLevel >= 2 && addSecretFileSwitchValue == false && changeCreatorAddressSwitchValue == false) {
+            tx = await mintNftNoFee(nftFileMetadataFilePath, royaltyFee, userReferrerAddress);
+        } else if (userLevel >= 2 && addSecretFileSwitchValue == true && changeCreatorAddressSwitchValue == false) {
+            tx = await mintNftSecretFileNoFee(nftFileMetadataFilePath, royaltyFee, userReferrerAddress, secretfileURL);
+        } else if (userLevel >= 2 && addSecretFileSwitchValue == true && changeCreatorAddressSwitchValue == true && sendToCustomAddressSwitchValue == false) {
+            tx = await mintNftSecretFileCusttomAddressNoFee(nftFileMetadataFilePath, royaltyFee, userReferrerAddress, secretfileURL, creator);
+        } else if (userLevel >= 2 && addSecretFileSwitchValue == true && changeCreatorAddressSwitchValue == true && sendToCustomAddressSwitchValue == true) {
+            tx = await mintNftSecretFileCusttomAddressSendNoFee(nftFileMetadataFilePath, royaltyFee, userReferrerAddress, secretfileURL, creator);
+        } else if (userLevel >= 2 && addSecretFileSwitchValue == false && changeCreatorAddressSwitchValue == true && sendToCustomAddressSwitchValue == false) {
+            tx = await mintNftCusttomAddressNoFee(nftFileMetadataFilePath, royaltyFee, userReferrerAddress, creator);
+        } else if (userLevel >= 2 && addSecretFileSwitchValue == false && changeCreatorAddressSwitchValue == true && sendToCustomAddressSwitchValue == true) {
+            tx = await mintNftCusttomAddressSendNoFee(nftFileMetadataFilePath, royaltyFee, userReferrerAddress, creator);
+        }
              loadingProgress.style.width = 60 + "%";
                 loadingStatus.innerText = "Request Sent - Waiting for blockchain";
 
@@ -537,10 +556,8 @@ createItem = async () => {
                       })
                       .on("error", (error) => { 
                           alert(error);
-                        document.getElementById("btnCreateItem").disabled = 0;
-                       
                         $('#loadingMint').modal('hide');
-                        $('#createItem').modal('show');
+                       
                         
                      });
                      
@@ -605,66 +622,6 @@ createItem = async () => {
     hideElement(createItemForm);
 }
 
-// Add to Marketplace
-addToMarketplace = async (tokenId, tokenAddress, askingPrice) => {
-   
-    const loadingStatus = document.getElementById("loadingStatus");
-    $('#createItem').modal('hide');
-    $('#loadingMint').modal('show');
-    loadingProgress.style.width = 1 + "%";
-    loadingStatus.innerText = "Adding NFT to marketplace"
-    await ensureMarketplaceIsApproved2(tokenId, tokenAddress);
-
-    const txOptions = {
-        contractAddress: MARKETPLACEV2_CONTRACT_ADDRESS,
-        functionName: "addItemToMarket",
-        abi: tokenContractAbi,
-        params: {
-            tokenId: tokenId,
-            tokenAddress: tokenAddress,
-            askingPrice: askingPrice,
-          },
-          awaitReceipt: false
-        };
-        tx = await Moralis.executeFunction(txOptions);
-             loadingProgress.style.width = 60 + "%";
-                loadingStatus.innerText = "Request Sent - Waiting for blockchain";
-
-             await tx.on("transactionHash", (hash) => { 
-                 console.log("hash" + hash); 
-                 loadingProgress.style.width = 70 + "%";
-                loadingStatus.innerText = "Hash Confirmed - Waiting for blockchain";
-                })
-                await tx.on("receipt", (receipt) => { 
-                     console.log("receipt" + receipt); 
-                     loadingProgress.style.width = 80 + "%";
-                          loadingStatus.innerText = "Finalizing - Waiting for blockchain";
-                    })
-                  .on("confirmation", (confirmationNumber, receipt) => {
-                          console.log(receipt);
-                          
-                           loadingProgress.style.width = 100 + "%";
-                           loadingStatus.innerText = "NFT Successfully added to marketplace!";
-                          
-                          return;
-                      })
-                      .on("error", (error) => { 
-                          alert(error);
-                        document.getElementById("btnCreateItem").disabled = 0;
-                       
-                        $('#loadingMint').modal('hide');
-                        
-                        
-                     });
-
-    }
-
-// Handle Auction/Buy Marketpalce
-handleAuction = async (id, bid) => {
-
-}
-
-
 // Burn NFT
 burnNFT = async (item) => {
     user = await Moralis.User.current();
@@ -678,12 +635,12 @@ burnNFT = async (item) => {
 
 
 // Minft NFT
-mintNft = async (metadataUrl, RoyaltyFee, referrerAddress, creatorAddress) => {
+mintNft = async (metadataUrl, RoyaltyFee, referrerAddress) => {
     userAddress = user.get('ethAddress');
     const txOptions = {
-        contractAddress: "0x67A3C573bE9edca87f5097e3A3F8f1111E51a6cd",
-        functionName: "createItem",
-        abi: tokenContractAbi,
+        contractAddress: NFT_CONTRACT_ADDRESS,
+            functionName: "createItem",
+            abi: NFTContractABI,
         params: {
             uri: metadataUrl,
             creator: userAddress,
@@ -693,50 +650,131 @@ mintNft = async (metadataUrl, RoyaltyFee, referrerAddress, creatorAddress) => {
           awaitReceipt: false
         };
 
-    if (earlyHoldersBalance != null) {
-        if (walletProvider == 'walletconnect') {
-            
-            return tx = await Moralis.executeFunction(txOptions);
-            // const receipt = await tokenContract.methods.createItemNoFee(metadataUrl, RoyaltyFee, referrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
-          
-        //     await tx.on("transactionHash", (hash) = () => { alert(hash); })
-        //     await tx.on("receipt", (receipt) = () => { alert(receipt); })
-        //     await tx.on("confirmation", (confirmationNumber, receipt) => { 
-        //         alert(confirmationNumber, receipt);
-        //         return receipt.events.Transfer.returnValues.tokenId;
-        //    })
-       
-           
-        } else {
-            const receipt = await tokenContract.methods.createItemNoFee(metadataUrl, RoyaltyFee, referrerAddress).send({from: user.get('ethAddress')});
-            console.log(receipt);
-            return receipt.events.Transfer.returnValues.tokenId;
-        }
-} else {
-    if (walletProvider == 'walletconnect') {
         return tx = await Moralis.executeFunction(txOptions);
 
-            //const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
-            
-    //     await tx.on("transactionHash", (hash) = () => { alert(hash); })
-    //     await tx.on("receipt", (receipt) = () => { alert(receipt); })
-    //     await tx.on("confirmation", (confirmationNumber, receipt) => { 
-    //   alert(confirmationNumber, receipt);
-    // return receipt.events.Transfer.returnValues.tokenId;
-//  })
-//   .on("error", (error) => { alert(error); });
+}
 
-  
-    } else {
-            const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({from: user.get('ethAddress')});
-            console.log(receipt);
-            return receipt.events.Transfer.returnValues.tokenId;
-        }
-    }
+mintNftNoFee = async (metadataUrl, RoyaltyFee, referrerAddress) => {
+    userAddress = user.get('ethAddress');
+    const txOptions = {
+        contractAddress: NFT_CONTRACT_ADDRESS,
+            functionName: "createItemNoFee",
+            abi: NFTContractABI,
+        params: {
+            uri: metadataUrl,
+            creator: userAddress,
+            royaltyFee: RoyaltyFee,
+            referrer: referrerAddress
+          },
+          awaitReceipt: false
+        };
+
+        return tx = await Moralis.executeFunction(txOptions);
+
+}
+
+mintNftCusttomAddressNoFee = async (metadataUrl, RoyaltyFee, referrerAddress, creator) => {
+
+    const txOptions = {
+        contractAddress: NFT_CONTRACT_ADDRESS,
+            functionName: "createItemCustomAddressNoFee",
+            abi: NFTContractABI,
+        params: {
+            uri: metadataUrl,
+            creator: creator,
+            royaltyFee: RoyaltyFee,
+            referrer: referrerAddress
+          },
+          awaitReceipt: false
+        };
+
+        return tx = await Moralis.executeFunction(txOptions);
+
+}
+
+
+mintNftCusttomAddressSendNoFee = async (metadataUrl, RoyaltyFee, referrerAddress, creator) => {
+
+    const txOptions = {
+        contractAddress: NFT_CONTRACT_ADDRESS,
+            functionName: "createItemCustomAddressSendNoFee",
+            abi: NFTContractABI,
+        params: {
+            uri: metadataUrl,
+            creator: creator,
+            royaltyFee: RoyaltyFee,
+            referrer: referrerAddress
+          },
+          awaitReceipt: false
+        };
+
+        return tx = await Moralis.executeFunction(txOptions);
+
+}
+
+
+mintNftSecretFileNoFee = async (metadataUrl, RoyaltyFee, referrerAddress, secretfileURL) => {
+    userAddress = user.get('ethAddress');
+    const txOptions = {
+        contractAddress: NFT_CONTRACT_ADDRESS,
+            functionName: "createSecretItemNoFee",
+            abi: NFTContractABI,
+        params: {
+            uri: metadataUrl,
+            creator: userAddress,
+            royaltyFee: RoyaltyFee,
+            referrer: referrerAddress,
+            secretUri: secretfileURL
+          },
+          awaitReceipt: false
+        };
+
+        return tx = await Moralis.executeFunction(txOptions);
+
+}
+
+mintNftSecretFileCusttomAddressNoFee = async (metadataUrl, RoyaltyFee, referrerAddress, secretfileURL, creator) => {
+
+    const txOptions = {
+        contractAddress: NFT_CONTRACT_ADDRESS,
+            functionName: "createSecretItemCustomAddressNoFee",
+            abi: NFTContractABI,
+        params: {
+            uri: metadataUrl,
+            creator: creator,
+            royaltyFee: RoyaltyFee,
+            referrer: referrerAddress,
+            secretUri: secretfileURL
+          },
+          awaitReceipt: false
+        };
+
+        return tx = await Moralis.executeFunction(txOptions);
+
+}
+
+mintNftSecretFileCusttomAddressSendNoFee = async (metadataUrl, RoyaltyFee, referrerAddress, secretfileURL, creator) => {
+
+    const txOptions = {
+        contractAddress: NFT_CONTRACT_ADDRESS,
+            functionName: "createSecretItemCustomAddressSendNoFee",
+            abi: NFTContractABI,
+        params: {
+            uri: metadataUrl,
+            creator: creator,
+            royaltyFee: RoyaltyFee,
+            referrer: referrerAddress,
+            secretUri: secretfileURL
+          },
+          awaitReceipt: false
+        };
+
+        return tx = await Moralis.executeFunction(txOptions);
+
 }
 
 mintEANft = async (metadataUrl, creator, RoyaltyFee, referrerAddress) => {
-    const receipt = await earlyHoldersContract.methods.createItem(metadataUrl, creator, RoyaltyFee, referrerAddress).send({from: user.get('ethAddress')});
+    const receipt = await earlyHoldersContract.methods.createItem(metadataUrl, creator, RoyaltyFee, referrerAddress).send({from: ethereum.selectedAddress});
     console.log(receipt);
     return receipt.events.Transfer.returnValues.tokenId;
 }
@@ -745,8 +783,8 @@ mintEANft = async (metadataUrl, creator, RoyaltyFee, referrerAddress) => {
 // Open User Items Modal
 openUserItems = async () => {
     user = await Moralis.User.current(); 
-    await loadUserItems();
-    await loadUserListedItems();
+    loadUserItems();
+    loadUserListedItems();
     if (user){ 
         const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
         const query = new Moralis.Query(BscTokenBalance);
@@ -881,12 +919,11 @@ renderUserItem = async (item) => {
             alert("Max 5Mil");
             return;
         }
-        await ensureMarketplaceIsApproved2(item.tokenId, item.tokenAddress);
+        await ensureMarketplaceIsApproved(item.tokenId, item.tokenAddress);
         await userItem.getElementsByTagName("input")[0].value;
         let test1 = userItem.getElementsByTagName("input")[0].value;
         let askingPriceBN = new BigNumber(test1).times(1000000000).times(1000000000);
-        //await marketplaceContract.methods.addItemToMarket(item.tokenId, item.tokenAddress, askingPriceBN, item.creator, item.royaltyFee, item.referrer).send({from: user.get('ethAddress')});
-        await addToMarketplace(item.tokenId, item.tokenAddress, askingPriceBN);
+        await marketplaceContract.methods.addItemToMarket(item.tokenId, item.tokenAddress, askingPriceBN, item.creator, item.royaltyFee, item.referrer).send({from: user.get('ethAddress')});
         alert("NFT Added To Marketplace!");
     };
 
@@ -932,7 +969,7 @@ renderUserListedItems = async (item) => {
             alert("Max 5Mil");
             return;
         }
-        await ensureMarketplaceIsApproved2(item.tokenId, item.tokenAddress);
+        await ensureMarketplaceIsApproved(item.tokenId, item.tokenAddress);
         await userItem.getElementsByTagName("input")[0].value;
         let test1 = userItem.getElementsByTagName("input")[0].value;
         let askingPriceBN = new BigNumber(test1).times(1000000000).times(1000000000);
@@ -967,14 +1004,9 @@ renderUserListedItems = async (item) => {
      const convertedToUSDPrice = new BigNumber(onftsPrice).times(itemaskingPriceBN);
      itemForSale.getElementsByTagName("button")[0].innerText = `${itemaskingPriceBN} ONFTs`;
      itemForSale.getElementsByTagName("button")[1].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
-    
-     itemForSale.getElementsByTagName("button")[1].onclick = async () => buyItemUSD(item);
-     
-     
-     
      itemForSale.getElementsByTagName("button")[0].onclick = async () =>  buyItem(item);
      itemForSale.getElementsByTagName("button")[2].onclick = () => {
-             var copyText = "https://onlynfts.online/marketplace/?nft=" + item.tokenAddress + "&id=" + item.tokenId;
+             var copyText = "https://marketplace.onlynfts.online/?nft=" + item.tokenAddress + "&id=" + item.tokenId;
             //  copyText.select();
             //  copyText.setSelectionRange(0, 99999);
              navigator.clipboard.writeText(copyText);
@@ -985,7 +1017,9 @@ renderUserListedItems = async (item) => {
         $('.toast').toast('show');
             };
 
-
+            itemForSale.getElementsByTagName("button")[1].onclick = () => {  
+                $('.toast').toast('show');
+            };  
 
     itemForSale.getElementsByTagName("h2")[0].onclick = () => {  
         window.open("https://onlynfts.online/profile?p=" + item.creatorUsername).focus();
@@ -997,113 +1031,6 @@ renderUserListedItems = async (item) => {
 itemsForSale.appendChild(itemForSale);
 }
 
-// // Render Marketplace Item
-// renderItem = (item) => {
-//     const itemForSale = marketplaceItemTemplate.cloneNode(true);
-//     if (item.sellerAvatar){
-//         itemForSale.getElementsByTagName("img")[1].src = item.sellerAvatar.url();
-//         itemForSale.getElementsByTagName("img")[1].alt = item.sellerUsername;
-     
-//     }
-//     itemForSale.nftShareValue = 0;
-//     //hideElement(itemForSale.getElementsByTagName("div")[2]);
-//     //hideElement(itemForSale.getElementsByTagName("input")[0]);
-//     //hideElement(itemForSale.getElementsByTagName("button")[0]);
-//     itemForSale.getElementsByTagName("a")[1].onclick = () => {
-     
-//             // $(itemForSale.getElementsByTagName("img")[0]).toggleClass('rotate-180');
-        
-//     };
-//     //$(itemForSale.getElementsByTagName("div")[0]).toggleClass('card__inner');
-//     // $(itemForSale.getElementsByTagName("div")[1]).toggleClass('card__face');
-//     //$(itemForSale.getElementsByTagName("div")[1]).toggleClass('card__face', 'card__face--front');
-//     // $(itemForSale.getElementsByTagName("div")[2]).toggleClass('card__face');
-//     //$(itemForSale.getElementsByTagName("div")[2]).toggleClass( 'card__face--back');
-//     //$(itemForSale.getElementsByTagName("div")[3]).toggleClass('card__content');
-//     //$(itemForSale.getElementsByTagName("div")[4]).toggleClass('card__header');
-//     //$(itemForSale.getElementsByTagName("div")[5]).toggleClass('card__body');
-
-    
-    
-//     itemForSale.getElementsByTagName("div")[0].onclick = () => {
-//         if (itemForSale.nftShareValue === 0) {
-            
-//             $(itemForSale.getElementsByTagName("div")[0]).toggleClass('rotate-180');
-//             const hmmwtf = $(itemForSale.getElementsByTagName("div")[0]).toggleClass('card__inner');
-           
-//             hmmwtf.classList.toggle('is-flipped');
-//         // itemForSale.nftShareValue = 1;
-//         }
-//     }
-//     itemForSale.getElementsByTagName("button")[0].onclick = () => {
-//         var copyText = itemForSale.getElementsByTagName("input")[0];
-//         copyText.select();
-//         copyText.setSelectionRange(0, 99999);
-//         navigator.clipboard.writeText(copyText.value);
-//        // alert("Copied the text: " + copyText.value);
-
-//         notificationHeader.innerText = "Copied!";
-//     notificationBody.innerText = "Copied the text: " + copyText.value;
-//     //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
-//     $('.toast').toast('show');
-//     };
-    
-//     hideElement(itemForSale.getElementsByTagName("video")[0]);
-//     itemForSale.getElementsByTagName("input")[0].value = "https://marketplace.onlynfts.online/?nft=" + item.tokenAddress + "&id=" + item.tokenId;
-//     itemForSale.getElementsByTagName("h6")[0].innerText = "Seller Info:";
-//     itemForSale.getElementsByTagName("p")[0].innerText = item.sellerUsername;
-//     itemForSale.getElementsByTagName("p")[1].innerText = item.ownerOf;
-//     itemForSale.getElementsByTagName("p")[1].onclick = () => alert("test");
-//     //itemForSale.getElementsByTagName("img")[1].style.filter = 'blur(20px)';
-
-//    // itemForSale.getElementsByTagName("p")[0].innerText = item.symbol;
-//     console.log(item.image.params);
-//     itemForSale.getElementsByTagName("img")[0].src = item.image;
-//     itemForSale.getElementsByTagName("img")[0].alt = item.name;
-//     //itemForSale.getElementsByTagName("video")[0].src = item.image;
-//     //itemForSale.getElementsByTagName("video")[0].play;
-//     itemForSale.getElementsByTagName("h5")[0].innerText = item.name;
-//     itemForSale.getElementsByTagName("h6")[1].innerText = "Description:";
-//     itemForSale.getElementsByTagName("p")[2].innerText = item.description;
-//     itemForSale.getElementsByTagName("p")[3].innerText = `RoyaltyFee ${item.royaltyFee} %`;
-    
-//     let itemlol = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
-//     let convertedToUSDPrice = new BigNumber(onftsPrice).times(itemlol);
-//     itemForSale.getElementsByTagName("button")[1].innerText = `BUY ${itemlol} ONFTs`;
-//     itemForSale.getElementsByTagName("button")[2].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
-//     // itemForSale.getElementsByTagName("button")[2].onclick = async () => {
-//     //     user = await Moralis.User.current();
-//     //     const amountIn = new BigNumber(1).times(1000000000).times(100000000);
-//     //     console.log(amountIn);
-//     //     amountsOut = await pancakeswapRouterContract.methods.getAmountsOut(amountIn, [WBNB_TOKEN_ADDRESS, PAYMENT_TOKEN_ADDRESS]).call({from: user.get('ethAddress')});
-        
-//     //     console.log(amountsOut);
-//     //     const amountInFriendly = amountIn;
-//     //     console.log(amountInFriendly);
-//     //     const amountsoutMinyWork = amountsOut[1] / 10;
-//     //     const amountsOutMiny = amountsOut[1] - amountsoutMinyWork;
-//     //     const amountsOutMin = amountsOut[1];
-//     //     const amountsOutMinBN = new BigNumber(amountsOutMin).times(90).div(100);
-//     //     const amountsOutMinTest = amountsOutMin;
-//     //     const amountsOutMinTest2 = new BigNumber(amountsOutMinTest).times(90).div(100);
-//     //     const amountsOutMinTest3 = amountsOutMinTest2;
-//     //     console.log(amountsOutMinTest3);
-//     //     console.log(amountsOutMinTest2);
-//     //     console.log(amountsOutMinTest);
-//     //     console.log(amountsOutMin);
-//     //     console.log(amountsOutMinBN);
-//     //     console.log(amountsOutMiny);
-
-//         //const contract = new web3.eth.Contract(paymentTokenContractAbi, WBNB_TOKEN_ADDRESS);
-//         //await contract.methods.approve(PANCAKESWAP_ROUTER_ADDRESS, amountIn).send({provider: walletProvider, from: user.get('ethAddress')});
-
-//  // await pancakeswapRouterContract.methods.swapTokensForExactTokens(amountIn, amountsOutMiny, [WBNB_TOKEN_ADDRESS, PAYMENT_TOKEN_ADDRESS], user.get('ethAddress'), Math.round(Date.now()/1000)+60*20).send({from: user.get('ethAddress')});
-//   //  }
-//     itemForSale.getElementsByTagName("button")[1].onclick = async () =>  buyItem(item);
-//     itemForSale.getElementsByTagName("a")[3].innerText = `Royalties ${item.royaltyFee}%`;
-//     itemForSale.id = `item-${item.uid}`;
-//     itemsForSale.appendChild(itemForSale);
-// }
 
 // Render Item Data
 getAndRenderItemData = (item, renderFunction) => {
@@ -1132,32 +1059,6 @@ ensureMarketplaceIsApproved = async (tokenId, tokenAddress) => {
     }
 }
 
-
-// Marketplace Approval 2.0
-ensureMarketplaceIsApproved2 = async (tokenId, tokenAddress) => {
-    user = await Moralis.User.current();
-    const userAddress = user.get('ethAddress');
-const options = {
-    contractAddress: tokenAddress,
-    functionName: "getApproved",
-    abi: NFTContractABI,
-    params: {
-      tokenId: tokenId
-    },
-};
-  const allowance = await Moralis.executeFunction(options);
-  if (allowance != MARKETPLACE_CONTRACT_ADDRESSV2){
-    const options = {
-        contractAddress: tokenAddress,
-        functionName: "approve",
-        abi: NFTContractABI,
-        params: {
-            to: MARKETPLACE_CONTRACT_ADDRESSV2,
-          tokenId: tokenId
-        },
-    };
-    const approve = await Moralis.executeFunction(options);}
-}
 // Payment Token Approval
 ensurePaymentTokenIsApproved = async (tokenAddress, amount) => {
     user = await Moralis.User.current();
@@ -1165,44 +1066,22 @@ ensurePaymentTokenIsApproved = async (tokenAddress, amount) => {
     const userAddress = user.get('ethAddress');
     console.log(walletProvider);
     const contract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
-
-    if (walletProvider == 'walletconnect') {
-    const approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({provider: walletProvider, chainId: 56, from: userAddress});
+    const approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({provider: walletProvider, from: userAddress});
     console.log(approvedAddress);
     if (approvedAddress < amount){
-        await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({provider: walletProvider, chainId: 56, from: userAddress});
-    }
-    } else {
-        const approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({from: userAddress});
-        console.log(approvedAddress);
-        if (approvedAddress < amount){
-            await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({from: userAddress});
-        }
+        await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({provider: walletProvider, from: userAddress});
     }
 }
 
 // Mint Token Approval
 ensureMintTokenIsApproved = async (tokenAddress, amount) => {
-    alert(walletProvider);
-    const onftsconverted = Moralis.Units.Token("10000", "18");
-    if (walletProvider == 'walletconnect') {
-        user = await Moralis.User.current();
-        const userAddress = user.get('ethAddress');
-        const contract = new web3.eth.Contract(mintTokenContractAbi, tokenAddress);
-        const approvedAddress = await contract.methods.allowance(userAddress, NFT_CONTRACT_ADDRESS).call({provider: walletProvider, chainId: 56, from: userAddress}); 
-        console.log(approvedAddress)
-        if (approvedAddress < 1000){
-            await contract.methods.approve(NFT_CONTRACT_ADDRESS, onftsconverted).send({provider: walletProvider, chainId: 56, from: userAddress});
-        }
-    } else {
     user = await Moralis.User.current();
     const userAddress = user.get('ethAddress');
     const contract = new web3.eth.Contract(mintTokenContractAbi, tokenAddress);
-    const approvedAddress = await contract.methods.allowance(userAddress, NFT_CONTRACT_ADDRESS).call({from: userAddress});
+    const approvedAddress = await contract.methods.allowance(userAddress, TOKEN_CONTRACT_ADDRESS).call({from: userAddress});
     console.log(approvedAddress)
     if (approvedAddress < 1000){
-        await contract.methods.approve(NFT_CONTRACT_ADDRESS, onftsconverted).send({from: userAddress});
-    }
+        await contract.methods.approve(TOKEN_CONTRACT_ADDRESS, web3.utils.toWei('1', 'tether')).send({from: userAddress});
     }
 }
 
@@ -1249,71 +1128,86 @@ removeItem = async (item) => {
 
 //Load User
 loadBalances = async () => {
-user = await Moralis.User.current(); 
-if (user){ 
-    earlyHoldersBalance = null;
-//     const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
-//     const query = new Moralis.Query(BscTokenBalance);
-//     query.equalTo("token_address", onftsAddress);
-//     query.equalTo("address", user.get('ethAddress'));
-//     const results = await query.find();
-//     onftsBalanceBN = 0;
-// // Do something with the returned Moralis.Object values
-// for (let i = 0; i < results.length; i++) {
-//     const object = results[i];
-//     //alert(object.id + ' - ' + object.get('balance'));
-//     const onftsBalance1 = object.get('balance');
-//     onftsBalanceBN = new BigNumber(onftsBalance1).div(1000000000).div(1000000000);
-//     onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(onftsPrice);
-//     console.log(onftsBalance1);
- 
-// };
+    user = await Moralis.User.current(); 
+    if (user){ 
+        earlyHoldersBalance = null;
+    //     const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
+    //     const query = new Moralis.Query(BscTokenBalance);
+    //     query.equalTo("token_address", onftsAddress);
+    //     query.equalTo("address", user.get('ethAddress'));
+    //     const results = await query.find();
+    //     onftsBalanceBN = 0;
+    // // Do something with the returned Moralis.Object values
+    // for (let i = 0; i < results.length; i++) {
+    //     const object = results[i];
+    //     //alert(object.id + ' - ' + object.get('balance'));
+    //     const onftsBalance1 = object.get('balance');
+    //     onftsBalanceBN = new BigNumber(onftsBalance1).div(1000000000).div(1000000000);
+    //     onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(onftsPrice);
+    //     console.log(onftsBalance1);
+     
+    // };
+    
+    // query.equalTo("token_address", onftsAddress);
+    // query.equalTo("address", user.get('ethAddress'));
+    // const results1 = await query.find();
+    // //alert("Successfully retrieved " + results1.length + " balance.");
+    // // Do something with the returned Moralis.Object values
+    // for (let i = 0; i < results1.length; i++) {
+    // const object1 = results1[i];
+    // //alert(object.id + ' - ' + object.get('balance'));
+    // const mintTokenBalance = object1.get('balance');
+    // mintTokenBalanceBN = new BigNumber(mintTokenBalance).div(1000000000).div(1000000000);
+    // console.log(mintTokenBalance);
+    // }; 
+    
+    const BscNFTOwners = Moralis.Object.extend("BscNFTOwners");
+    const query2 = new Moralis.Query(BscNFTOwners);
+    query2.equalTo("token_address", onftsEarlyHoldersNFTAddress);
+    query2.equalTo("owner_of", user.get('ethAddress'));
+    const results2 = await query2.find();
+    // Do something with the returned Moralis.Object values
+    for (let i = 0; i < results2.length; i++) {
+    const object2 = results2[i];
+    earlyHoldersBalance = object2.get('token_id');
+    console.log(object2.get('token_id'));
+    if (earlyHoldersBalance !== null) {
+        console.log(object2.get('token_id'));}
+    };
+    
+    
+    
+    const options = { chain: "bsc" };
+    const balance = await Moralis.Web3API.account.getTokenBalances(options);
+    console.log(balance);
+    if (balance.length != 0) {
+        const tokenAddress =  "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b"; // You can specify for example: tokenAddress, name or symbol
+        const tokenBalance = balance.find((token) => token.token_address === tokenAddress);
+        console.log(tokenBalance.balance);
+        onftsBalance = tokenBalance.balance
+        onftsBalanceBN = new BigNumber(onftsBalance).div(1000000000).div(1000000000);
+        onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(onftsPrice);
+    } else {
+        onftsBalance = 0
+        onftsBalanceBN = new BigNumber(onftsBalance).div(1000000000).div(1000000000);
+        onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(onftsPrice);
+        console.log(onftsBalance);
+    }}
+    }
 
-// query.equalTo("token_address", onftsAddress);
-// query.equalTo("address", user.get('ethAddress'));
-// const results1 = await query.find();
-// //alert("Successfully retrieved " + results1.length + " balance.");
-// // Do something with the returned Moralis.Object values
-// for (let i = 0; i < results1.length; i++) {
-// const object1 = results1[i];
-// //alert(object.id + ' - ' + object.get('balance'));
-// const mintTokenBalance = object1.get('balance');
-// mintTokenBalanceBN = new BigNumber(mintTokenBalance).div(1000000000).div(1000000000);
-// console.log(mintTokenBalance);
-// }; 
-
-const BscNFTOwners = Moralis.Object.extend("BscNFTOwners");
-const query2 = new Moralis.Query(BscNFTOwners);
-query2.equalTo("token_address", onftsEarlyHoldersNFTAddress);
-query2.equalTo("owner_of", user.get('ethAddress'));
-const results2 = await query2.find();
-// Do something with the returned Moralis.Object values
-for (let i = 0; i < results2.length; i++) {
-const object2 = results2[i];
-earlyHoldersBalance = object2.get('token_id');
-console.log(object2.get('token_id'));
-if (earlyHoldersBalance !== null) {
-    console.log(object2.get('token_id'));}
-};
-
-
-
-const options = { chain: "bsc" };
-const balance = await Moralis.Web3API.account.getTokenBalances(options);
-console.log(balance);
-if (balance.length != 0) {
-    const tokenAddress =  "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b"; // You can specify for example: tokenAddress, name or symbol
-    const tokenBalance = balance.find((token) => token.token_address === tokenAddress);
-    console.log(tokenBalance.balance);
-    onftsBalance = tokenBalance.balance
-    onftsBalanceBN = new BigNumber(onftsBalance).div(1000000000).div(1000000000);
-    onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(onftsPrice);
-} else {
-    onftsBalance = 0
-    onftsBalanceBN = new BigNumber(onftsBalance).div(1000000000).div(1000000000);
-    onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(onftsPrice);
-    console.log(onftsBalance);
-}}
+//Handle User Levels
+checkUserLevel = async () => {
+    const level1req = 100;
+   
+    if (onftsBalanceUSDBN > 100 < 500 && earlyHoldersBalance == null) {
+    userLevel = 2;
+    } else if (onftsBalanceUSDBN > 500 && earlyHoldersBalance == null) {
+    userLevel = 3;
+    } else if (earlyHoldersBalance !== null) {
+        userLevel = 4; 
+    } else {
+        userLevel = 1;
+    }
 }
 
 //Buy Crypto
@@ -1322,13 +1216,13 @@ buyCrypto = async () => {
         const userAddress = user.get('ethAddress');
         
         let response = await Moralis.Plugins.fiat.buy({ coin: "BNB_BEP20", receiver: userAddress,}, {disableTriggers: true});
-        console.log(response);
+        console.log(response.data);
         $('#buyCryptoModal').modal('show');
         document.getElementById('buyCryptoModalInner').style.display = 'block';
     document.getElementById('buyCryptoModalInner').src = response.data;
 
      } else {
-        let response = await Moralis.Plugins.fiat.buy({ coin: "BNB_BEP20"}, {disableTriggers: true});
+        let response = await Moralis.Plugins.fiat.buy({ coin: "BNB_BEP20", receiver: '',}, {disableTriggers: true});
         console.log(respone);
         $('#buyCryptoModal').modal('show');
          document.getElementById('buyCryptoModalInner').style.display = 'block';
@@ -1337,18 +1231,243 @@ buyCrypto = async () => {
  }
 
 
-// Get Token Stats
-getTokenStats = async () => {
-    if (user) {
-var totalSupply = await paymentTokenContract.methods.totalSupply().call({from: user.get('ethAddress')});
-console.log(totalSupply);
-var marketCap = Number(totalSupply * onftsPrice / 1000000000 / 1000000000);
-var marketCapFinal = marketCap.toLocaleString()
-console.log(marketCapFinal);
+
+// Fetch Coin Price
+fetchLiveCoinData = async () => {
+    var currentTime = Date.now();
+    console.log(currentTime);
+    var yesterdayTime = currentTime - 86400000 * 7;
+console.log(currentTime);
+console.log(yesterdayTime);
+    const response = await fetch(new Request('https://api.livecoinwatch.com/coins/single/history'), {
+        method: 'POST',
+        headers: new Headers({
+          'content-type': 'application/json',
+          'x-api-key': '7c49a6ef-ab71-4f3b-8a07-6ae9220b2bd3'
+        }),
+        body: JSON.stringify({
+            currency: 'USD',
+            code: 'ONFTS',
+            start: yesterdayTime,
+            end: currentTime,
+            meta: true
+          })
+        })
+    .then((response) => {
+        
+    
+        return response.json();
+    })
+
+    mcapHistoryFirst = response.history[0].rate;
+    mcapHistoryLast = response.history[4].rate;
+
+    volumeHistoryFirst = response.history[0].volume;
+    volumeHistoryLast = response.history[4].volume;
+    volumeHistoryLastText = volumeHistoryLast.toLocaleString();
+
+
+    volumePercentageChange = volumeHistoryLast / volumeHistoryFirst * 100 - 100;
+    volumePercentageChangeBool = Math.sign(volumePercentageChange);
+    volumePercentageChangeText = volumePercentageChange.toLocaleString();
+
+    mcapPercentageChange = mcapHistoryLast / mcapHistoryFirst * 100 - 100;
+    mcapPercentageChangeBool = Math.sign(mcapPercentageChange);
+    mcapPercentageChangeText = mcapPercentageChange.toLocaleString();
+
+    console.log(mcapPercentageChangeText);
+    console.log(mcapPercentageChangeBool);
+    
+    document.getElementById("onftsDailyVolumeInfo").innerText = "$" + volumeHistoryLastText ;
+    document.getElementById("onftsDailyVolumeInfoTrend").innerText = " " + volumePercentageChangeText + "% (24hrs)" ;
+    if (volumePercentageChangeBool === 1) {
+        document.getElementById("onftsDailyVolumeInfoTrend").classList.add('positive-number', 'fas', 'fa-angle-double-up');
     } else {
-        console.log("login");
+
+    document.getElementById("onftsDailyVolumeInfoTrend").classList.add('negative-number', 'fas', 'fa-angle-double-down');
     }
-}   
+
+
+
+    document.getElementById("onftsMarketcapInfoTrend").innerText = " " + mcapPercentageChangeText + "% (24hrs)" ;
+    if (mcapPercentageChangeBool === 1) {
+        document.getElementById("onftsMarketcapInfoTrend").classList.add('positive-number', 'fas', 'fa-angle-double-up');
+    } else {
+
+    document.getElementById("onftsMarketcapInfoTrend").classList.add('negative-number', 'fas', 'fa-angle-double-down');
+    }
+    if (user){
+
+    
+    if (onftsBalanceBN > 1) {
+        var onftsBalanceNumber = Number(onftsBalanceBN);
+        var onftsBalanceText = onftsBalanceNumber.toLocaleString();
+        console.log(onftsBalanceText);
+        document.getElementById("onftsBalanceInfo").innerText = onftsBalanceText + " $ONFTs";
+    }
+    }
+}
+
+function handleTokenSwapModal(side) {
+    currentSelectSide = side;
+    $('#tokenSwapModal').modal('show');
+}
+
+async function renderInterface() {
+    if(currentTrade.from){
+    document.getElementById("from_token_img").src = currentTrade.from.logoURI;
+    document.getElementById("from_token_txt").innerHTML = currentTrade.from.symbol;
+    if (user) {await getQuoteBalancesFrom()};
+    }
+
+    if(currentTrade.to){
+    document.getElementById("to_token_img").src = currentTrade.to.logoURI;
+    document.getElementById("to_token_txt").innerHTML = currentTrade.to.symbol;
+    if (user) {await getQuoteBalancesTo()};
+    }
+}
+
+async function getQuoteBalancesFrom() {
+    console.log(currentTrade.from.address);
+    if (currentTrade.from.symbol !== "BNB") {
+    const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
+    const query = new Moralis.Query(BscTokenBalance);
+    query.equalTo("token_address", currentTrade.from.address);
+    query.equalTo("address", user.get('ethAddress'));
+    const results = await query.find();
+    console.log(results);
+if (results.length > 0) {
+for (let i = 0; i < results.length; i++) {
+    const object = results[i];
+    //alert(object.id + ' - ' + object.get('balance'));
+    const currentTradeFromBalance = new Number (object.get('balance')) / 10**currentTrade.from.decimals;    
+    console.log(currentTradeFromBalance);
+    document.getElementById("from_balance").innerText = "Bal: " + currentTradeFromBalance.toLocaleString();
+        };
+    } else {
+        document.getElementById("from_balance").innerText = "Bal: " + 0;
+
+    };
+    } else {
+        const BscBalance = Moralis.Object.extend("BscBalance");
+        const query = new Moralis.Query(BscBalance);
+        query.equalTo("address", user.get('ethAddress'));
+        const results = await query.find();
+        console.log(results);
+        if (results.length > 0) {
+            for (let i = 0; i < results.length; i++) {
+            const object = results[i];
+            //alert(object.id + ' - ' + object.get('balance'));
+            const currentTradeFromBalance = new Number (object.get('balance')) / 10**currentTrade.from.decimals;    
+            console.log(currentTradeFromBalance);
+            document.getElementById("from_balance").innerText = "Bal: " +  currentTradeFromBalance.toLocaleString();
+            };
+        } else {
+            document.getElementById("from_balance").innerText = "Bal: " +  0;
+        }
+    };
+};
+
+async function getQuoteBalancesTo() {
+    console.log(currentTrade.to.address);
+    if (currentTrade.to.symbol !== "BNB") {
+        const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
+        const query = new Moralis.Query(BscTokenBalance);
+        query.equalTo("token_address", currentTrade.to.address);
+        query.equalTo("address", user.get('ethAddress'));
+        const results = await query.find();
+        console.log(results);
+        if (results.length > 0) {
+            for (let i = 0; i < results.length; i++) {
+                const object = results[i];
+                //alert(object.id + ' - ' + object.get('balance'));
+                const currentTradeToBalance = new Number (object.get('balance')) / 10**currentTrade.to.decimals;    
+                console.log(currentTradeToBalance);
+                document.getElementById("to_balance").innerText = "Bal: " +  currentTradeToBalance.toLocaleString();
+            };
+        } else {
+            document.getElementById("to_balance").innerText = "Bal: " +  0;
+        };
+    } else {
+        const BscBalance = Moralis.Object.extend("BscBalance");
+        const query = new Moralis.Query(BscBalance);
+        query.equalTo("address", user.get('ethAddress'));
+        const results = await query.find();
+        console.log(results);
+        if (results.length > 0) {
+        for (let i = 0; i < results.length; i++) {
+        const object = results[i];
+            //alert(object.id + ' - ' + object.get('balance'));
+            const currentTradeToBalance = new Number (object.get('balance')) / 10**currentTrade.to.decimals;    
+            console.log(currentTradeToBalance);
+            document.getElementById("to_balance").innerText = "Bal: " +  currentTradeToBalance.toLocaleString();
+            };
+        } else {
+            document.getElementById("to_balance").innerText = "Bal: " +  0;
+        };
+    };
+};
+
+async function getQuote() {
+    if(!currentTrade.from || !currentTrade.to || !document.getElementById("from_amount").value) return;
+    
+    var fromAmountValue = document.getElementById("from_amount").value;
+    let amountBN = Number (fromAmountValue * 10**currentTrade.from.decimals);
+    let amount = Moralis.Units.ETH(fromAmountValue, currentTrade.from.decimals);
+    //let amount = Number (Moralis.Units.ETH(fromAmountValue));
+    console.log(amountBN);
+  console.log(amount);
+    const quote = await Moralis.Plugins.oneInch.quote({
+       chain: 'bsc',
+       fromTokenAddress: currentTrade.from.address,
+       toTokenAddress: currentTrade.to.address,
+       amount: amount,
+   })
+   console.log(quote);
+   document.getElementById("to_amount").value = quote.toTokenAmount / 10**currentTrade.to.decimals;
+   document.getElementById("gas_amount").innerHTML = quote.estimatedGas;
+
+}
+
+async function trySwap() {
+    alert("tryingswap");
+    let address = await user.get('ethAddress');
+    var fromAmountValue = document.getElementById("from_amount").value;
+    let amount = Moralis.Units.ETH(fromAmountValue, currentTrade.from.decimals);
+
+    //let amount = Number (fromAmountValue * 10**currentTrade.from.decimals);
+    if (currentTrade.from.symbol !== "BNB") {
+        const allowance = await Moralis.Plugins.oneInch.hasAllowance({
+            chain: 'bsc',
+            fromTokenAddress: currentTrade.from.address,
+            fromAddress: address,
+            amount: amount,
+        })
+        console.log(allowance);
+        if (!allowance){
+            await Moralis.Plugins.oneInch.approve({
+                chain: 'bsc',
+                tokenAddress: currentTrade.from.address,
+                fromAddress: address,
+                amount: amount,
+            });
+        }
+    }
+    let receipt = await doSwap(address, amount);
+    console.log(receipt);
+}
+
+async function doSwap(userAddress, amount) {
+    return Moralis.Plugins.oneInch.swap({
+        chain: 'bsc',
+        fromTokenAddress: currentTrade.from.address,
+        toTokenAddress: currentTrade.to.address,
+        amount: amount,
+        fromAddress: userAddress,
+        slippage: 8,
+    })
+
+}
 
 // Hide Elements
 hideElement = (element) => element.style.display = "none";
@@ -1368,7 +1487,14 @@ const userDashboardButton = document.getElementById("btnUserDashboard");
 const userLogoutButton = document.getElementById("btnLogout1");
 userLogoutButton.onclick = logout;
 const buyCryptoButton = document.getElementById("buyCryptoButton");
-buyCryptoButton.onclick = buyCrypto
+buyCryptoButton.onclick = buyCrypto;
+
+
+//document.getElementById("from_amount").onkeydown = getQuote; //Keystroke
+//document.getElementById("from_amount").onpaste = getQuote; //IE, FF3
+//document.getElementById("from_amount").oninput = getQuote; //FF,Opera,Chrome,Safari
+
+
 
 // Notification
 const notificationHeader = document.getElementById("notificationHeader")
@@ -1395,7 +1521,6 @@ const createItemForm = document.getElementById("createItem");
 const createItemNameField = document.getElementById("txtCreateItemName");
 const createItemDescriptionField = document.getElementById("txtCreateItemDescription");
 const createItemPriceField = document.getElementById("numCreateItemPrice");
-const secretNftFile = document.getElementById("secretNftFile");
 const createItemRoyaltyFee = document.getElementById("numCreateRoyaltyFee");
 const createItemCreator = document.getElementById("textCreateItemCreator");
 const createItemStatusField = document.getElementById("selectCreateItemStatus");
@@ -1440,6 +1565,8 @@ const addToMarketplaceSwitch = document.getElementById("customSwitch1");
 const addSecretFileSwitch = document.getElementById("customSwitch3"); 
 const devSwitch = document.getElementById("customSwitch2");
 const devSwitchButton = document.getElementById("devSwitch");
+const sendToCustomAddressSwitch = document.getElementById("customSwitch5"); 
+const changeCreatorAddressSwitch = document.getElementById("customSwitch4"); 
 const itemsForSaleList = document.getElementById("itemsForSale");
 const itemsForSaleUI = document.getElementById("itemsForSaleUI");
 
@@ -1477,6 +1604,42 @@ secretFileEnableSwitch = async() => {
     }
 }
 
+changeCreatorAddressEnableSwitch = async() => {
+    
+    if (changeCreatorAddressSwitchValue == true) {
+        changeCreatorAddressSwitchValue = false;
+        console.log(changeCreatorAddressSwitchValue);
+        createItemCreator.disabled = 1;
+        sendToCustomAddressSwitch.disabled = 1;
+    }
+    else if (changeCreatorAddressSwitch.checked) {
+        
+        changeCreatorAddressSwitchValue = true;
+        console.log(changeCreatorAddressSwitchValue);
+        createItemCreator.disabled = 0;
+        sendToCustomAddressSwitch.disabled = 0;
+        
+        return;
+    }
+}
+
+sendToCustomAddressEnableSwitch = async() => {
+    
+    if (sendToCustomAddressSwitchValue == true) {
+        sendToCustomAddressSwitchValue = false;
+        console.log(sendToCustomAddressSwitchValue);
+      return;
+    }
+    else if (sendToCustomAddressSwitch.checked) {
+        
+        sendToCustomAddressSwitchValue = true;
+        console.log(sendToCustomAddressSwitchValue);
+        
+        
+        return;
+    }
+}
+
 //Mint NFT Dev Options
 devsBox = async() => {
     if (createNFTValue == 1) {
@@ -1489,6 +1652,7 @@ devsBox = async() => {
         return;
     }
 }
+
 
 
 

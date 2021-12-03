@@ -1159,7 +1159,7 @@ userConnectButton1.onclick = () => $('#connectWalletModal').modal('show')
 const userProfileButton = document.getElementById("btnUserInfo");
 userProfileButton.onclick = openUserInfo;
 const openCreateItemButton = document.getElementById("btnOpenCreateItem");
-openCreateItemButton.onclick = handleOpenCreateItem;
+// openCreateItemButton.onclick = handleOpenCreateItem;
 const userSubscriptionsButton = document.getElementById("btnUserSubscriptions");
 const userDashboardButton = document.getElementById("btnUserDashboard");
 const userLogoutButton = document.getElementById("btnLogout1");
