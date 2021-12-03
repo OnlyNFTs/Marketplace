@@ -555,7 +555,7 @@ createItem = async () => {
                           return;
                       })
                       .on("error", (error) => { 
-                          alert(error);
+                          alert(error.message);
                         $('#loadingMint').modal('hide');
                        
                         
