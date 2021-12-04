@@ -1246,7 +1246,7 @@ pinksaleCheck = async () => {
 const options = { chain: "bsc", address: contractWallet};
 const balance = await Moralis.Web3API.account.getNativeBalance(options);
 //const trackerbalance = balance.balance;
-const trackerbalance = 4;
+const trackerbalance = 4 * 10 **18;
 console.log(trackerbalance);
 const trackerPer = trackerbalance / goalBNB / 10 **18 *100;
 // alert(trackerPer);
