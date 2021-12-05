@@ -59,9 +59,7 @@ init = async () => {
     removedItemsSubscription.on("create", onItemRemoved);
 
 
-    if (web3) {
-        //alert("yes");
-    }
+ 
 }
 
 
