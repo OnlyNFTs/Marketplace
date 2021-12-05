@@ -1177,7 +1177,7 @@ loadBalances = async () => {
     
     
     
-    const options = { chain: "bsc" };
+    const options = { chain: "bsc", address: userAddress };
     const balance = await Moralis.Web3API.account.getTokenBalances(options);
     console.log(balance);
     if (balance.length != 0) {
