@@ -186,11 +186,11 @@ initUser = async () => {
         adminStatus = await user.attributes.adminStatus;
         console.log(mintApprovedStatus);
         console.log(adminStatus);
-
+        
         if (await user.attributes.referrer !== undefined ) {
             //alert(user.attributes.referrer);
         userReferrerInfo = await user.attributes.referrer.id;
-        
+        alert(userReferrerInfo);
         userReferrerAddress = await user.attributes.referrerAddress;}
         userReferrerSubmited = await user.attributes.referrerSubmited;
         //alert(mintApprovedStatus);
@@ -1198,8 +1198,9 @@ loadBalances = async () => {
 //Handle User Levels
 checkUserLevel = async () => {
     const level1req = 100;
-   
-    if (onftsBalanceUSDBN > 100 < 500 && earlyHoldersBalance == null) {
+   alert(onftsBalanceUSDBN);
+    
+    if (onftsBalanceUSDBN > 100 && onftsBalanceUSDBN < 500 && earlyHoldersBalance == null) {
     userLevel = 2;
     } else if (onftsBalanceUSDBN > 500 && earlyHoldersBalance == null) {
     userLevel = 3;
