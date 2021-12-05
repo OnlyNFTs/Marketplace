@@ -721,12 +721,12 @@ button:focus,
 .call-to-action-app {
   text-align: center;
 }
-
+/* 
 .call-to-action-app h2,
 .call-to-action-app p,
 .call-to-action-app a {
   color: #fff !important;
-}
+} */
 
 .call-to-action-app p {
   margin-bottom: 60px;
