@@ -188,10 +188,12 @@ initUser = async () => {
         console.log(adminStatus);
         
         if (await user.attributes.referrer !== undefined ) {
-            //alert(user.attributes.referrer);
+            
         userReferrerInfo = await user.attributes.referrer.id;
-        alert(userReferrerInfo);
-        userReferrerAddress = await user.attributes.referrerAddress;}
+        userReferrerAddress = await user.attributes.referrer.attributes.ethAddress;
+        alert(userReferrerAddress);
+        }
+        //userReferrerAddress = await user.attributes.referrer.attributes.ethAddress;}
         userReferrerSubmited = await user.attributes.referrerSubmited;
         //alert(mintApprovedStatus);
         hideElement(userConnectButton);
@@ -233,16 +235,14 @@ openUserInfo = async () => {
         userUsernameField.value = user.get('username');
         userUniqueId = user.id;
         
-        if (mintApprovedStatus == true) {
-        document.getElementById("refferalId").innerText = userUniqueId;
+        if (userReferrerAddress) {
+        document.getElementById("refferalId").innerText = userReferrerAddress;
         } else {
             document.getElementById("refferalId").innerText = "Please wait for approval"; 
         }
 
-        if (earlyHoldersBalance != null) {
-            document.getElementById("earlyNFT").innerText = "Level: Early Adopter";
-            } else {
-                document.getElementById("earlyNFT").innerText = "Level 1"; 
+        if (userLevel) {
+                document.getElementById("earlyNFT").innerText = "Level: " + userLevel; 
             }
 
 
@@ -264,8 +264,15 @@ openUserInfo = async () => {
 
 //Submit Referral
 submitRefferal = async () => {
-    if (userReferrerField.value.length == 24) {
-        user.set('referrerSubmited', userReferrerField.value);
+    const userReferrerFieldVal = userReferrerField.value;
+        const params = {objectId: userReferrerFieldVal};
+        const checkReferrerId = await Moralis.Cloud.run('checkReferrerId', params);
+        console.log(checkReferrerId);
+    if (checkReferrerId) {
+        
+        
+        user.set('referrer', checkReferrerId);
+
         await user.save();
         alert("Submited!");
     } else  {
@@ -297,7 +304,7 @@ handleOpenCreateItem = async () => {
     
     if (mintApprovedStatus == false) {
     
-        if (userReferrerSubmited == null) {
+        if (!userReferrerAddress) {
             //alert("enter referrer id");
             $('#enterReferrer').modal('show');
         } else {
@@ -332,7 +339,13 @@ openCreateItem = async () => {
         
 
         if (mintApprovedStatus != true) {
-            $('#enterReferrer').modal('show');
+            if (!userReferrerAddress) {
+                //alert("enter referrer id");
+                $('#enterReferrer').modal('show');
+            } else {
+                //alert("await for approval");
+                $('#waitforApproval').modal('show');
+            }
         }
         if (userLevel >= 1 && mintApprovedStatus == true){
             document.getElementById("lvl1").classList.add('ti-check');

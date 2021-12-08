@@ -15,7 +15,7 @@ onftsAddress = "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b";
 // Initialise
 init = async () => {
     await Moralis.start({ serverUrl, appId });
-    
+
     // initWeb3();
     hideElement(nsfwButton);
     hideElement(connectWalletModal);
@@ -24,24 +24,24 @@ init = async () => {
     hideElement(loadingMintForm);
     // hideElement(musicPlayer);
     hideElement(itemsForSaleUI);
-  
-     window.addEventListener('load', function() {
-         checkWalletProvider();
-        });
+
+    window.addEventListener('load', function () {
+        checkWalletProvider();
+    });
     //await checkWalletProvider();
     await checkURL();
     // $("#ageVer").modal('show');
     await fetchCoinPrice();
     await loadItems();
     await initUser();
-   // await getTokenStats();
- 
+    // await getTokenStats();
+
     await Moralis.initPlugins();
     await getMarketQuote();
-    
 
 
-   
+
+
     //  loadSong(songs[songIndex]);
     // await $('#musicPlayer').modal('show');
     // // await $('#musicPlayer').modal('hide');
@@ -59,42 +59,42 @@ init = async () => {
     removedItemsSubscription.on("create", onItemRemoved);
 
 
- 
+
 }
 
 
 getSupportedTokens = async () => {
     const tokens = await Moralis.Plugins.oneInch.getSupportedTokens({
-      chain: 'bsc', // The blockchain you want to use (eth/bsc/polygon)
+        chain: 'bsc', // The blockchain you want to use (eth/bsc/polygon)
     });
     console.log(tokens);
-  }
+}
 
-  getMarketQuote = async () => {
-       var priceTest = new BigNumber(onftsPriceBNB * 5000000 *10);
-       console.log(priceTest);
-       var pricelol = priceTest.toString();
-       console.log(pricelol);
+getMarketQuote = async () => {
+    var priceTest = new BigNumber(onftsPriceBNB * 5000000 * 10);
+    console.log(priceTest);
+    var pricelol = priceTest.toString();
+    console.log(pricelol);
     const quote = await Moralis.Plugins.oneInch.quote({
-        
-      chain: 'bsc', // The blockchain you want to use (eth/bsc/polygon)
-      fromTokenAddress: WBNB_TOKEN_ADDRESS, // The token you want to swap
-      toTokenAddress: PAYMENT_TOKEN_ADDRESS, // The token you want to receive
-      amount: pricelol,
+
+        chain: 'bsc', // The blockchain you want to use (eth/bsc/polygon)
+        fromTokenAddress: WBNB_TOKEN_ADDRESS, // The token you want to swap
+        toTokenAddress: PAYMENT_TOKEN_ADDRESS, // The token you want to receive
+        amount: pricelol,
     });
     console.log(quote);
     console.log(quote.toTokenAmount);
     if (quote.toTokenAmount) {
         const quote2 = await Moralis.Plugins.oneInch.quote({
-        chain: 'bsc', // The blockchain you want to use (eth/bsc/polygon)
-        fromTokenAddress: PAYMENT_TOKEN_ADDRESS, // The token you want to swap
-        toTokenAddress: WBNB_TOKEN_ADDRESS, // The token you want to receive
-        amount: 1,
-      });
-      console.log(quote2);
-      
+            chain: 'bsc', // The blockchain you want to use (eth/bsc/polygon)
+            fromTokenAddress: PAYMENT_TOKEN_ADDRESS, // The token you want to swap
+            toTokenAddress: WBNB_TOKEN_ADDRESS, // The token you want to receive
+            amount: 1,
+        });
+        console.log(quote2);
+
     }
-  }
+}
 
 
 
@@ -103,19 +103,18 @@ const pancakeswap_api_url = 'https://api.pancakeswap.info/api/v2/tokens/0x134bbb
 
 // Fetch Coin Price
 fetchCoinPrice = async () => {
-const response = await fetch(pancakeswap_api_url)
-.then((response) => {
-    return response.json();
-})
-.then((data) => {
-    var onftsApiData = data.data;
-    console.log(onftsApiData);
-    onftsPrice = onftsApiData.price;
-    onftsPriceBNB = onftsApiData.price_BNB;
+    const checkPricing = await Moralis.Web3API.token.getTokenPrice({ chain: 'bsc', address: "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b" });
+    console.log(checkPricing);
+    onftsPrice = checkPricing.usdPrice;
+    console.log(onftsPrice);
+    onftsPriceBNB = checkPricing.nativePrice.value;
+
+    console.log(onftsPriceBNB);
     onftsPriceBN = new BigNumber(onftsPrice);
     onftsPriceBNBBN = new BigNumber(onftsPriceBNB);
     document.getElementById("onftspricebutton").innerText = `$${onftsPriceBN.dp(6)}`;
-})
+    return (onftsPrice, onftsPriceBNB);
+
 }
 
 // Big Number Config
@@ -129,60 +128,60 @@ BigNumber.config({
 // On Item Sold Cloud Function
 onItemSold = async (item) => {
     const listing = document.getElementById(`item-${item.attributes.uid}`);
-    if (listing){
+    if (listing) {
         listing.parentNode.removeChild(listing);
     }
-    
+
     user = await Moralis.User.current();
-    if (user){
-        const params = {uid: `${item.attributes.uid}`};
+    if (user) {
+        const params = { uid: `${item.attributes.uid}` };
         const soldItem = await Moralis.Cloud.run('getItem', params);
-        if (soldItem){
-            if (user.get('accounts').includes(item.attributes.buyer)){
+        if (soldItem) {
+            if (user.get('accounts').includes(item.attributes.buyer)) {
                 getAndRenderItemData(soldItem, renderUserItem);
             }
 
             const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
             if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
-          
+
         }
-   
+
     }
 }
 
 // Item Removed Cloud Function
 onItemRemoved = async (item) => {
     const listing = document.getElementById(`item-${item.attributes.uid}`);
-    if (listing){
+    if (listing) {
         listing.parentNode.removeChild(listing);
     }
-    
+
     user = await Moralis.User.current();
-    if (user){
-        const params = {uid: `${item.attributes.uid}`};
+    if (user) {
+        const params = { uid: `${item.attributes.uid}` };
         const soldItem = await Moralis.Cloud.run('getItem', params);
-        if (soldItem){
-            if (user.get('accounts').includes(item.attributes.buyer)){
+        if (soldItem) {
+            if (user.get('accounts').includes(item.attributes.buyer)) {
                 getAndRenderItemData(soldItem, renderUserItem);
             }
 
             const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
             if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
-          
+
         }
-   
+
     }
 }
 
 
 // On Item added cloud function
 onItemAdded = async (item) => {
-    const params = {uid: `${item.attributes.uid}`};
+    const params = { uid: `${item.attributes.uid}` };
     const addedItem = await Moralis.Cloud.run('getItem', params);
-    if (addedItem){
+    if (addedItem) {
         user = await Moralis.User.current();
-        if (user){
-            if (user.get('accounts').includes(addedItem.ownerOf)){
+        if (user) {
+            if (user.get('accounts').includes(addedItem.ownerOf)) {
                 const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
                 if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
 
@@ -197,18 +196,19 @@ onItemAdded = async (item) => {
 
 // Init User
 initUser = async () => {
-    if (await Moralis.User.current()){
+    if (await Moralis.User.current()) {
         user = await Moralis.User.current();
         mintApprovedStatus = await user.attributes.mintApproved;
         adminStatus = await user.attributes.adminStatus;
         console.log(mintApprovedStatus);
         console.log(adminStatus);
 
-        if (await user.attributes.referrer !== undefined ) {
+        if (await user.attributes.referrer !== undefined) {
             //alert(user.attributes.referrer);
-        userReferrerInfo = await user.attributes.referrer.id;
-        
-        userReferrerAddress = await user.attributes.referrerAddress;}
+            userReferrerInfo = await user.attributes.referrer.id;
+
+            userReferrerAddress = await user.attributes.referrerAddress;
+        }
         userReferrerSubmited = await user.attributes.referrerSubmited;
         //alert(mintApprovedStatus);
         hideElement(userConnectButton);
@@ -223,7 +223,7 @@ initUser = async () => {
         loadBalances();
         loadUserItems();
         loadUserListedItems();
-    }else{
+    } else {
         showElement(userConnectButton);
         showElement(userConnectButton1);
         hideElement(userProfileButton);
@@ -242,43 +242,43 @@ initUser = async () => {
 openUserInfo = async () => {
     user = await Moralis.User.current();
 
-    if (user){    
+    if (user) {
         const email = user.get('email');
-        
-        if(email){
+
+        if (email) {
             userEmailField.value = email;
-        }else{
+        } else {
             userEmailField.value = " ";
         }
         userUsernameField.value = user.get('username');
         userUniqueId = user.id;
-        
+
         if (mintApprovedStatus == true) {
-        document.getElementById("refferalId").innerText = userUniqueId;
+            document.getElementById("refferalId").innerText = userUniqueId;
         } else if (userReferrerSubmited == null) {
-            document.getElementById("refferalId").innerText = "Enter Referral ID"; 
+            document.getElementById("refferalId").innerText = "Enter Referral ID";
         } else {
-            document.getElementById("refferalId").innerText = "Please wait for approval"; 
+            document.getElementById("refferalId").innerText = "Please wait for approval";
         }
 
         if (earlyHoldersBalance != null) {
             document.getElementById("earlyNFT").innerText = "Level: Early Adopter";
-            } else {
-                document.getElementById("earlyNFT").innerText = "Level 1"; 
-            }
+        } else {
+            document.getElementById("earlyNFT").innerText = "Level 1";
+        }
 
 
 
         const userAvatar = user.get('avatar');
-        if(userAvatar){
+        if (userAvatar) {
             userAvatarImg.src = userAvatar.url();
             showElement(userAvatarImg);
-        }else{
+        } else {
             hideElement(userAvatarImg);
         }
 
         $('#userInfo').modal('show');
-    }else{
+    } else {
         login();
     }
 }
@@ -291,7 +291,7 @@ submitRefferal = async () => {
         user.set('referrerSubmited', userReferrerField.value);
         await user.save();
         alert("Submited!");
-    } else  {
+    } else {
         alert("Invalid Refferer ID Entered! Please enter a valid Referrer ID");
     }
     initUser();
@@ -300,10 +300,10 @@ submitRefferal = async () => {
 
 // Save User Info
 saveUserInfo = async () => {
-    
+
     user.set('username', userUsernameField.value);
-    if(userEmailField.value.length > 0){
-    user.set('email', userEmailField.value);
+    if (userEmailField.value.length > 0) {
+        user.set('email', userEmailField.value);
     }
     if (userAvatarFile.files.length > 0) {
         const avatar = new Moralis.File("avatar1.jpg", userAvatarFile.files[0]);
@@ -319,9 +319,9 @@ saveUserInfo = async () => {
 // Handle Open Create Item Modal
 handleOpenCreateItem = async () => {
 
-    
+
     if (mintApprovedStatus == false) {
-    
+
         if (userReferrerSubmited == null) {
             //alert("enter referrer id");
             $('#enterReferrer').modal('show');
@@ -329,25 +329,25 @@ handleOpenCreateItem = async () => {
             //alert("await for approval");
             $('#waitforApproval').modal('show');
         }
-    
-    }else if (mintApprovedStatus == true) {
+
+    } else if (mintApprovedStatus == true) {
         openCreateItem();
     }
-    
+
 }
 
 // Open Create Item Modal
 openCreateItem = async () => {
-    user = await Moralis.User.current(); 
-    if (user){ 
+    user = await Moralis.User.current();
+    if (user) {
         initUser();
-            hideElement(devSwitchButton);
-            devSwitch.disabled = 1;
-            console.log(adminStatus);
-        if (onftsBalanceBN < onftsHoldersMintRequirements) { 
+        hideElement(devSwitchButton);
+        devSwitch.disabled = 1;
+        console.log(adminStatus);
+        if (onftsBalanceBN < onftsHoldersMintRequirements) {
             document.getElementById("btnCreateItem").disabled = 1;
             createItemCreator.disabled = 1;
-        }else if (earlyHoldersBalance !== null) {
+        } else if (earlyHoldersBalance !== null) {
             document.getElementById("mint-fee").innerText = "0";
             document.getElementById("mint-balance").innerText = onftsBalanceBN;
             createItemCreator.disabled = 0;
@@ -355,29 +355,29 @@ openCreateItem = async () => {
 
                 showElement(devSwitchButton);
                 devSwitch.disabled = 0;
-    
-    
+
+
             }
-         
+
         } if (await adminStatus == true) {
 
-                showElement(devSwitchButton);
-                devSwitch.disabled = 0;
-    
-    
-            }
-           
-           document.getElementById("mint-fee").innerText = mintFee;
-           document.getElementById("mint-balance").innerText = onftsBalanceBN;
-           createItemCreator.value = await user.get('ethAddress');
-           createNFTValue = "0";
-           addToMarketplaceValue = "0";
-           addSecretFileSwitchValue = false;
-           createItemPriceField.disabled = 1;
-           secretNftFile.disabled = 1;
-           $('#createItem').modal('show');
-        }else{
-    login();
+            showElement(devSwitchButton);
+            devSwitch.disabled = 0;
+
+
+        }
+
+        document.getElementById("mint-fee").innerText = mintFee;
+        document.getElementById("mint-balance").innerText = onftsBalanceBN;
+        createItemCreator.value = await user.get('ethAddress');
+        createNFTValue = "0";
+        addToMarketplaceValue = "0";
+        addSecretFileSwitchValue = false;
+        createItemPriceField.disabled = 1;
+        secretNftFile.disabled = 1;
+        $('#createItem').modal('show');
+    } else {
+        login();
     }
 }
 
@@ -386,36 +386,36 @@ const supportedNFTContracts = ['test', 'test'];
 // Create Item
 createItem = async () => {
 
-    if (onftsBalanceBN < onftsHoldersMintRequirements) { 
+    if (onftsBalanceBN < onftsHoldersMintRequirements) {
         document.getElementById("btnCreateItem").disabled = 1;
         alert(`Not Enough Mint Tokens! You need atleast ${onftsHoldersMintRequirements} to mint an NFT!`);
         return;
-    } else if (createItemFile.files.length == 0){
+    } else if (createItemFile.files.length == 0) {
         alert("Please select a file!");
         return;
-    } else if (createItemNameField.value.length == 0){
+    } else if (createItemNameField.value.length == 0) {
         alert("Please give the item a name!");
         return;
-    } else if (createItemRoyaltyFee.value.length == 0){
+    } else if (createItemRoyaltyFee.value.length == 0) {
         alert("Please give the item a royalty fee!");
         return;
-    } else if (addToMarketplaceValue == 1){
+    } else if (addToMarketplaceValue == 1) {
         if (createItemPriceField.value.length == 0) {
-        alert("Please give the item a price!");
-        return;
+            alert("Please give the item a price!");
+            return;
         }
-    } else if (createItemPriceField.value > 5000000){
+    } else if (createItemPriceField.value > 5000000) {
         alert("Maximum sell price is 5,000,000 ONFTs!");
         return;
-    } else if (createItemRoyaltyFee.value > 50){
+    } else if (createItemRoyaltyFee.value > 50) {
         alert("Maximum royalty fee is 50!");
         return;
     } else if (addSecretFileSwitchValue == true) {
-        if (secretNftFile.files.length == 0){
-        alert("Please select a secret file or disable the option");
-        return;
+        if (secretNftFile.files.length == 0) {
+            alert("Please select a secret file or disable the option");
+            return;
         }
-    
+
     }
 
     document.getElementById("btnCreateItem").disabled = 1;
@@ -433,26 +433,26 @@ createItem = async () => {
     const creator = await createItemCreator.value;
     loadingProgress.style.width = 10 + "%";
     const royaltyFee = await createItemRoyaltyFee.value;
-    
-    const nftFile = new Moralis.File("nftFile",createItemFile.files[0]);
+
+    const nftFile = new Moralis.File("nftFile", createItemFile.files[0]);
     await nftFile.saveIPFS();
     loadingProgress.style.width = 20 + "%";
     const nftFilePath = nftFile.ipfs();
 
     if (addSecretFileSwitchValue == true) {
-        
+
         file = secretNftFile.files[0];
         const secretFile = new Moralis.File("secretFile", file);
-        await secretFile.save().then(function() {
-        const secretfileURL = secretFile.url();
-        console.log(secretfileURL);
-      }, function(error) {
-        // The file either could not be read, or could not be saved to Moralis.
-      });
-    
+        await secretFile.save().then(function () {
+            const secretfileURL = secretFile.url();
+            console.log(secretfileURL);
+        }, function (error) {
+            // The file either could not be read, or could not be saved to Moralis.
+        });
+
     }
-   
-     const metadata = {
+
+    const metadata = {
         name: createItemNameField.value,
         description: createItemDescriptionField.value,
         image: nftFilePath,
@@ -464,7 +464,7 @@ createItem = async () => {
     };
 
 
-//var Item = Moralis.Object.extend("OnlyNFTs");
+    //var Item = Moralis.Object.extend("OnlyNFTs");
     // var OnlyNFTs = new Item();
     // OnlyNFTs.set('name', createItemNameField.value);
     // OnlyNFTs.set('description', createItemDescriptionField.value);
@@ -480,7 +480,7 @@ createItem = async () => {
     //  OnlyNFTs.save();
 
 
-    const nftFileMetadataFile = new Moralis.File("metadata.json", {base64 : btoa(JSON.stringify(metadata))});
+    const nftFileMetadataFile = new Moralis.File("metadata.json", { base64: btoa(JSON.stringify(metadata)) });
     await nftFileMetadataFile.saveIPFS();
     loadingProgress.style.width = 40 + "%";
     loadingStatus.innerText = "Please confirm transaction for mintfee approval";
@@ -488,87 +488,87 @@ createItem = async () => {
     await ensureMintTokenIsApproved(MINT_TOKEN_ADDRESS);
     loadingProgress.style.width = 50 + "%";
     loadingStatus.innerText = "Please confirm transaction to mint your NFT";
-   
+
     //alert(creator);
-    switch(createNFTValue){
+    switch (createNFTValue) {
 
         case "0":
             //nftId = await mintNft(nftFileMetadataFilePath, royaltyFee, userReferrerAddress);
             // await mintNft(nftFileMetadataFilePath, royaltyFee, userReferrerAddress);
-            
-             const RoyaltyFee = royaltyFee;
-             const user = await Moralis.User.current();
+
+            const RoyaltyFee = royaltyFee;
+            const user = await Moralis.User.current();
             const userAddress = user.get('ethAddress');
-    const createItem = {
-        contractAddress: NFT_CONTRACT_ADDRESS,
-        functionName: "createItemNoFee",
-        abi: NFTContractABI,
-        params: {
-            uri: nftFileMetadataFilePath,
-            royaltyFee: RoyaltyFee,
-            referrer: userReferrerAddress
-          },
-          awaitReceipt: false
-        };
+            const createItem = {
+                contractAddress: NFT_CONTRACT_ADDRESS,
+                functionName: "createItemNoFee",
+                abi: NFTContractABI,
+                params: {
+                    uri: nftFileMetadataFilePath,
+                    royaltyFee: RoyaltyFee,
+                    referrer: userReferrerAddress
+                },
+                awaitReceipt: false
+            };
 
-             tx = await Moralis.executeFunction(createItem);
-             loadingProgress.style.width = 60 + "%";
-                loadingStatus.innerText = "Request Sent - Waiting for blockchain";
+            tx = await Moralis.executeFunction(createItem);
+            loadingProgress.style.width = 60 + "%";
+            loadingStatus.innerText = "Request Sent - Waiting for blockchain";
 
-             await tx.on("transactionHash", (hash) => { 
-                 console.log("hash" + hash); 
-                 loadingProgress.style.width = 70 + "%";
+            await tx.on("transactionHash", (hash) => {
+                console.log("hash" + hash);
+                loadingProgress.style.width = 70 + "%";
                 loadingStatus.innerText = "Hash Confirmed - Waiting for blockchain";
+            })
+            await tx.on("receipt", (receipt) => {
+                console.log("receipt" + receipt);
+                loadingProgress.style.width = 80 + "%";
+                loadingStatus.innerText = "Finalizing - Waiting for blockchain";
+            })
+                .on("confirmation", (confirmationNumber, receipt) => {
+                    console.log(receipt);
+
+                    loadingProgress.style.width = 100 + "%";
+                    loadingStatus.innerText = "NFT Successfully minted!";
+
+                    return;
                 })
-                await tx.on("receipt", (receipt) => { 
-                     console.log("receipt" + receipt); 
-                     loadingProgress.style.width = 80 + "%";
-                          loadingStatus.innerText = "Finalizing - Waiting for blockchain";
-                    })
-                  .on("confirmation", (confirmationNumber, receipt) => {
-                          console.log(receipt);
-                          
-                           loadingProgress.style.width = 100 + "%";
-                           loadingStatus.innerText = "NFT Successfully minted!";
-                          
-                          return;
-                      })
-                      .on("error", (error) => { 
-                          alert(error);
-                        document.getElementById("btnCreateItem").disabled = 0;
-                       
-                        $('#loadingMint').modal('hide');
-                        $('#createItem').modal('show');
-                        
-                     });
-                     
-                break;
+                .on("error", (error) => {
+                    alert(error);
+                    document.getElementById("btnCreateItem").disabled = 0;
+
+                    $('#loadingMint').modal('hide');
+                    $('#createItem').modal('show');
+
+                });
+
+            break;
         case "1":
 
-        nftId1 = await mintEANft(nftFileMetadataFilePath, creator, royaltyFee, userReferrerAddress);
-       
-        var symbol = await earlyHoldersContract.methods.symbol().call({from: user.get('ethAddress')});
-        var name = await earlyHoldersContract.methods.name().call({from: user.get('ethAddress')}); 
-        var Item = Moralis.Object.extend("EANFT");
-        var eaNFT = new Item();
-        eaNFT.set('name', createItemNameField.value);
-        eaNFT.set('description', createItemDescriptionField.value);
-        eaNFT.set('owner_of', creator);
-        eaNFT.set('creator_address', creator);
-        eaNFT.set('royaltyFee', royaltyFee);
-        eaNFT.set('token_address', onftsEarlyHoldersNFTAddress);
-        eaNFT.set('token_id', nftId1);
-        eaNFT.set('token_uri', nftFileMetadataFilePath);
-        eaNFT.set('token_symbol', symbol);
-        eaNFT.set('token_name', name);
-        eaNFT.set('referrer_address', userReferrerAddress);
-        await eaNFT.save();
-        break;
+            nftId1 = await mintEANft(nftFileMetadataFilePath, creator, royaltyFee, userReferrerAddress);
+
+            var symbol = await earlyHoldersContract.methods.symbol().call({ from: user.get('ethAddress') });
+            var name = await earlyHoldersContract.methods.name().call({ from: user.get('ethAddress') });
+            var Item = Moralis.Object.extend("EANFT");
+            var eaNFT = new Item();
+            eaNFT.set('name', createItemNameField.value);
+            eaNFT.set('description', createItemDescriptionField.value);
+            eaNFT.set('owner_of', creator);
+            eaNFT.set('creator_address', creator);
+            eaNFT.set('royaltyFee', royaltyFee);
+            eaNFT.set('token_address', onftsEarlyHoldersNFTAddress);
+            eaNFT.set('token_id', nftId1);
+            eaNFT.set('token_uri', nftFileMetadataFilePath);
+            eaNFT.set('token_symbol', symbol);
+            eaNFT.set('token_name', name);
+            eaNFT.set('referrer_address', userReferrerAddress);
+            await eaNFT.save();
+            break;
     }
 
-    
-    
-    switch(addToMarketplaceValue){
+
+
+    switch (addToMarketplaceValue) {
 
         case "0":
 
@@ -589,23 +589,23 @@ createItem = async () => {
             let royaltyFee = createItemRoyaltyFee.value;
             loadingProgress.style.width = 60 + "%";
             loadingStatus.innerText = "Please approve marketplace";
-            if (walletProvider == 'walletconnect'){
-                await marketplaceContract.methods.addItemToMarket(nftId, TOKEN_CONTRACT_ADDRESS, askingPriceBN, creator, royaltyFee, userReferrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
+            if (walletProvider == 'walletconnect') {
+                await marketplaceContract.methods.addItemToMarket(nftId, TOKEN_CONTRACT_ADDRESS, askingPriceBN, creator, royaltyFee, userReferrerAddress).send({ provider: walletProvider, chainId: 56, from: user.get('ethAddress') });
             } else {
-            await marketplaceContract.methods.addItemToMarket(nftId, TOKEN_CONTRACT_ADDRESS, askingPriceBN, creator, royaltyFee, userReferrerAddress).send({from: user.get('ethAddress')});
+                await marketplaceContract.methods.addItemToMarket(nftId, TOKEN_CONTRACT_ADDRESS, askingPriceBN, creator, royaltyFee, userReferrerAddress).send({ from: user.get('ethAddress') });
             }
             loadingProgress.style.width = 100 + "%";
             loadingStatus.innerText = "NFT Successfully added to the marketplace!";
             document.getElementById("btnCreateItem").disabled = 0;
             initUser();
             break;
-    }  
+    }
     hideElement(createItemForm);
 }
 
 // Add to Marketplace
 addToMarketplace = async (tokenId, tokenAddress, askingPrice) => {
-   
+
     const loadingStatus = document.getElementById("loadingStatus");
     $('#createItem').modal('hide');
     $('#loadingMint').modal('show');
@@ -621,41 +621,41 @@ addToMarketplace = async (tokenId, tokenAddress, askingPrice) => {
             tokenId: tokenId,
             tokenAddress: tokenAddress,
             askingPrice: askingPrice,
-          },
-          awaitReceipt: false
-        };
-        tx = await Moralis.executeFunction(txOptions);
-             loadingProgress.style.width = 60 + "%";
-                loadingStatus.innerText = "Request Sent - Waiting for blockchain";
+        },
+        awaitReceipt: false
+    };
+    tx = await Moralis.executeFunction(txOptions);
+    loadingProgress.style.width = 60 + "%";
+    loadingStatus.innerText = "Request Sent - Waiting for blockchain";
 
-             await tx.on("transactionHash", (hash) => { 
-                 console.log("hash" + hash); 
-                 loadingProgress.style.width = 70 + "%";
-                loadingStatus.innerText = "Hash Confirmed - Waiting for blockchain";
-                })
-                await tx.on("receipt", (receipt) => { 
-                     console.log("receipt" + receipt); 
-                     loadingProgress.style.width = 80 + "%";
-                          loadingStatus.innerText = "Finalizing - Waiting for blockchain";
-                    })
-                  .on("confirmation", (confirmationNumber, receipt) => {
-                          console.log(receipt);
-                          
-                           loadingProgress.style.width = 100 + "%";
-                           loadingStatus.innerText = "NFT Successfully added to marketplace!";
-                          
-                          return;
-                      })
-                      .on("error", (error) => { 
-                          alert(error);
-                        document.getElementById("btnCreateItem").disabled = 0;
-                       
-                        $('#loadingMint').modal('hide');
-                        
-                        
-                     });
+    await tx.on("transactionHash", (hash) => {
+        console.log("hash" + hash);
+        loadingProgress.style.width = 70 + "%";
+        loadingStatus.innerText = "Hash Confirmed - Waiting for blockchain";
+    })
+    await tx.on("receipt", (receipt) => {
+        console.log("receipt" + receipt);
+        loadingProgress.style.width = 80 + "%";
+        loadingStatus.innerText = "Finalizing - Waiting for blockchain";
+    })
+        .on("confirmation", (confirmationNumber, receipt) => {
+            console.log(receipt);
 
-    }
+            loadingProgress.style.width = 100 + "%";
+            loadingStatus.innerText = "NFT Successfully added to marketplace!";
+
+            return;
+        })
+        .on("error", (error) => {
+            alert(error);
+            document.getElementById("btnCreateItem").disabled = 0;
+
+            $('#loadingMint').modal('hide');
+
+
+        });
+
+}
 
 // Handle Auction/Buy Marketpalce
 handleAuction = async (id, bid) => {
@@ -666,11 +666,11 @@ handleAuction = async (id, bid) => {
 // Burn NFT
 burnNFT = async (item) => {
     user = await Moralis.User.current();
-    if (!user){
+    if (!user) {
         login();
         return;
     }
-    await tokenContract.methods.burnToken(item.tokenId).send({from: user.get('ethAddress')});
+    await tokenContract.methods.burnToken(item.tokenId).send({ from: user.get('ethAddress') });
     alert("NFT Destroyed!");
 }
 
@@ -687,46 +687,46 @@ mintNft = async (metadataUrl, RoyaltyFee, referrerAddress, creatorAddress) => {
             creator: userAddress,
             royaltyFee: RoyaltyFee,
             referrer: referrerAddress
-          },
-          awaitReceipt: false
-        };
+        },
+        awaitReceipt: false
+    };
 
     if (earlyHoldersBalance != null) {
         if (walletProvider == 'walletconnect') {
-            
+
             return tx = await Moralis.executeFunction(txOptions);
             // const receipt = await tokenContract.methods.createItemNoFee(metadataUrl, RoyaltyFee, referrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
-          
-        //     await tx.on("transactionHash", (hash) = () => { alert(hash); })
-        //     await tx.on("receipt", (receipt) = () => { alert(receipt); })
-        //     await tx.on("confirmation", (confirmationNumber, receipt) => { 
-        //         alert(confirmationNumber, receipt);
-        //         return receipt.events.Transfer.returnValues.tokenId;
-        //    })
-       
-           
+
+            //     await tx.on("transactionHash", (hash) = () => { alert(hash); })
+            //     await tx.on("receipt", (receipt) = () => { alert(receipt); })
+            //     await tx.on("confirmation", (confirmationNumber, receipt) => { 
+            //         alert(confirmationNumber, receipt);
+            //         return receipt.events.Transfer.returnValues.tokenId;
+            //    })
+
+
         } else {
-            const receipt = await tokenContract.methods.createItemNoFee(metadataUrl, RoyaltyFee, referrerAddress).send({from: user.get('ethAddress')});
+            const receipt = await tokenContract.methods.createItemNoFee(metadataUrl, RoyaltyFee, referrerAddress).send({ from: user.get('ethAddress') });
             console.log(receipt);
             return receipt.events.Transfer.returnValues.tokenId;
         }
-} else {
-    if (walletProvider == 'walletconnect') {
-        return tx = await Moralis.executeFunction(txOptions);
+    } else {
+        if (walletProvider == 'walletconnect') {
+            return tx = await Moralis.executeFunction(txOptions);
 
             //const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
-            
-    //     await tx.on("transactionHash", (hash) = () => { alert(hash); })
-    //     await tx.on("receipt", (receipt) = () => { alert(receipt); })
-    //     await tx.on("confirmation", (confirmationNumber, receipt) => { 
-    //   alert(confirmationNumber, receipt);
-    // return receipt.events.Transfer.returnValues.tokenId;
-//  })
-//   .on("error", (error) => { alert(error); });
 
-  
-    } else {
-            const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({from: user.get('ethAddress')});
+            //     await tx.on("transactionHash", (hash) = () => { alert(hash); })
+            //     await tx.on("receipt", (receipt) = () => { alert(receipt); })
+            //     await tx.on("confirmation", (confirmationNumber, receipt) => { 
+            //   alert(confirmationNumber, receipt);
+            // return receipt.events.Transfer.returnValues.tokenId;
+            //  })
+            //   .on("error", (error) => { alert(error); });
+
+
+        } else {
+            const receipt = await tokenContract.methods.createItem(metadataUrl, RoyaltyFee, referrerAddress).send({ from: user.get('ethAddress') });
             console.log(receipt);
             return receipt.events.Transfer.returnValues.tokenId;
         }
@@ -734,7 +734,7 @@ mintNft = async (metadataUrl, RoyaltyFee, referrerAddress, creatorAddress) => {
 }
 
 mintEANft = async (metadataUrl, creator, RoyaltyFee, referrerAddress) => {
-    const receipt = await earlyHoldersContract.methods.createItem(metadataUrl, creator, RoyaltyFee, referrerAddress).send({from: user.get('ethAddress')});
+    const receipt = await earlyHoldersContract.methods.createItem(metadataUrl, creator, RoyaltyFee, referrerAddress).send({ from: user.get('ethAddress') });
     console.log(receipt);
     return receipt.events.Transfer.returnValues.tokenId;
 }
@@ -742,38 +742,38 @@ mintEANft = async (metadataUrl, creator, RoyaltyFee, referrerAddress) => {
 
 // Open User Items Modal
 openUserItems = async () => {
-    user = await Moralis.User.current(); 
+    user = await Moralis.User.current();
     await loadUserItems();
     await loadUserListedItems();
-    if (user){ 
+    if (user) {
         const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
         const query = new Moralis.Query(BscTokenBalance);
         query.equalTo("token_address", onftsAddress);
         query.equalTo("address", user.get('ethAddress'));
         const results = await query.find();
 
-    // Do something with the returned Moralis.Object values
-    for (let i = 0; i < results.length; i++) {
-        const object = results[i];
-        //alert(object.id + ' - ' + object.get('balance'));
-        const onftsBalance1 = object.get('balance');
-        onftsBalanceBN = new BigNumber(onftsBalance1).div(1000000000).div(1000000000);
-        onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(onftsPrice);
-        document.getElementById("onftsBalanceButton").innerText = `${onftsBalanceBN.dp(2)} ONFTs - ${onftsBalanceUSDBN.dp(2)} USD`;
-    };
+        // Do something with the returned Moralis.Object values
+        for (let i = 0; i < results.length; i++) {
+            const object = results[i];
+            //alert(object.id + ' - ' + object.get('balance'));
+            const onftsBalance1 = object.get('balance');
+            onftsBalanceBN = new BigNumber(onftsBalance1).div(1000000000).div(1000000000);
+            onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(onftsPrice);
+            document.getElementById("onftsBalanceButton").innerText = `${onftsBalanceBN.dp(2)} ONFTs - ${onftsBalanceUSDBN.dp(2)} USD`;
+        };
 
-    query.equalTo("token_address", onftsAddress);
-    query.equalTo("address", user.get('ethAddress'));
-    const results1 = await query.find();
-    for (let i = 0; i < results1.length; i++) {
-    const object1 = results1[i];
-    const mintTokenBalance = object1.get('balance');
-    mintTokenBalanceBN = new BigNumber(mintTokenBalance).div(1000000000).div(1000000000);
-    document.getElementById("mintTokenBalanceButton").innerText = `${mintTokenBalanceBN.dp(2)} TOKEN`;
-    };   
+        query.equalTo("token_address", onftsAddress);
+        query.equalTo("address", user.get('ethAddress'));
+        const results1 = await query.find();
+        for (let i = 0; i < results1.length; i++) {
+            const object1 = results1[i];
+            const mintTokenBalance = object1.get('balance');
+            mintTokenBalanceBN = new BigNumber(mintTokenBalance).div(1000000000).div(1000000000);
+            document.getElementById("mintTokenBalanceButton").innerText = `${mintTokenBalanceBN.dp(2)} TOKEN`;
+        };
 
         $('#userItems').modal('show');
-    }else{
+    } else {
         login();
     }
 }
@@ -793,16 +793,16 @@ loadItems = async () => {
     const items = await Moralis.Cloud.run("getItems");
     user = await Moralis.User.current();
     items.forEach(item => {
-        if (user)   { 
-            if (urlProfile) { 
+        if (user) {
+            if (urlProfile) {
                 urlProfileLC = urlProfile.toLowerCase();
                 if (urlProfileLC != item.creator) {
                     const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
                     if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
                     return;
                 }
-            }   
-        }  if (urlProfile) { 
+            }
+        } if (urlProfile) {
             urlProfileLC = urlProfile.toLowerCase();
             if (urlProfileLC != item.creator) {
                 const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
@@ -820,19 +820,19 @@ loadUserListedItems = async () => {
     const items = await Moralis.Cloud.run("getItems");
     user = await Moralis.User.current();
     items.forEach(item => {
-        if (user)   { 
-                if (user.attributes.accounts != item.ownerOf) {
-                    console.log(item.ownerOf);
-                    console.log("work");
-                    const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
-                    if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
-                    return;
-                }
-                getAndRenderItemData(item, renderUserListedItems);
-            }   
-            
-        });  
-    }
+        if (user) {
+            if (user.attributes.accounts != item.ownerOf) {
+                console.log(item.ownerOf);
+                console.log("work");
+                const userItemListing = document.getElementById(`user-item-${item.tokenObjectId}`);
+                if (userItemListing) userItemListing.parentNode.removeChild(userItemListing);
+                return;
+            }
+            getAndRenderItemData(item, renderUserListedItems);
+        }
+
+    });
+}
 
 // Init NFT Template
 initTemplate = (id) => {
@@ -851,11 +851,11 @@ renderUserItem = async (item) => {
     userItem.getElementsByTagName("img")[1].src = item.image;
     userItem.getElementsByTagName("img")[1].alt = item.name;
     userItem.getElementsByTagName("h5")[0].innerText = item.name;
-    userItem.getElementsByTagName("p")[0].innerText = item.symbol; 
-    userItem.getElementsByTagName("p")[1].innerText = item.description; 
+    userItem.getElementsByTagName("p")[0].innerText = item.symbol;
+    userItem.getElementsByTagName("p")[1].innerText = item.description;
     userItem.getElementsByTagName("h6")[0].innerText = "Creator";
     userItem.getElementsByTagName("p")[2].innerText = item.creator;
-    userItem.getElementsByTagName("p")[3].innerText = item.royaltyFee;    
+    userItem.getElementsByTagName("p")[3].innerText = item.royaltyFee;
     itemPrice = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
     userItem.getElementsByTagName("input")[0].value = await itemPrice ?? 1;
     userItem.getElementsByTagName("input")[0].disabled = await item.askingPrice > 0;
@@ -872,10 +872,10 @@ renderUserItem = async (item) => {
     userItem.getElementsByTagName("button")[2].onclick = async () => burnNFT(item);
     userItem.getElementsByTagName("button")[0].onclick = async () => {
         user = await Moralis.User.current();
-        if (!user){
+        if (!user) {
             login();
             return;
-        }else if (userItem.getElementsByTagName("input")[0].value > 5000000) {
+        } else if (userItem.getElementsByTagName("input")[0].value > 5000000) {
             alert("Max 5Mil");
             return;
         }
@@ -890,7 +890,7 @@ renderUserItem = async (item) => {
 
     userItem.id = `user-item-${item.tokenObjectId}`
     userItems.appendChild(userItem);
-   
+
 }
 
 // Render User Items
@@ -902,11 +902,11 @@ renderUserListedItems = async (item) => {
     userItem.getElementsByTagName("img")[1].src = item.image;
     userItem.getElementsByTagName("img")[1].alt = item.name;
     userItem.getElementsByTagName("h5")[0].innerText = item.name;
-    userItem.getElementsByTagName("p")[0].innerText = item.symbol; 
-    userItem.getElementsByTagName("p")[1].innerText = item.description; 
+    userItem.getElementsByTagName("p")[0].innerText = item.symbol;
+    userItem.getElementsByTagName("p")[1].innerText = item.description;
     userItem.getElementsByTagName("h6")[0].innerText = "Creator";
     userItem.getElementsByTagName("p")[2].innerText = item.creator;
-    userItem.getElementsByTagName("p")[3].innerText = item.royaltyFee;    
+    userItem.getElementsByTagName("p")[3].innerText = item.royaltyFee;
     itemPrice = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
     userItem.getElementsByTagName("input")[0].value = await itemPrice ?? 1;
     userItem.getElementsByTagName("input")[0].disabled = await item.askingPrice > 0;
@@ -923,10 +923,10 @@ renderUserListedItems = async (item) => {
     userItem.getElementsByTagName("button")[2].onclick = async () => burnNFT(item);
     userItem.getElementsByTagName("button")[0].onclick = async () => {
         user = await Moralis.User.current();
-        if (!user){
+        if (!user) {
             login();
             return;
-        }else if (userItem.getElementsByTagName("input")[0].value > 5000000) {
+        } else if (userItem.getElementsByTagName("input")[0].value > 5000000) {
             alert("Max 5Mil");
             return;
         }
@@ -934,65 +934,65 @@ renderUserListedItems = async (item) => {
         await userItem.getElementsByTagName("input")[0].value;
         let test1 = userItem.getElementsByTagName("input")[0].value;
         let askingPriceBN = new BigNumber(test1).times(1000000000).times(1000000000);
-        await marketplaceContract.methods.addItemToMarket(item.tokenId, item.tokenAddress, askingPriceBN, item.creator, item.royaltyFee, item.referrer).send({from: user.get('ethAddress')});
+        await marketplaceContract.methods.addItemToMarket(item.tokenId, item.tokenAddress, askingPriceBN, item.creator, item.royaltyFee, item.referrer).send({ from: user.get('ethAddress') });
         alert("NFT Added To Marketplace!");
     };
 
     userItem.id = `user-item-${item.tokenObjectId}`
-    
+
     userItemsListed.appendChild(userItem);
 }
 
- // Render Marketplace Item
- renderItem = (item) => {
-     const itemForSale = marketplaceItemTemplate.cloneNode(true);
-     itemForSale.getElementsByTagName("img")[0].src = item.image;
-     itemForSale.getElementsByTagName("img")[0].alt = item.name;
-     if (item.sellerAvatar){
-                itemForSale.getElementsByTagName("img")[1].src = item.sellerAvatar.url();
-                itemForSale.getElementsByTagName("img")[1].alt = item.sellerUsername;
-             
-        }
+// Render Marketplace Item
+renderItem = (item) => {
+    const itemForSale = marketplaceItemTemplate.cloneNode(true);
+    itemForSale.getElementsByTagName("img")[0].src = item.image;
+    itemForSale.getElementsByTagName("img")[0].alt = item.name;
+    if (item.sellerAvatar) {
+        itemForSale.getElementsByTagName("img")[1].src = item.sellerAvatar.url();
+        itemForSale.getElementsByTagName("img")[1].alt = item.sellerUsername;
 
-     hideElement(itemForSale.getElementsByTagName("video")[0]);
-    item.creator 
-     itemForSale.getElementsByTagName("h2")[0].innerText = item.sellerUsername;
-     itemForSale.getElementsByTagName("h3")[0].innerText = item.name;
-     itemForSale.getElementsByTagName("p")[0].innerText = item.description;
+    }
 
-    
-     const itemaskingPriceBN = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
-     const convertedToUSDPrice = new BigNumber(onftsPrice).times(itemaskingPriceBN);
-     itemForSale.getElementsByTagName("button")[0].innerText = `${itemaskingPriceBN} ONFTs`;
-     itemForSale.getElementsByTagName("button")[1].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
-    
-     itemForSale.getElementsByTagName("button")[1].onclick = async () => buyItemUSD(item);
-     
-     
-     
-     itemForSale.getElementsByTagName("button")[0].onclick = async () =>  buyItem(item);
-     itemForSale.getElementsByTagName("button")[2].onclick = () => {
-             var copyText = "https://onlynfts.online/marketplace/?nft=" + item.tokenAddress + "&id=" + item.tokenId;
-            //  copyText.select();
-            //  copyText.setSelectionRange(0, 99999);
-             navigator.clipboard.writeText(copyText);
-        
-             notificationHeader.innerText = "Copied!";
-         notificationBody.innerText = "Copied: " + copyText;
+    hideElement(itemForSale.getElementsByTagName("video")[0]);
+    item.creator
+    itemForSale.getElementsByTagName("h2")[0].innerText = item.sellerUsername;
+    itemForSale.getElementsByTagName("h3")[0].innerText = item.name;
+    itemForSale.getElementsByTagName("p")[0].innerText = item.description;
+
+
+    const itemaskingPriceBN = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
+    const convertedToUSDPrice = new BigNumber(onftsPrice).times(itemaskingPriceBN);
+    itemForSale.getElementsByTagName("button")[0].innerText = `${itemaskingPriceBN} ONFTs`;
+    itemForSale.getElementsByTagName("button")[1].innerText = `$${convertedToUSDPrice.dp(2)} USD`;
+
+    itemForSale.getElementsByTagName("button")[1].onclick = async () => buyItemUSD(item);
+
+
+
+    itemForSale.getElementsByTagName("button")[0].onclick = async () => buyItem(item);
+    itemForSale.getElementsByTagName("button")[2].onclick = () => {
+        var copyText = "https://onlynfts.online/marketplace/?nft=" + item.tokenAddress + "&id=" + item.tokenId;
+        //  copyText.select();
+        //  copyText.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(copyText);
+
+        notificationHeader.innerText = "Copied!";
+        notificationBody.innerText = "Copied: " + copyText;
         //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
         $('.toast').toast('show');
-            };
+    };
 
 
 
-    itemForSale.getElementsByTagName("h2")[0].onclick = () => {  
+    itemForSale.getElementsByTagName("h2")[0].onclick = () => {
         window.open("https://onlynfts.online/profile?p=" + item.creatorUsername).focus();
-    };    
+    };
 
-    itemForSale.getElementsByTagName("img")[1].onclick = () => {  
+    itemForSale.getElementsByTagName("img")[1].onclick = () => {
         window.open("https://onlynfts.online/profile?p=" + item.creatorUsername).focus();
-    };  
-itemsForSale.appendChild(itemForSale);
+    };
+    itemsForSale.appendChild(itemForSale);
 }
 
 // // Render Marketplace Item
@@ -1001,16 +1001,16 @@ itemsForSale.appendChild(itemForSale);
 //     if (item.sellerAvatar){
 //         itemForSale.getElementsByTagName("img")[1].src = item.sellerAvatar.url();
 //         itemForSale.getElementsByTagName("img")[1].alt = item.sellerUsername;
-     
+
 //     }
 //     itemForSale.nftShareValue = 0;
 //     //hideElement(itemForSale.getElementsByTagName("div")[2]);
 //     //hideElement(itemForSale.getElementsByTagName("input")[0]);
 //     //hideElement(itemForSale.getElementsByTagName("button")[0]);
 //     itemForSale.getElementsByTagName("a")[1].onclick = () => {
-     
+
 //             // $(itemForSale.getElementsByTagName("img")[0]).toggleClass('rotate-180');
-        
+
 //     };
 //     //$(itemForSale.getElementsByTagName("div")[0]).toggleClass('card__inner');
 //     // $(itemForSale.getElementsByTagName("div")[1]).toggleClass('card__face');
@@ -1021,14 +1021,14 @@ itemsForSale.appendChild(itemForSale);
 //     //$(itemForSale.getElementsByTagName("div")[4]).toggleClass('card__header');
 //     //$(itemForSale.getElementsByTagName("div")[5]).toggleClass('card__body');
 
-    
-    
+
+
 //     itemForSale.getElementsByTagName("div")[0].onclick = () => {
 //         if (itemForSale.nftShareValue === 0) {
-            
+
 //             $(itemForSale.getElementsByTagName("div")[0]).toggleClass('rotate-180');
 //             const hmmwtf = $(itemForSale.getElementsByTagName("div")[0]).toggleClass('card__inner');
-           
+
 //             hmmwtf.classList.toggle('is-flipped');
 //         // itemForSale.nftShareValue = 1;
 //         }
@@ -1045,7 +1045,7 @@ itemsForSale.appendChild(itemForSale);
 //     //notificationTime.innerText = Math.round(Date.now()/1000)+60*20;
 //     $('.toast').toast('show');
 //     };
-    
+
 //     hideElement(itemForSale.getElementsByTagName("video")[0]);
 //     itemForSale.getElementsByTagName("input")[0].value = "https://marketplace.onlynfts.online/?nft=" + item.tokenAddress + "&id=" + item.tokenId;
 //     itemForSale.getElementsByTagName("h6")[0].innerText = "Seller Info:";
@@ -1064,7 +1064,7 @@ itemsForSale.appendChild(itemForSale);
 //     itemForSale.getElementsByTagName("h6")[1].innerText = "Description:";
 //     itemForSale.getElementsByTagName("p")[2].innerText = item.description;
 //     itemForSale.getElementsByTagName("p")[3].innerText = `RoyaltyFee ${item.royaltyFee} %`;
-    
+
 //     let itemlol = new BigNumber(item.askingPrice).div(1000000000).div(1000000000);
 //     let convertedToUSDPrice = new BigNumber(onftsPrice).times(itemlol);
 //     itemForSale.getElementsByTagName("button")[1].innerText = `BUY ${itemlol} ONFTs`;
@@ -1074,7 +1074,7 @@ itemsForSale.appendChild(itemForSale);
 //     //     const amountIn = new BigNumber(1).times(1000000000).times(100000000);
 //     //     console.log(amountIn);
 //     //     amountsOut = await pancakeswapRouterContract.methods.getAmountsOut(amountIn, [WBNB_TOKEN_ADDRESS, PAYMENT_TOKEN_ADDRESS]).call({from: user.get('ethAddress')});
-        
+
 //     //     console.log(amountsOut);
 //     //     const amountInFriendly = amountIn;
 //     //     console.log(amountInFriendly);
@@ -1105,18 +1105,18 @@ itemsForSale.appendChild(itemForSale);
 
 // Render Item Data
 getAndRenderItemData = (item, renderFunction) => {
-    
+
     fetch(item.tokenUri)
-    .then(response => response.json())
-    .then(data => {
-        item.name = data.name;
-        item.description = data.description;
-        item.image = data.image;
-        item.creator = data.creator;
-        item.royaltyFee = data.royaltyFee;
-        item.referrer = data.referrer;
-        renderFunction(item);
-    })
+        .then(response => response.json())
+        .then(data => {
+            item.name = data.name;
+            item.description = data.description;
+            item.image = data.image;
+            item.creator = data.creator;
+            item.royaltyFee = data.royaltyFee;
+            item.referrer = data.referrer;
+            renderFunction(item);
+        })
 }
 
 // Marketplace Approval
@@ -1124,9 +1124,9 @@ ensureMarketplaceIsApproved = async (tokenId, tokenAddress) => {
     user = await Moralis.User.current();
     const userAddress = user.get('ethAddress');
     const contract = new web3.eth.Contract(tokenContractAbi, tokenAddress);
-    const approvedAddress = await contract.methods.getApproved(tokenId).call({from: userAddress});
-    if (approvedAddress != MARKETPLACE_CONTRACT_ADDRESS){
-        await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, tokenId).send({from: userAddress});
+    const approvedAddress = await contract.methods.getApproved(tokenId).call({ from: userAddress });
+    if (approvedAddress != MARKETPLACE_CONTRACT_ADDRESS) {
+        await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, tokenId).send({ from: userAddress });
     }
 }
 
@@ -1135,26 +1135,27 @@ ensureMarketplaceIsApproved = async (tokenId, tokenAddress) => {
 ensureMarketplaceIsApproved2 = async (tokenId, tokenAddress) => {
     user = await Moralis.User.current();
     const userAddress = user.get('ethAddress');
-const options = {
-    contractAddress: tokenAddress,
-    functionName: "getApproved",
-    abi: NFTContractABI,
-    params: {
-      tokenId: tokenId
-    },
-};
-  const allowance = await Moralis.executeFunction(options);
-  if (allowance != MARKETPLACE_CONTRACT_ADDRESSV2){
     const options = {
         contractAddress: tokenAddress,
-        functionName: "approve",
+        functionName: "getApproved",
         abi: NFTContractABI,
         params: {
-            to: MARKETPLACE_CONTRACT_ADDRESSV2,
-          tokenId: tokenId
+            tokenId: tokenId
         },
     };
-    const approve = await Moralis.executeFunction(options);}
+    const allowance = await Moralis.executeFunction(options);
+    if (allowance != MARKETPLACE_CONTRACT_ADDRESSV2) {
+        const options = {
+            contractAddress: tokenAddress,
+            functionName: "approve",
+            abi: NFTContractABI,
+            params: {
+                to: MARKETPLACE_CONTRACT_ADDRESSV2,
+                tokenId: tokenId
+            },
+        };
+        const approve = await Moralis.executeFunction(options);
+    }
 }
 // Payment Token Approval
 ensurePaymentTokenIsApproved = async (tokenAddress, amount) => {
@@ -1165,16 +1166,16 @@ ensurePaymentTokenIsApproved = async (tokenAddress, amount) => {
     const contract = new web3.eth.Contract(paymentTokenContractAbi, PAYMENT_TOKEN_ADDRESS);
 
     if (walletProvider == 'walletconnect') {
-    const approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({provider: walletProvider, chainId: 56, from: userAddress});
-    console.log(approvedAddress);
-    if (approvedAddress < amount){
-        await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({provider: walletProvider, chainId: 56, from: userAddress});
-    }
-    } else {
-        const approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({from: userAddress});
+        const approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({ provider: walletProvider, chainId: 56, from: userAddress });
         console.log(approvedAddress);
-        if (approvedAddress < amount){
-            await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({from: userAddress});
+        if (approvedAddress < amount) {
+            await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({ provider: walletProvider, chainId: 56, from: userAddress });
+        }
+    } else {
+        const approvedAddress = await contract.methods.allowance(userAddress, MARKETPLACE_CONTRACT_ADDRESS).call({ from: userAddress });
+        console.log(approvedAddress);
+        if (approvedAddress < amount) {
+            await contract.methods.approve(MARKETPLACE_CONTRACT_ADDRESS, amount).send({ from: userAddress });
         }
     }
 }
@@ -1187,20 +1188,20 @@ ensureMintTokenIsApproved = async (tokenAddress, amount) => {
         user = await Moralis.User.current();
         const userAddress = user.get('ethAddress');
         const contract = new web3.eth.Contract(mintTokenContractAbi, tokenAddress);
-        const approvedAddress = await contract.methods.allowance(userAddress, NFT_CONTRACT_ADDRESS).call({provider: walletProvider, chainId: 56, from: userAddress}); 
+        const approvedAddress = await contract.methods.allowance(userAddress, NFT_CONTRACT_ADDRESS).call({ provider: walletProvider, chainId: 56, from: userAddress });
         console.log(approvedAddress)
-        if (approvedAddress < 1000){
-            await contract.methods.approve(NFT_CONTRACT_ADDRESS, onftsconverted).send({provider: walletProvider, chainId: 56, from: userAddress});
+        if (approvedAddress < 1000) {
+            await contract.methods.approve(NFT_CONTRACT_ADDRESS, onftsconverted).send({ provider: walletProvider, chainId: 56, from: userAddress });
         }
     } else {
-    user = await Moralis.User.current();
-    const userAddress = user.get('ethAddress');
-    const contract = new web3.eth.Contract(mintTokenContractAbi, tokenAddress);
-    const approvedAddress = await contract.methods.allowance(userAddress, NFT_CONTRACT_ADDRESS).call({from: userAddress});
-    console.log(approvedAddress)
-    if (approvedAddress < 1000){
-        await contract.methods.approve(NFT_CONTRACT_ADDRESS, onftsconverted).send({from: userAddress});
-    }
+        user = await Moralis.User.current();
+        const userAddress = user.get('ethAddress');
+        const contract = new web3.eth.Contract(mintTokenContractAbi, tokenAddress);
+        const approvedAddress = await contract.methods.allowance(userAddress, NFT_CONTRACT_ADDRESS).call({ from: userAddress });
+        console.log(approvedAddress)
+        if (approvedAddress < 1000) {
+            await contract.methods.approve(NFT_CONTRACT_ADDRESS, onftsconverted).send({ from: userAddress });
+        }
     }
 }
 
@@ -1213,8 +1214,8 @@ createProfilePage = async () => {
     profilePages.set('link', 'https://onlynfts.online');
     profilePages.set('creator_address', user.get('ethAddress'));
     profilePages.set('referrer_address', userReferrerAddress);
-    
-    
+
+
     await profilePages.save();
 
 }
@@ -1223,130 +1224,132 @@ createProfilePage = async () => {
 // Buy Item
 buyItem = async (item) => {
     user = await Moralis.User.current();
-    if (!user){
+    if (!user) {
         login();
         return;
     }
     console.log(walletProvider);
-    await ensurePaymentTokenIsApproved(PAYMENT_TOKEN_ADDRESS, item.askingPrice); 
-    await marketplaceContract.methods.buyItem(item.uid).send({provider: walletProvider, chainId: 56, from: user.get('ethAddress')});
+    await ensurePaymentTokenIsApproved(PAYMENT_TOKEN_ADDRESS, item.askingPrice);
+    await marketplaceContract.methods.buyItem(item.uid).send({ provider: walletProvider, chainId: 56, from: user.get('ethAddress') });
     alert("NFT Purchased");
 }
 
 // Remove from marketplace
 removeItem = async (item) => {
     user = await Moralis.User.current();
-    if (!user){
+    if (!user) {
         login();
         return;
     }
-    await marketplaceContract.methods.removeItem(item.uid).send({from: user.get('ethAddress')});
-   
+    await marketplaceContract.methods.removeItem(item.uid).send({ from: user.get('ethAddress') });
+
     alert("NFT Removed from Marketplace!");
 }
 
 //Load User
 loadBalances = async () => {
-user = await Moralis.User.current(); 
-if (user){ 
-    earlyHoldersBalance = null;
-//     const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
-//     const query = new Moralis.Query(BscTokenBalance);
-//     query.equalTo("token_address", onftsAddress);
-//     query.equalTo("address", user.get('ethAddress'));
-//     const results = await query.find();
-//     onftsBalanceBN = 0;
-// // Do something with the returned Moralis.Object values
-// for (let i = 0; i < results.length; i++) {
-//     const object = results[i];
-//     //alert(object.id + ' - ' + object.get('balance'));
-//     const onftsBalance1 = object.get('balance');
-//     onftsBalanceBN = new BigNumber(onftsBalance1).div(1000000000).div(1000000000);
-//     onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(onftsPrice);
-//     console.log(onftsBalance1);
- 
-// };
+    user = await Moralis.User.current();
+    if (user) {
+        earlyHoldersBalance = null;
+        //     const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
+        //     const query = new Moralis.Query(BscTokenBalance);
+        //     query.equalTo("token_address", onftsAddress);
+        //     query.equalTo("address", user.get('ethAddress'));
+        //     const results = await query.find();
+        //     onftsBalanceBN = 0;
+        // // Do something with the returned Moralis.Object values
+        // for (let i = 0; i < results.length; i++) {
+        //     const object = results[i];
+        //     //alert(object.id + ' - ' + object.get('balance'));
+        //     const onftsBalance1 = object.get('balance');
+        //     onftsBalanceBN = new BigNumber(onftsBalance1).div(1000000000).div(1000000000);
+        //     onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(onftsPrice);
+        //     console.log(onftsBalance1);
 
-// query.equalTo("token_address", onftsAddress);
-// query.equalTo("address", user.get('ethAddress'));
-// const results1 = await query.find();
-// //alert("Successfully retrieved " + results1.length + " balance.");
-// // Do something with the returned Moralis.Object values
-// for (let i = 0; i < results1.length; i++) {
-// const object1 = results1[i];
-// //alert(object.id + ' - ' + object.get('balance'));
-// const mintTokenBalance = object1.get('balance');
-// mintTokenBalanceBN = new BigNumber(mintTokenBalance).div(1000000000).div(1000000000);
-// console.log(mintTokenBalance);
-// }; 
+        // };
 
-const BscNFTOwners = Moralis.Object.extend("BscNFTOwners");
-const query2 = new Moralis.Query(BscNFTOwners);
-query2.equalTo("token_address", onftsEarlyHoldersNFTAddress);
-query2.equalTo("owner_of", user.get('ethAddress'));
-const results2 = await query2.find();
-// Do something with the returned Moralis.Object values
-for (let i = 0; i < results2.length; i++) {
-const object2 = results2[i];
-earlyHoldersBalance = object2.get('token_id');
-console.log(object2.get('token_id'));
-if (earlyHoldersBalance !== null) {
-    console.log(object2.get('token_id'));}
-};
+        // query.equalTo("token_address", onftsAddress);
+        // query.equalTo("address", user.get('ethAddress'));
+        // const results1 = await query.find();
+        // //alert("Successfully retrieved " + results1.length + " balance.");
+        // // Do something with the returned Moralis.Object values
+        // for (let i = 0; i < results1.length; i++) {
+        // const object1 = results1[i];
+        // //alert(object.id + ' - ' + object.get('balance'));
+        // const mintTokenBalance = object1.get('balance');
+        // mintTokenBalanceBN = new BigNumber(mintTokenBalance).div(1000000000).div(1000000000);
+        // console.log(mintTokenBalance);
+        // }; 
+
+        const BscNFTOwners = Moralis.Object.extend("BscNFTOwners");
+        const query2 = new Moralis.Query(BscNFTOwners);
+        query2.equalTo("token_address", onftsEarlyHoldersNFTAddress);
+        query2.equalTo("owner_of", user.get('ethAddress'));
+        const results2 = await query2.find();
+        // Do something with the returned Moralis.Object values
+        for (let i = 0; i < results2.length; i++) {
+            const object2 = results2[i];
+            earlyHoldersBalance = object2.get('token_id');
+            console.log(object2.get('token_id'));
+            if (earlyHoldersBalance !== null) {
+                console.log(object2.get('token_id'));
+            }
+        };
 
 
 
-const options = { chain: "bsc" };
-const balance = await Moralis.Web3API.account.getTokenBalances(options);
-console.log(balance);
-if (balance.length != 0) {
-    const tokenAddress =  "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b"; // You can specify for example: tokenAddress, name or symbol
-    const tokenBalance = balance.find((token) => token.token_address === tokenAddress);
-    console.log(tokenBalance.balance);
-    onftsBalance = tokenBalance.balance
-    onftsBalanceBN = new BigNumber(onftsBalance).div(1000000000).div(1000000000);
-    onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(onftsPrice);
-} else {
-    onftsBalance = 0
-    onftsBalanceBN = new BigNumber(onftsBalance).div(1000000000).div(1000000000);
-    onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(onftsPrice);
-    console.log(onftsBalance);
-}}
+        const options = { chain: "bsc" };
+        const balance = await Moralis.Web3API.account.getTokenBalances(options);
+        console.log(balance);
+        if (balance.length != 0) {
+            const tokenAddress = "0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b"; // You can specify for example: tokenAddress, name or symbol
+            const tokenBalance = balance.find((token) => token.token_address === tokenAddress);
+            console.log(tokenBalance.balance);
+            onftsBalance = tokenBalance.balance
+            onftsBalanceBN = new BigNumber(onftsBalance).div(1000000000).div(1000000000);
+            onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(onftsPrice);
+        } else {
+            onftsBalance = 0
+            onftsBalanceBN = new BigNumber(onftsBalance).div(1000000000).div(1000000000);
+            onftsBalanceUSDBN = new BigNumber(onftsBalanceBN).times(onftsPrice);
+            console.log(onftsBalance);
+        }
+    }
 }
 
 //Buy Crypto
 buyCrypto = async () => {
     if (user) {
         const userAddress = user.get('ethAddress');
-        
-        let response = await Moralis.Plugins.fiat.buy({ coin: "BNB_BEP20", receiver: userAddress,}, {disableTriggers: true});
+
+        let response = await Moralis.Plugins.fiat.buy({ coin: "BNB_BEP20", receiver: userAddress, }, { disableTriggers: true });
         console.log(response);
         $('#buyCryptoModal').modal('show');
         document.getElementById('buyCryptoModalInner').style.display = 'block';
-    document.getElementById('buyCryptoModalInner').src = response.data;
+        document.getElementById('buyCryptoModalInner').src = response.data;
 
-     } else {
-        let response = await Moralis.Plugins.fiat.buy({ coin: "BNB_BEP20"}, {disableTriggers: true});
+    } else {
+        let response = await Moralis.Plugins.fiat.buy({ coin: "BNB_BEP20" }, { disableTriggers: true });
         console.log(respone);
         $('#buyCryptoModal').modal('show');
-         document.getElementById('buyCryptoModalInner').style.display = 'block';
-    document.getElementById('buyCryptoModalInner').src = response.data;
-     }
- }
+        document.getElementById('buyCryptoModalInner').style.display = 'block';
+        document.getElementById('buyCryptoModalInner').src = response.data;
+    }
+}
 
 
 // Get Token Stats
 getTokenStats = async () => {
     if (user) {
-var totalSupply = await paymentTokenContract.methods.totalSupply().call({from: user.get('ethAddress')});
-console.log(totalSupply);
-var marketCap = Number(totalSupply * onftsPrice / 1000000000 / 1000000000);
-var marketCapFinal = marketCap.toLocaleString()
-console.log(marketCapFinal);
+        var totalSupply = await paymentTokenContract.methods.totalSupply().call({ from: user.get('ethAddress') });
+        console.log(totalSupply);
+        var marketCap = Number(totalSupply * onftsPrice / 1000000000 / 1000000000);
+        var marketCapFinal = marketCap.toLocaleString()
+        console.log(marketCapFinal);
     } else {
         console.log("login");
     }
-}   
+}
 
 // Hide Elements
 hideElement = (element) => element.style.display = "none";
@@ -1427,15 +1430,15 @@ const marketplaceItemTemplate = initTemplate("marketplaceItemTemplate");
 
 // Items for sale
 const itemsForSale = document.getElementById("itemsForSale");
-var   usdPrice = new BigNumber(0.000025);
+var usdPrice = new BigNumber(0.000025);
 const removeNftButton = document.getElementById("remove-nft-button");
 
 // Loading
 const loadingMintForm = document.getElementById("loadingMint");
 const loadingProgress = document.getElementById("myBar");
 const NFToptions = document.getElementById("options");
-const addToMarketplaceSwitch = document.getElementById("customSwitch1");  
-const addSecretFileSwitch = document.getElementById("customSwitch3"); 
+const addToMarketplaceSwitch = document.getElementById("customSwitch1");
+const addSecretFileSwitch = document.getElementById("customSwitch3");
 const devSwitch = document.getElementById("customSwitch2");
 const devSwitchButton = document.getElementById("devSwitch");
 const itemsForSaleList = document.getElementById("itemsForSale");
@@ -1445,7 +1448,7 @@ const itemsForSaleUI = document.getElementById("itemsForSaleUI");
 const nsfwButton = document.getElementById("nsfwButton");
 
 // Mint NFT Options
-optionsBox = async() => {
+optionsBox = async () => {
     if (addToMarketplaceValue == 1) {
         addToMarketplaceValue = "0";
         console.log(addToMarketplaceValue);
@@ -1459,15 +1462,15 @@ optionsBox = async() => {
     }
 }
 
-secretFileEnableSwitch = async() => {
-    
+secretFileEnableSwitch = async () => {
+
     if (addSecretFileSwitchValue == true) {
         addSecretFileSwitchValue = false;
         console.log(addSecretFileSwitchValue);
         secretNftFile.disabled = 1;
     }
     else if (addSecretFileSwitch.checked) {
-        
+
         addSecretFileSwitchValue = true;
         console.log(addSecretFileSwitchValue);
         secretNftFile.disabled = 0;
@@ -1476,7 +1479,7 @@ secretFileEnableSwitch = async() => {
 }
 
 //Mint NFT Dev Options
-devsBox = async() => {
+devsBox = async () => {
     if (createNFTValue == 1) {
         createNFTValue = "0";
         console.log(createNFTValue);

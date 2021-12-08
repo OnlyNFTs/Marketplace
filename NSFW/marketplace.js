@@ -85,19 +85,18 @@ const pancakeswap_api_url = 'https://api.pancakeswap.info/api/v2/tokens/0x134bbb
 
 // Fetch Coin Price
 fetchCoinPrice = async () => {
-const response = await fetch(pancakeswap_api_url)
-.then((response) => {
-    return response.json();
-})
-.then((data) => {
-    var onftsApiData = data.data;
-    console.log(onftsApiData);
-    onftsPrice = onftsApiData.price;
-    onftsPriceBNB = onftsApiData.price_BNB;
+    const checkPricing = await Moralis.Web3API.token.getTokenPrice({chain:'bsc', address:"0x134bbb94fc5a92c854cd22b783ffe9e1c02d761b"});
+    console.log(checkPricing);
+     onftsPrice = checkPricing.usdPrice;
+    console.log(onftsPrice);
+     onftsPriceBNB = checkPricing.nativePrice.value;
+
+    console.log(onftsPriceBNB);
     onftsPriceBN = new BigNumber(onftsPrice);
     onftsPriceBNBBN = new BigNumber(onftsPriceBNB);
     document.getElementById("onftspricebutton").innerText = `$${onftsPriceBN.dp(6)}`;
-})
+    return(onftsPrice, onftsPriceBNB);
+
 }
 
 // Big Number Config
